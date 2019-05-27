@@ -1,8 +1,6 @@
 import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
-class td_agent:
+class tdagent:
     def __init__(self, values, p_random_move, alpha_start):
         self.vals = values
         self.p_random_move = p_random_move

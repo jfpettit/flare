@@ -1,0 +1,12 @@
+README.md
+setup.py
+DynamicProgramming_gridworld/__init__.py
+DynamicProgramming_gridworld/britz_gridworld.py
+TD_tictactoe/__init__.py
+TD_tictactoe/td_agent.py
+environments/__init__.py
+environments/tictactoe.py
+reinforcement_learning_jfpettit.egg-info/PKG-INFO
+reinforcement_learning_jfpettit.egg-info/SOURCES.txt
+reinforcement_learning_jfpettit.egg-info/dependency_links.txt
+reinforcement_learning_jfpettit.egg-info/top_level.txt
