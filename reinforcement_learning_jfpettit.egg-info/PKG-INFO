@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: reinforcement-learning-jfpettit
-Version: 0.0.1
+Version: 0.1.dev0
 Summary: Implementations of reinforcement learning (RL) algorithms and some custom environments.
 Home-page: https://github.com/jfpettit/reinforcement_learning
 Author: Jacob Pettit

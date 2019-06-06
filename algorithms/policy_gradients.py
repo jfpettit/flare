@@ -3,6 +3,7 @@ import torch
 import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
+from utils import GeneralizedAdvantageEstimation, MlpPolicyUtils
 
 
 class simple_policy_net(nn.Module):
@@ -20,7 +21,7 @@ class simple_policy_net(nn.Module):
         x = F.tanh(self.layer1(x))
         x = F.tanh(self.layer2(x))
         x = F.tanh(self.layer3(x))
-        return F.softmax(x, dim=1)
+        return x
     
 class simple_policy_training:
     def __init__(self, gamma, env, policy, optimizer):
@@ -76,21 +77,35 @@ class simple_policy_training:
             running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
             self.end_episode()
             self.env.close()
-            
-        
-'''
-class reward_to_go_training(simple_policy_training(), gamma, env, policy, optimizer):
-    def __init__(self):
-        self.gamma = gamma
+
+
+class VanillaPolicyGradient:
+    def __init__(self, env, network, steps_per_epoch, epochs, gamma=.99, policy_lr=3e-4, value_lr=1e-3, value_train_iters=80, lam=.97, max_ep_len=1000, save_freq=10):
         self.env = env
-        self.policy = policy
-        self.optimizer = optimizer
-    
-    def rewardtogo(self, rewards):
-        n = len(rewards)
-        rewards_togo = np.zeros_like(rewards)
-        for i in reversed(range(n)):
-            rewards_togo[i] = rewards[i] + (rewards_togo[i+1] if i+1 < n else 0)
-        return rewards_togo
-'''    
+        self.network = network
+        self.epochs=epochs
+        self.gamma, self.lam = gamma, lam
+        self.policy_lr, self.value_lr = policy_lr, value_lr
+        self.val_train_iters = value_train_iters
+        self.max_ep_len = max_ep_len
+        self.save_freq = save_freq
+        self.steps_per_epoch = steps_per_epoch
+
+        self.obs_dim = self.env.observation_space.shape
+        self.act_dim = self.env.action_space.shape
+
+        self.mlp_utils = MlpPolicyUtils(network, self.env.action_space)
+
+        self.policy, self.logprobs, self.logprobs_policy, self.values = self.mlp_utils.actor_critic_mlp(np.empty(self.obs_dim), np.empty(self.act_dim))
+
+        self.grabbable = [self.policy, self.values, self.logprobs_policy]
+
+        self.       gae = GeneralizedAdvantageEstimation(self.steps_per_epoch, self.gamma, self.lam)
+
+
+
+
+        
+
+
     

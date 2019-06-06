@@ -1,3 +1,2 @@
-DynamicProgramming_gridworld
-TD_tictactoe
 environments
+examples

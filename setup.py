@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
 	name='reinforcement_learning-jfpettit',
-	version='0.0.1',
+	version='0.1dev',
 	author='Jacob Pettit',
 	author_email='jfpettit@gmail.com',
 	description='Implementations of reinforcement learning (RL) algorithms and some custom environments.',
