@@ -103,7 +103,7 @@ class DQNtraining:
         self.bs = bs
         self.gamma = gamma
 
-    def action_choice(self, state, i):
+    def action_choice(self, state, i=None):
         if self.anneal:
             i = i if i < len(self.eps_vals) else len(self.eps_vals)-1
             do_random = np.random.binomial(1, self.eps_vals[i])
@@ -122,24 +122,25 @@ class DQNtraining:
         ts_ = self.experience_buffer.sample(self.bs)
 
         states = [ts_[i][0] for i in range(len(ts_))]
+        actions = [ts_[i][1] for i in range(len(ts_))]
         next_states = [ts_[i][2] for i in range(len(ts_)) if ts_[i][2] is not None]
         rewards = [ts_[i][3] for i in range(len(ts_))]
-        actions = [ts_[i][1] for i in range(len(ts_))]
+        
         mask_fn = lambda s: s is not None
         mask = [mask_fn(next_states[i]) for i in range(len(next_states))]
         
         qs = torch.tensor([torch.max(self.policy_net(state.float())) for state in states])
         
         next_state_vs = torch.zeros(self.bs)
-        next_state_vs[mask] = torch.tensor([self.target_net(next_states[i].float()).max() for i in range(len(next_states))])
+        next_state_vs[mask] = torch.tensor([torch.max(self.target_net(next_state.float())) for next_state in next_states])
 
         expected_qs = (next_state_vs * self.gamma) + torch.tensor(rewards)
 
         self.optimizer.zero_grad()
-        loss = self.loss(qs, expected_qs.unsqueeze(1).view(self.bs))
+        loss = self.loss(qs, expected_qs)
         loss.requires_grad = True
         loss.backward()
-        #clip_grad_value_(self.policy_net.parameters(), 1)
+        clip_grad_value_(self.policy_net.parameters(), 1)
         self.optimizer.step()
 
     def train_loop_(self, num_epochs, verbose=True, n=10):
@@ -169,7 +170,6 @@ class DQNtraining:
                         sys.stdout.flush()
             if i % n == 0:
                 self.target_net.load_state_dict(self.policy_net.state_dict())
-                self.target_net.eval()
             self.env.close()
         print('\n')
         return eprew, eplen
