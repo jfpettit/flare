@@ -81,7 +81,7 @@ class ExperienceReplayBuffer:
 
 
 class DQNtraining:
-    def __init__(self, env, network, buffer_size=10000, epsilon=0.9, gamma=.99, bs=128, optimizer=optim.RMSprop, 
+    def __init__(self, env, network, buffer_size=10000, epsilon=1., gamma=.99, bs=128, optimizer=optim.RMSprop, 
         anneal_epsilon=True, epsilon_end=0.05, num_anneal_steps=200, loss=F.smooth_l1_loss):
 
         self.env = env
