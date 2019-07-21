@@ -99,7 +99,7 @@ class REINFORCE:
         del self.model.save_values[:]
 
         
-    def train_loop_(self, render, epochs):
+    def train_loop_(self, render, epochs, verbose=True):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -120,4 +120,6 @@ class REINFORCE:
             running_reward += (1-self.gamma) * episode_reward  + (self.gamma) * running_reward
             self.update_()
             self.env.close()
+            print('\rEpisode {} of {}'.format(i, epochs), '\t Episode reward: ', episode_reward, end='')
+            sys.stdout.flush()
         return self.ep_reward, self.ep_length

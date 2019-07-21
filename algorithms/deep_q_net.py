@@ -95,6 +95,7 @@ class DQNtraining:
         self.eps = epsilon
         self.optimizer=optimizer(self.policy_net.parameters())
 
+        self.anneal = anneal_epsilon
         if anneal_epsilon:
             self.eps_vals = np.linspace(self.eps, epsilon_end, num_anneal_steps)
 
@@ -103,8 +104,11 @@ class DQNtraining:
         self.gamma = gamma
 
     def action_choice(self, state, i):
-        i = i if i < len(self.eps_vals) else len(self.eps_vals)-1
-        do_random = np.random.binomial(1, self.eps_vals[i])
+        if self.anneal:
+            i = i if i < len(self.eps_vals) else len(self.eps_vals)-1
+            do_random = np.random.binomial(1, self.eps_vals[i])
+        else:
+            do_random = np.random.binomial(1, self.eps)
         if do_random:
             action = self.env.action_space.sample()
         else:
@@ -132,10 +136,10 @@ class DQNtraining:
         expected_qs = (next_state_vs * self.gamma) + torch.tensor(rewards)
 
         self.optimizer.zero_grad()
-        loss = self.loss(qs, expected_qs.unsqueeze(1).view(self.bs))
+        loss = self.loss(expected_qs.unsqueeze(1).view(self.bs), qs)
         loss.requires_grad = True
         loss.backward()
-        clip_grad_value_(self.policy_net.parameters(), 1)
+        #clip_grad_value_(self.policy_net.parameters(), 1)
         self.optimizer.step()
 
     def train_loop_(self, num_epochs, verbose=True, n=10):
@@ -162,7 +166,7 @@ class DQNtraining:
                     eplen.append(s)
                     eprew.append(ep_reward)
                     if verbose:
-                        print('\rEpoch {} of {}'.format(i, num_epochs), '\tEp len: {}; Ep rew: {}\t'.format(s, ep_reward), end="")
+                        print('\rEpoch {} of {}'.format(i, num_epochs), '\t Episode reward: {}'.format(s, ep_reward), end="")
                         sys.stdout.flush()
             if i % target_update == 0:
                 self.target_net.load_state_dict(self.policy_net.state_dict())
