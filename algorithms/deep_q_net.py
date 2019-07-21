@@ -136,7 +136,7 @@ class DQNtraining:
         expected_qs = (next_state_vs * self.gamma) + torch.tensor(rewards)
 
         self.optimizer.zero_grad()
-        loss = self.loss(expected_qs.unsqueeze(1).view(self.bs), qs)
+        loss = self.loss(qs, expected_qs.unsqueeze(1).view(self.bs))
         loss.requires_grad = True
         loss.backward()
         #clip_grad_value_(self.policy_net.parameters(), 1)
@@ -169,6 +169,7 @@ class DQNtraining:
                         sys.stdout.flush()
             if i % n == 0:
                 self.target_net.load_state_dict(self.policy_net.state_dict())
+                self.target_net.eval()
             self.env.close()
         print('\n')
         return eprew, eplen

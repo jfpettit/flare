@@ -34,7 +34,7 @@ class SimplePolicyNet(nn.Module):
             return x
         return F.softmax(x, dim=-1)
 
-class SimplePolicyTraining:
+class REINFORCE:
     def __init__(self, gamma, env, model, optimizer=None):
         self.gamma = gamma
         self.env = env
@@ -72,7 +72,7 @@ class SimplePolicyTraining:
         self.model.save_log_probs.append(m_.log_prob(choice))
         return choice.item()
     
-    def train_loop_(self, render, epochs):
+    def train_loop_(self, render, epochs, verbose=True):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -91,6 +91,8 @@ class SimplePolicyTraining:
                     break
                 
             running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
+            print('\r Episode {} of {}'.format(i, epochs), '\t Episode reward:', episode_reward, end="")
+            sys.stdout.flush()
             self.end_episode_()
             self.env.close()
         return self.ep_reward, self.ep_length
