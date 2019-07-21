@@ -81,8 +81,8 @@ class ExperienceReplayBuffer:
 
 
 class DQNtraining:
-    def __init__(self, env, buffer_size, epsilon, network, gamma=.99, bs=32, optimizer=optim.RMSprop, 
-        anneal_epsilon=False, epsilon_end=None, num_anneal_steps=None, loss=F.smooth_l1_loss):
+    def __init__(self, env, network, buffer_size=10000, epsilon=0.9, gamma=.99, bs=128, optimizer=optim.RMSprop, 
+        anneal_epsilon=True, epsilon_end=0.05, num_anneal_steps=200, loss=F.smooth_l1_loss):
 
         self.env = env
 
@@ -143,7 +143,7 @@ class DQNtraining:
         clip_grad_value_(self.policy_net.parameters(), 1)
         self.optimizer.step()
 
-    def train_loop_(self, num_epochs, verbose=True, n=10):
+    def train_loop_(self, num_epochs, verbose=True, n=5):
         running_reward = 0
         eplen, eprew = [], []
         for i in range(num_epochs):
