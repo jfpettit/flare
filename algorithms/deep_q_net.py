@@ -143,7 +143,6 @@ class DQNtraining:
         self.optimizer.step()
 
     def train_loop_(self, num_epochs, verbose=True, n=10):
-        target_update = num_epochs//n
         running_reward = 0
         eplen, eprew = [], []
         for i in range(num_epochs):
@@ -166,9 +165,9 @@ class DQNtraining:
                     eplen.append(s)
                     eprew.append(ep_reward)
                     if verbose:
-                        print('\rEpoch {} of {}'.format(i, num_epochs), '\t Episode reward: {}'.format(s, ep_reward), end="")
+                        print('\rEpoch {} of {}'.format(i, num_epochs), '\t Episode reward: {}'.format(ep_reward), end="")
                         sys.stdout.flush()
-            if i % target_update == 0:
+            if i % n == 0:
                 self.target_net.load_state_dict(self.policy_net.state_dict())
             self.env.close()
         print('\n')
