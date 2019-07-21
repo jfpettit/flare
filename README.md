@@ -10,4 +10,11 @@ This folder contains files for the tic-tac-toe playing agent and for the tic-tac
 ## [Policy Iteration with Dynamic Programming to solve Gridworld](https://github.com/jfpettit/reinforcement-learning/tree/master/DynamicProgramming_gridworld)
 This folder contains files for the gridworld environment (developed by Denny Britz, see his code [here](https://github.com/dennybritz/reinforcement-learning/blob/master/lib/envs/gridworld.py)) and for policy iteration using dynamic programming. Chapter 4 of "Reinforcement Learning: An Introduction" discusses performing policy iteration using dynamic programming, and one example throughout that chapter is gridworld. In gridworld, the agent starts in a random position on an N by N grid and has to navigate to a terminal state. The reward at every step the agent takes to travel to the terminal state is -1, so the agent is incentivized to reach the terminal state as quickly as possible. The code contains a class implementing policy iteration, prints out the learned policy and value function, and renders the agent as it moves through gridworld.
 
+## Things actively in progress
+- REINFORCE has been implemented, testing to make sure it works properly across a range of environments.
+- DQN training has been implemented and is also being tested.
+
+## Next plan:
+- A2C is coming up next.
+
 More to come!
