@@ -1,6 +1,6 @@
 import numpy as np
 
-class DynamicProgrammingPolicyIteration:
+class dynamic_programming_policy_iteration:
     def __init__(self, environment, discount, threshold, maxiter):
         self.environment = environment
         self.discount = discount

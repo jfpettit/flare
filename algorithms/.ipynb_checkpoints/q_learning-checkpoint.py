@@ -3,7 +3,7 @@ from collections import defaultdict
 import sys
 import itertools
 
-class QLearning:
+class qlearning:
     def __init__(self, alpha, epsilon, gamma, env):
         self.alpha = alpha
         self.eps = epsilon

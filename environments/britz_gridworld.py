@@ -80,7 +80,7 @@ class GridworldEnv(discrete.DiscreteEnv):
 
         super(GridworldEnv, self).__init__(nS, nA, P, isd)
 
-    def _render(self, mode='human', close=False):
+    def render_(self, mode='human', close=False):
         """ Renders the current gridworld layout
          For example, a 4x4 grid with the mode="human" looks like:
             T  o  o  o

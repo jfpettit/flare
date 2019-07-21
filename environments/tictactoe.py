@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import gym
 
-class tictactoe:
+
+class tictactoe(gym.Env):
     def __init__(self):
         self.x_win = False
         self.o_win = False
@@ -112,36 +114,6 @@ class tictactoe:
                     tmp_board[i][j] = '-'
         print(tmp_board)
         
-    def find_next_move_slow(self, state_arr, state, player):
-        tmp_states = []
-        inds = []
-        if player is 1:
-            for i in range(len(state)):
-                for j in range(len(state[i])):
-                    tmp = np.copy(state)
-                    if tmp[i][j] == 0:
-                        tmp[i][j] = 1
-                        tmp_states.append(tmp)
-            
-            for i in range(len(tmp_states)):
-                for j in range(len(state_arr)):
-                    if np.array_equal(tmp_states[i], state_arr[j]):
-                        inds.append(j)
-            return inds
-        
-        if player is 2:
-            for i in range(len(state)):
-                for j in range(len(state[i])):
-                    tmp = np.copy(state)
-                    if tmp[i][j] == 0:
-                        tmp[i][j] = 2
-                        tmp_states.append(tmp)
-                        
-            for i in range(len(tmp_states)):
-                for j in range(len(state_arr)):
-                    if np.array_equal(tmp_states[i], state_arr[j]):
-                        inds.append(j)
-            return inds
     
     def find_next_move(self, state_arr, state, player):
         tmp_states = []

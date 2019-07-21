@@ -3,7 +3,7 @@ import gym
 from gym import spaces
 from gym.utils import seeding
 
-class blackjack_game(gym.Env):
+class BlackjackGame(gym.Env):
     def __init__(self):
         self.cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
         self.action_space = spaces.Discrete(2)
