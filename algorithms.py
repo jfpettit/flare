@@ -285,10 +285,11 @@ class REINFORCE:
 class PPO(ActorCritic):
     def __init__(self, env, network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
         steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
-        policy_train_iters=80):
+        policy_train_iters=80, verbose=True):
         self.env = env
         self.model = network
         self.epsilon = epsilon
+        self.verbose = verbose
 
         if adv_fn is not None:
             self.adv_fn = adv_fn
@@ -308,8 +309,6 @@ class PPO(ActorCritic):
 
     def update_(self):
         return_ = 0
-        self.log_probs = self.model.save_log_probs
-        values = self.model.save_values
         rewards = self.model.save_rewards
         policy_loss = []
         value_loss = []
@@ -324,7 +323,6 @@ class PPO(ActorCritic):
                     returns = (returns - returns.mean()) / returns.std()
         
         states_ = torch.stack(self.model.save_states)
-        values_ = torch.stack(self.model.save_values)
         actions_ = torch.stack(self.model.save_actions)
         logprobs_ = torch.stack(self.model.save_log_probs)
 
@@ -334,9 +332,9 @@ class PPO(ActorCritic):
             pol_ratio = torch.exp(probs - logprobs_)
             approx_kl = (probs - logprobs_).mean()
             if approx_kl > 1.5 * self.target_kl:
-                #print('Early stopping due to {} hitting max KL'.format(approx_kl), '\n')
+                if self.verbose: print('Early stopping due to {} hitting max KL'.format(approx_kl), '\n')
                 break
-            adv = returns - values_.detach()
+            adv = returns - values.detach()
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
             loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values)) - self.target_kl*entropy
             self.optimizer.zero_grad()
@@ -364,7 +362,7 @@ class PPO(ActorCritic):
         del self.model.save_actions[:]
         del self.model.save_states[:]
 
-    def train_loop_(self, render, epochs, verbose=True):
+    def train_loop_(self, render, epochs):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -387,8 +385,9 @@ class PPO(ActorCritic):
                 self.log_probs_old = self.model.save_log_probs
             self.update_()
             self.env.close()
-            print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
-            sys.stdout.flush()
+            if self.verbose:
+                print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
+                sys.stdout.flush()
         print('\n')
         return self.ep_reward, self.ep_length
 
