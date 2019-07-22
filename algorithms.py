@@ -347,6 +347,8 @@ class PPO(ActorCritic):
             states_ = states_.cuda()
             actions_ = actions_.cuda()
             logprobs_ = logprobs_.cuda()
+            returns = returns.cuda()
+
         
         for step in range(self.policy_train_iters):
             probs, values, entropy = self.model.eval(states_, actions_)
@@ -356,7 +358,7 @@ class PPO(ActorCritic):
                 if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
                 sys.stdout.flush()
                 break
-            adv = returns - values.cpu().detach()
+            adv = returns - values.detach()
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
             loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
             self.optimizer.zero_grad()
