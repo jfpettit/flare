@@ -13,11 +13,12 @@ from rlpack.utils import NetworkUtils as netu
 import sys
 from torch.nn.utils import clip_grad_value_
 
+device = ('cuda:0' if torch.cuda.is_available() else "cpu")
 
 class ActorCritic:
     def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer='adam', standardize_rewards=True):
         self.env = env
-        self.model=model
+        self.model=model.to(device)
         self.gamma = gamma
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
@@ -130,8 +131,8 @@ class DQNtraining:
 
         self.env = env
 
-        self.policy_net = network
-        self.target_net = network
+        self.policy_net = network.to(device)
+        self.target_net = network.to(device)
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()
 
@@ -222,7 +223,7 @@ class REINFORCE:
     def __init__(self, gamma, env, model, optimizer=None):
         self.gamma = gamma
         self.env = env
-        self.model = model
+        self.model = model.to(device)
         if optimizer is not None:
             self.optimizer = optimizer
         else:
@@ -287,7 +288,7 @@ class PPO(ActorCritic):
         steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
         policy_train_iters=80, verbose=True):
         self.env = env
-        self.model = network
+        self.model = network.to(device)
         self.epsilon = epsilon
         self.verbose = verbose
 
@@ -322,14 +323,14 @@ class PPO(ActorCritic):
                 if not torch.equal(returns, torch.full(returns.shape, returns[0])):
                     returns = (returns - returns.mean()) / returns.std()
         
-        states_ = torch.stack(self.model.save_states)
-        actions_ = torch.stack(self.model.save_actions)
-        logprobs_ = torch.stack(self.model.save_log_probs)
+        states_ = torch.stack(self.model.save_states).to(device).detach()
+        actions_ = torch.stack(self.model.save_actions).to(device).detach()
+        logprobs_ = torch.stack(self.model.save_log_probs).to(device).detach()
 
         
         for step in range(self.policy_train_iters):
             probs, values, entropy = self.model.eval(states_, actions_)
-            pol_ratio = torch.exp(probs - logprobs_)
+            pol_ratio = torch.exp(probs - logprobs_.detach())
             approx_kl = (probs - logprobs_).mean()
             if approx_kl > 1.5 * self.target_kl:
                 if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
