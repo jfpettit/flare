@@ -363,7 +363,7 @@ class PPO(ActorCritic):
         del self.model.save_actions[:]
         del self.model.save_states[:]
 
-    def train_loop_(self, render, epochs):
+    def train_loop_(self, render, epochs, solved_threshold=None):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -386,6 +386,9 @@ class PPO(ActorCritic):
                 self.log_probs_old = self.model.save_log_probs
             self.update_()
             self.env.close()
+            if solved_threshold and len(self.ep_reward) > 100:
+                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
+                    print('Environment solved in {} steps. Ending training.'.format(i))
             if self.verbose:
                 print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
                 sys.stdout.flush()
