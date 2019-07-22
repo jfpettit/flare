@@ -266,7 +266,7 @@ class REINFORCE:
         state = torch.from_numpy(state).float()
         if use_gpu:
             state = state.cuda()
-        action_probabilities, state_value = self.model(state)
+        action_probabilities = self.model(state)
         m_ = torch.distributions.Categorical(action_probabilities)
         choice = m_.sample()
         self.model.save_log_probs.append(m_.log_prob(choice))
