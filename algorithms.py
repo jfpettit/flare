@@ -232,31 +232,31 @@ class DQNtraining:
         return eprew, eplen
 
 class REINFORCE:
-    def __init__(self, gamma, env, model, optimizer=None):
+    def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam):
         self.gamma = gamma
         self.env = env
         self.model = model
         if use_gpu:
             self.model.cuda()
-        if optimizer is not None:
-            self.optimizer = optimizer
-        else:
-            self.optimizer = torch.optim.Adam(model.parameters())
+        self.optimizer = optimizer(self.model.parameters())
     
-    def end_episode_(self):
+    def update_(self):
         return_ = 0
         policy_loss = []
         returns = []
         for reward in self.model.save_rewards[::-1]:
             return_ = reward + self.gamma * return_
             returns.insert(0, return_)
+
         returns = torch.Tensor(returns)
         returns = (returns - returns.mean()) / returns.std()
-        for log_prob, return_ in zip(self.model.save_log_probs, returns):
-            policy_loss.append(-log_prob * return_)
+
+        #for log_prob, return_ in zip(self.model.save_log_probs, returns):
+        #    policy_loss.append(-log_prob * return_)
+        logps = torch.stack(self.model.save_log_probs)
         self.optimizer.zero_grad()
-        policy_loss = torch.cat(policy_loss).sum()
-        policy_loss.backward()
+        policy_loss = (-logps * returns)
+        policy_loss.mean().backward()
         self.optimizer.step()
         del self.model.save_rewards[:]
         del self.model.save_log_probs[:]
@@ -264,12 +264,13 @@ class REINFORCE:
     def action_choice(self, state):
         state = np.asarray(state)
         state = torch.from_numpy(state).float()
-        if use_gpu: state = state.cuda()
-        action_probabilities = self.model(state)
+        if use_gpu:
+            state = state.cuda()
+        action_probabilities, state_value = self.model(state)
         m_ = torch.distributions.Categorical(action_probabilities)
         choice = m_.sample()
         self.model.save_log_probs.append(m_.log_prob(choice))
-        return choice.item()
+        return choice.item() 
     
     def train_loop_(self, render, epochs, verbose=True):
         running_reward = 0
@@ -277,7 +278,7 @@ class REINFORCE:
         self.ep_reward = []
         for i in range(epochs):
             state, episode_reward = self.env.reset(), 0
-            for s in range(1, 10000):
+            for s in range(0, 10000):
                 action = self.action_choice(state)
                 state, reward, done, _ = self.env.step(action)
                 if render:
@@ -292,7 +293,7 @@ class REINFORCE:
             running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
             print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
             sys.stdout.flush()
-            self.end_episode_()
+            self.update_()
             self.env.close()
         print('\n')
         return self.ep_reward, self.ep_length
