@@ -356,7 +356,7 @@ class PPO(ActorCritic):
                 if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
                 sys.stdout.flush()
                 break
-            adv = returns - values.detach()
+            adv = returns - values.cpu().detach()
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
             loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
             self.optimizer.zero_grad()
