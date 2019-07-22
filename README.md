@@ -9,6 +9,12 @@ This repository is intended to be a learning resource for anyone trying to find 
 
 Currently, all of the algorithms here are only implemented for Gym environments with discrete action spaces. It's on my to-do list to extend them (except DQN) to continuous action spaces.
 
+A2C, REINFORCE, and PPO are tested on GPUs. 
+
+No more attention is being given to the classical RL algorithms here unless somebody lists an issue saying one of them doesn't work or something.
+
+Each of the Deep RL algorithms needs to be more extensively tested, so far they've only been tested on problems from the "Classic Control" suite of Gym environments. 
+
 Algorithms currently implemented are:
 - Temporal Difference (TD) learning:
 	- This algorithm only works with the tic-tac-toe environment I custom-built specifically for the purpose of training a tic-tac-toe agent using TD learning, and so you can look at how to quickly run this code [here](https://jfpettit.github.io/TicTacToeInterface/). That'll get you set up playing tic-tac-toe against the agent. 
@@ -23,11 +29,21 @@ Algorithms currently implemented are:
 - A2C
 	- This is an implementation of the Advantage Actor Critic algorithm. This should also work with any gym environment.
 	- Again, it'll take any Pytorch NN and train it. 
+- PPO
+	- This is an implementation of the PPO-clip variant, it checks approximate KL divergence throughout training. It has been tested on a couple of environments.
+	- This also takes any Pytorch NN and works with any gym environment. 
+
+## Miscellaneous
 
 There is also a utils file containing some different advantage function estimators and math utilities and other stuff. Some of it is used, other stuff I thought might just come in handy at some point and wrote it anyway.
 
+I've added a folder containing some trained models. These models were saved using ```python torch.save(model.cpu().state_dict(), PATH)``` so you can load them by initializing an architecture identical to the one used to produce the model, loading the saved model file and setting your new networks state_dict to the saved one. To make this easier, I'll list which architectures produced which files:
+- 'gpu_ppo_acrobot_run1' used the SimpleActorCritic network in neural_nets.py
+- 'gpu_reinforce_cartpole_run1' used the SimplePolicyNet also in neural_nets.py
+- 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the SimpleActorCritic network, but I'm not certain.
 
 ## More to come!
-- A2C and REINFORCE will be extended to continuous action spaces
-- Implement PPO
+- A2C, PPO, and (hopefully) REINFORCE will be extended to continuous action spaces
 - Implement DDPG
+- Implement SAC (maybe?)
+- Will structure this code as a pip package
