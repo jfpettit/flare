@@ -13,12 +13,14 @@ from rlpack.utils import NetworkUtils as netu
 import sys
 from torch.nn.utils import clip_grad_value_
 
-device = ('cuda:0' if torch.cuda.is_available() else "cpu")
+use_gpu = True if torch.cuda.is_available() else False
 
 class ActorCritic:
     def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer='adam', standardize_rewards=True):
         self.env = env
-        self.model=model.to(device)
+        self.model=model
+        if use_gpu:
+            self.model.cuda()
         self.gamma = gamma
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
@@ -39,6 +41,8 @@ class ActorCritic:
     def action_choice(self, state):
         state = np.asarray(state)
         state = torch.from_numpy(state).float()
+        if use_gpu:
+            state = state.cuda()
         action_probabilities, state_value = self.model(state)
         m_ = torch.distributions.Categorical(action_probabilities)
         choice = m_.sample()
@@ -131,8 +135,11 @@ class DQNtraining:
 
         self.env = env
 
-        self.policy_net = network.to(device)
-        self.target_net = network.to(device)
+        self.policy_net = network
+        self.target_net = network
+        if use_gpu:
+            self.policy_net.cuda()
+            self.target_net.cuda()
         self.target_net.load_state_dict(self.policy_net.state_dict())
         self.target_net.eval()
 
@@ -157,6 +164,7 @@ class DQNtraining:
         if do_random:
             action = self.env.action_space.sample()
         else:
+            if use_gpu: state = state.cuda()
             action = torch.argmax(self.policy_net(state.float()))
         return action
 
@@ -173,6 +181,10 @@ class DQNtraining:
         
         mask_fn = lambda s: s is not None
         mask = [mask_fn(next_states[i]) for i in range(len(next_states))]
+
+        if use_gpu:
+            states = states.cuda()
+            next_states = next_states.cuda()
         
         qs = torch.tensor([torch.max(self.policy_net(state.float())) for state in states])
         
@@ -223,7 +235,9 @@ class REINFORCE:
     def __init__(self, gamma, env, model, optimizer=None):
         self.gamma = gamma
         self.env = env
-        self.model = model.to(device)
+        self.model = model
+        if use_gpu:
+            self.model.cuda()
         if optimizer is not None:
             self.optimizer = optimizer
         else:
@@ -249,7 +263,7 @@ class REINFORCE:
 
     def action_choice(self, state):
         state = np.asarray(state)
-        print(state)
+        if use_gpu: state = state.cuda()
         state = torch.from_numpy(state).float().unsqueeze(0)
         action_probabilities = self.model(state)
         m_ = torch.distributions.Categorical(action_probabilities)
@@ -288,7 +302,9 @@ class PPO(ActorCritic):
         steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
         policy_train_iters=80, verbose=True):
         self.env = env
-        self.model = network.to(device)
+        self.model = network
+        if use_gpu:
+            self.model.cuda()
         self.epsilon = epsilon
         self.verbose = verbose
 
@@ -323,10 +339,14 @@ class PPO(ActorCritic):
                 if not torch.equal(returns, torch.full(returns.shape, returns[0])):
                     returns = (returns - returns.mean()) / returns.std()
         
-        states_ = torch.stack(self.model.save_states).to(device).detach()
-        actions_ = torch.stack(self.model.save_actions).to(device).detach()
-        logprobs_ = torch.stack(self.model.save_log_probs).to(device).detach()
+        states_ = torch.stack(self.model.save_states)
+        actions_ = torch.stack(self.model.save_actions)
+        logprobs_ = torch.stack(self.model.save_log_probs)
 
+        if use_gpu:
+            states_ = states_.cuda()
+            actions_ = actions_.cuda()
+            logprobs_ = logprobs_.cuda()
         
         for step in range(self.policy_train_iters):
             probs, values, entropy = self.model.eval(states_, actions_)
