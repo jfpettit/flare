@@ -342,21 +342,6 @@ class PPO(ActorCritic):
             loss_fn.mean().backward(retain_graph=True)
             self.optimizer.step()
         
-
-
-
-        #for step in range(self.policy_train_iters):
-        ##    adv=returns - values_.detach()
-        #   policy_ratio = torch.exp(torch.tensor(self.log_probs) - torch.tensor(self.log_probs_old))
-        #    g_ = torch.clamp(policy_ratio, 1-self.epsilon, 1+self.epsilon) * adv
-        #    policy_loss.append(-torch.min((policy_ratio*adv), g_))
-        #    value_loss.append((returns - values_)**2)
-        
-        #self.optimizer.zero_grad()
-        #loss = (torch.stack(policy_loss) + torch.stack(value_loss)).mean()
-        #loss.backward()
-        #self.optimizer.step()
-        #self.log_probs_old = self.model.save_log_probs
         del self.model.save_rewards[:]
         del self.model.save_log_probs[:]
         del self.model.save_values[:]
@@ -389,6 +374,7 @@ class PPO(ActorCritic):
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
                     print('Environment solved in {} steps. Ending training.'.format(i))
+                    return self.ep_reward, self.ep_length
             if self.verbose:
                 print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
                 sys.stdout.flush()
