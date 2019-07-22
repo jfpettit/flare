@@ -4,14 +4,14 @@
 
 ## Details
 
-This repository is intended to be a learning resource for anyone trying to find beginner-level code covering some RL algorithms. Some of my code isn't very well documented or clear, but I'm working on improving that. My learning path has followed Sutton and Barto's Reinforcement Learning: An Introduction [book](http://incompleteideas.net/book/the-book.html) and more recently, OpenAI's [SpinningUp](https://spinningup.openai.com/en/latest/). Many of the algorithms contained here are based on resources and exercises and recommendations made from those resources. The traditional RL stuff is inspired by Sutton and Barto, while much of the Deep RL stuff is inspired by SpinningUp.
+This repository is intended to be a learning resource for anyone trying to find beginner-level code covering some RL algorithms. Some of my code isn't very well documented or clear, but I'm working on improving that. My learning path has followed Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book.html) and more recently, OpenAI's [SpinningUp](https://spinningup.openai.com/en/latest/). Many of the algorithms contained here are based on exercises and recommendations from those resources. The traditional RL stuff is inspired by Sutton and Barto, while much of the Deep RL stuff is inspired by SpinningUp.
 
 
 Currently, all of the algorithms here are only implemented for Gym environments with discrete action spaces. It's on my to-do list to extend them (except DQN) to continuous action spaces.
 
 A2C, REINFORCE, and PPO are tested on GPUs. 
 
-No more attention is being given to the classical RL algorithms here unless somebody lists an issue saying one of them doesn't work or something.
+No further attention is being given to the classical RL algorithms here unless somebody lists an issue saying one of them doesn't work or something similar.
 
 Each of the Deep RL algorithms needs to be more extensively tested, so far they've only been tested on problems from the "Classic Control" suite of Gym environments. 
 
@@ -37,7 +37,7 @@ Algorithms currently implemented are:
 
 There is also a utils file containing some different advantage function estimators and math utilities and other stuff. Some of it is used, other stuff I thought might just come in handy at some point and wrote it anyway.
 
-I've added a folder containing some trained models. These models were saved using ```python torch.save(model.cpu().state_dict(), PATH)``` so you can load them by initializing an architecture identical to the one used to produce the model, loading the saved model file and setting your new networks state_dict to the saved one. To make this easier, I'll list which architectures produced which files:
+I've added a folder containing some trained models. These models were saved using ```torch.save(model.cpu().state_dict(), PATH)``` so you can load them by initializing an architecture identical to the one used to produce the model, loading the saved model file and setting your new networks state_dict to the saved one. To make this easier, I'll list which architectures produced which files:
 - 'gpu_ppo_acrobot_run1' used the SimpleActorCritic network in neural_nets.py
 - 'gpu_reinforce_cartpole_run1' used the SimplePolicyNet also in neural_nets.py
 - 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the SimpleActorCritic network, but I'm not certain.
