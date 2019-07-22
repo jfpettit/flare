@@ -332,11 +332,12 @@ class PPO(ActorCritic):
             pol_ratio = torch.exp(probs - logprobs_)
             approx_kl = (probs - logprobs_).mean()
             if approx_kl > 1.5 * self.target_kl:
-                if self.verbose: print('Early stopping due to {} hitting max KL'.format(approx_kl), '\n')
+                if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
+                sys.stdout.flush()
                 break
             adv = returns - values.detach()
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
-            loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values)) - self.target_kl*entropy
+            loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
             self.optimizer.zero_grad()
             loss_fn.mean().backward(retain_graph=True)
             self.optimizer.step()
