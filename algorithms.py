@@ -251,9 +251,10 @@ class REINFORCE:
         returns = torch.Tensor(returns)
         returns = (returns - returns.mean()) / returns.std()
 
-        #for log_prob, return_ in zip(self.model.save_log_probs, returns):
-        #    policy_loss.append(-log_prob * return_)
         logps = torch.stack(self.model.save_log_probs)
+        if use_gpu: 
+            logps = logps.cuda()
+            returns = returns.cuda()
         self.optimizer.zero_grad()
         policy_loss = (-logps * returns)
         policy_loss.mean().backward()
