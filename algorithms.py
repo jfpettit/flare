@@ -263,8 +263,8 @@ class REINFORCE:
 
     def action_choice(self, state):
         state = np.asarray(state)
+        state = torch.from_numpy(state).float()
         if use_gpu: state = state.cuda()
-        state = torch.from_numpy(state).float().unsqueeze(0)
         action_probabilities = self.model(state)
         m_ = torch.distributions.Categorical(action_probabilities)
         choice = m_.sample()
