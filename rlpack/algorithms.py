@@ -273,7 +273,7 @@ class REINFORCE:
         self.model.save_log_probs.append(m_.log_prob(choice))
         return choice.item() 
     
-    def train_loop_(self, render, epochs, verbose=True):
+    def train_loop_(self, render, epochs, verbose=True, solved_threshold=None):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -292,7 +292,12 @@ class REINFORCE:
                     break
                 
             running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
-            print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
+            if solved_threshold and len(self.ep_reward) > 100:
+                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
+                    print('\r Environment solved in {} steps. Ending training.'.format(i))
+                    return self.ep_reward, self.ep_length
+            if verbose:
+                print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
             sys.stdout.flush()
             self.update_()
             self.env.close()
@@ -398,7 +403,7 @@ class PPO(ActorCritic):
             self.env.close()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
-                    print('Environment solved in {} steps. Ending training.'.format(i))
+                    print('\r Environment solved in {} steps. Ending training.'.format(i))
                     return self.ep_reward, self.ep_length
             if self.verbose:
                 print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')

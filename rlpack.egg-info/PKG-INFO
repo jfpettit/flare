@@ -6,9 +6,20 @@ Home-page: https://github.com/jfpettit/rlpack
 Author: Jacob Pettit
 Author-email: jfpettit@gmail.com
 License: UNKNOWN
-Description: # rlpack
+Description: # rl-pack
         
         **This repository is actively under development and is not stable.**
+        
+        ## Installation
+        
+        Clone the repository, cd into it: 
+        
+        ```
+        git clone https://github.com/jfpettit/rl-pack.git
+        cd rl-pack
+        pip install -e .
+        ```
+        
         
         ## Details
         
@@ -54,6 +65,5 @@ Description: # rlpack
         - A2C, PPO, and (hopefully) REINFORCE will be extended to continuous action spaces
         - Implement DDPG
         - Implement SAC (maybe?)
-        - Will structure this code as a pip package
         
 Platform: UNKNOWN

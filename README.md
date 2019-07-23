@@ -11,7 +11,16 @@ git clone https://github.com/jfpettit/rl-pack.git
 cd rl-pack
 pip install -e .
 ```
+## Examples
 
+These are under development, but one is done! There is an example training REINFORCE on CartPole.
+With the repository installed:
+```
+cd rl-pack/examples
+python reinforce_cartpole.py --watch --plot
+```
+
+The ```--watch``` and ```--plot``` tags are optional. They represent whether you want to watch the agent playing CartPole after it is done training and whether you want to plot the reward earned over training after training is done, respectively.
 
 ## Details
 
@@ -57,3 +66,5 @@ I've added a folder containing some trained models. These models were saved usin
 - A2C, PPO, and (hopefully) REINFORCE will be extended to continuous action spaces
 - Implement DDPG
 - Implement SAC (maybe?)
+- Comment code to make it clearer
+- Blog post
