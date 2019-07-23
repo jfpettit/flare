@@ -2,6 +2,17 @@
 
 **This repository is actively under development and is not stable.**
 
+## Installation
+
+Clone the repository, cd into it: 
+
+```
+git clone https://github.com/jfpettit/rl-pack.git
+cd rl-pack
+pip install -e .
+```
+
+
 ## Details
 
 This repository is intended to be a learning resource for anyone trying to find beginner-level code covering some RL algorithms. Some of my code isn't very well documented or clear, but I'm working on improving that. My learning path has followed Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book.html) and more recently, OpenAI's [SpinningUp](https://spinningup.openai.com/en/latest/). Many of the algorithms contained here are based on exercises and recommendations from those resources. The traditional RL stuff is inspired by Sutton and Barto, while much of the Deep RL stuff is inspired by SpinningUp.
