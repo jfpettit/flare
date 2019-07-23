@@ -1,4 +1,4 @@
-# rlpack
+# rl-pack
 
 **This repository is actively under development and is not stable.**
 
@@ -57,4 +57,3 @@ I've added a folder containing some trained models. These models were saved usin
 - A2C, PPO, and (hopefully) REINFORCE will be extended to continuous action spaces
 - Implement DDPG
 - Implement SAC (maybe?)
-- Will structure this code as a pip package
