@@ -15,8 +15,82 @@ from torch.nn.utils import clip_grad_value_
 
 use_gpu = True if torch.cuda.is_available() else False
 
-class ActorCritic:
-    def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer='adam', standardize_rewards=True):
+class REINFORCE:
+    def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam):
+        self.gamma = gamma
+        self.env = env
+        self.model = model
+        if use_gpu:
+            self.model.cuda()
+        self.optimizer = optimizer(self.model.parameters())
+    
+    def update_(self):
+        return_ = 0
+        policy_loss = []
+        returns = []
+        for reward in self.model.save_rewards[::-1]:
+            return_ = reward + self.gamma * return_
+            returns.insert(0, return_)
+
+        returns = torch.Tensor(returns)
+        returns = (returns - returns.mean()) / returns.std()
+
+        logps = torch.stack(self.model.save_log_probs)
+        if use_gpu: 
+            logps = logps.cuda()
+            returns = returns.cuda()
+        self.optimizer.zero_grad()
+        policy_loss = (-logps * returns)
+        policy_loss.mean().backward()
+        self.optimizer.step()
+        del self.model.save_rewards[:]
+        del self.model.save_log_probs[:]
+
+    def action_choice(self, state):
+        state = np.asarray(state)
+        state = torch.from_numpy(state).float()
+        if use_gpu:
+            state = state.cuda()
+        action_probabilities = self.model(state)
+        m_ = torch.distributions.Categorical(action_probabilities)
+        choice = m_.sample()
+        self.model.save_log_probs.append(m_.log_prob(choice))
+        return choice.item() 
+    
+    def train_loop_(self, epochs, render=False, verbose=True, solved_threshold=None):
+        running_reward = 0
+        self.ep_length = []
+        self.ep_reward = []
+        for i in range(epochs):
+            state, episode_reward = self.env.reset(), 0
+            for s in range(0, 10000):
+                action = self.action_choice(state)
+                state, reward, done, _ = self.env.step(action)
+                if render:
+                    self.env.render()
+                self.model.save_rewards.append(reward)
+                episode_reward += reward
+                if done:
+                    self.ep_length.append(s)
+                    self.ep_reward.append(episode_reward)
+                    break
+                
+            running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
+            if solved_threshold and len(self.ep_reward) > 100:
+                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
+                    print('\r Environment solved in {} steps. Ending training.'.format(i))
+                    return self.ep_reward, self.ep_length
+            if verbose:
+                print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
+            sys.stdout.flush()
+            self.update_()
+            self.env.close()
+        print('\n')
+        return self.ep_reward, self.ep_length
+
+class A2C:
+    def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer='adam', standardize_rewards=True,
+        policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
         self.env = env
         self.model=model
         if use_gpu:
@@ -36,6 +110,10 @@ class ActorCritic:
         else:
             self.aeu_ = aeu(self.gamma, self.lam)
             self.adv_fn = self.aeu_.basic_adv_estimator
+
+        self.policy_train_iters = policy_train_iters
+        self.val_loss = val_loss
+        self.verbose = verbose
         
 
     def action_choice(self, state):
@@ -54,11 +132,7 @@ class ActorCritic:
 
     def update_(self):
         return_ = 0
-        log_probs = self.model.save_log_probs
-        values = self.model.save_values
         rewards = self.model.save_rewards
-        policy_loss = []
-        value_loss = []
         returns = []
         for reward in self.model.save_rewards[::-1]:
             return_ = reward + self.gamma * return_
@@ -68,23 +142,36 @@ class ActorCritic:
             if len(returns) > 1:
                 if not torch.equal(returns, torch.full(returns.shape, returns[0])):
                     returns = (returns - returns.mean()) / returns.std()
-            
-        for index, obj in enumerate(zip(log_probs, values, returns)):
-            log_prob, val, return_ = obj
-            adv=self.adv_fn(return_, val, values[index-1], index)
-            policy_loss.append(-log_prob * adv)
-            value_loss.append((return_ - val)**2)
         
-        self.optimizer.zero_grad()
-        loss = torch.stack(policy_loss).mean() + torch.stack(value_loss).mean()
-        loss.backward()
-        self.optimizer.step()
+        states_ = torch.stack(self.model.save_states)
+        actions_ = torch.stack(self.model.save_actions)
+        logprobs_ = torch.stack(self.model.save_log_probs)
+
+        if use_gpu:
+            states_ = states_.cuda()
+            actions_ = actions_.cuda()
+            logprobs_ = logprobs_.cuda()
+            returns = returns.cuda()
+
+
+        for step in range(self.policy_train_iters):
+            probs, values, entropy = self.model.eval(states_, actions_)
+            adv = returns - values.detach()
+            loss_fn = -(logprobs_ * adv).mean() + (0.5 * self.val_loss(returns, values))
+            self.optimizer.zero_grad()
+            loss_fn.backward(retain_graph=True)
+            self.optimizer.step()
+            
+        
         del self.model.save_rewards[:]
         del self.model.save_log_probs[:]
         del self.model.save_values[:]
+        del self.model.save_actions[:]
+        del self.model.save_states[:]
+
 
         
-    def train_loop_(self, render, epochs, verbose=True):
+    def train_loop_(self, epochs, render=False, solved_threshold=None):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -103,12 +190,94 @@ class ActorCritic:
                     break
                 
             running_reward += (1-self.gamma) * episode_reward  + (self.gamma) * running_reward
+            if i == 0:
+                self.log_probs_old = self.model.save_log_probs
             self.update_()
             self.env.close()
-            print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
-            sys.stdout.flush()
+            if solved_threshold and len(self.ep_reward) > 100:
+                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
+                    print('\r Environment solved in {} steps. Ending training.'.format(i))
+                    return self.ep_reward, self.ep_length
+            if self.verbose:
+                print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
+                sys.stdout.flush()
         print('\n')
         return self.ep_reward, self.ep_length
+
+class PPO(A2C):
+    def __init__(self, env, network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
+        steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
+        policy_train_iters=80, verbose=True):
+        self.env = env
+        self.model = network
+        if use_gpu:
+            self.model.cuda()
+        self.epsilon = epsilon
+        self.verbose = verbose
+
+        if adv_fn is not None:
+            self.adv_fn = adv_fn
+        else:
+            self.aeu_ = aeu(gamma, lam)
+            self.adv_fn = self.aeu_.basic_adv_estimator
+
+        self.optimizer = optimizer(self.model.parameters(), lr=lr)
+
+        self.gamma = gamma
+        self.lam = lam
+        self.standardize = standardize_rewards
+        self.steps_per_epoch = steps_per_epoch
+        self.target_kl = target_kl
+        self.policy_train_iters = policy_train_iters
+        self.val_loss = nn.MSELoss()
+
+    def update_(self):
+        return_ = 0
+        rewards = self.model.save_rewards
+        policy_loss = []
+        value_loss = []
+        returns = []
+        for reward in self.model.save_rewards[::-1]:
+            return_ = reward + self.gamma * return_
+            returns.insert(0, return_)
+        returns = torch.Tensor(returns)
+        if self.standardize:
+            if len(returns) > 1:
+                if not torch.equal(returns, torch.full(returns.shape, returns[0])):
+                    returns = (returns - returns.mean()) / returns.std()
+        
+        states_ = torch.stack(self.model.save_states)
+        actions_ = torch.stack(self.model.save_actions)
+        logprobs_ = torch.stack(self.model.save_log_probs)
+
+        if use_gpu:
+            states_ = states_.cuda()
+            actions_ = actions_.cuda()
+            logprobs_ = logprobs_.cuda()
+            returns = returns.cuda()
+
+        
+        for step in range(self.policy_train_iters):
+            probs, values, entropy = self.model.eval(states_, actions_)
+            pol_ratio = torch.exp(probs - logprobs_.detach())
+            approx_kl = (probs - logprobs_).mean()
+            if approx_kl > 1.5 * self.target_kl:
+                if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
+                sys.stdout.flush()
+                break
+            adv = returns - values.detach()
+            g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
+            loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
+            self.optimizer.zero_grad()
+            loss_fn.mean().backward(retain_graph=True)
+            self.optimizer.step()
+        
+        del self.model.save_rewards[:]
+        del self.model.save_log_probs[:]
+        del self.model.save_values[:]
+        del self.model.save_actions[:]
+        del self.model.save_states[:]
+
 
 class ExperienceReplayBuffer:
     def __init__(self, buffer_size):
@@ -231,185 +400,9 @@ class DQNtraining:
         print('\n')
         return eprew, eplen
 
-class REINFORCE:
-    def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam):
-        self.gamma = gamma
-        self.env = env
-        self.model = model
-        if use_gpu:
-            self.model.cuda()
-        self.optimizer = optimizer(self.model.parameters())
-    
-    def update_(self):
-        return_ = 0
-        policy_loss = []
-        returns = []
-        for reward in self.model.save_rewards[::-1]:
-            return_ = reward + self.gamma * return_
-            returns.insert(0, return_)
 
-        returns = torch.Tensor(returns)
-        returns = (returns - returns.mean()) / returns.std()
 
-        logps = torch.stack(self.model.save_log_probs)
-        if use_gpu: 
-            logps = logps.cuda()
-            returns = returns.cuda()
-        self.optimizer.zero_grad()
-        policy_loss = (-logps * returns)
-        policy_loss.mean().backward()
-        self.optimizer.step()
-        del self.model.save_rewards[:]
-        del self.model.save_log_probs[:]
 
-    def action_choice(self, state):
-        state = np.asarray(state)
-        state = torch.from_numpy(state).float()
-        if use_gpu:
-            state = state.cuda()
-        action_probabilities = self.model(state)
-        m_ = torch.distributions.Categorical(action_probabilities)
-        choice = m_.sample()
-        self.model.save_log_probs.append(m_.log_prob(choice))
-        return choice.item() 
-    
-    def train_loop_(self, render, epochs, verbose=True, solved_threshold=None):
-        running_reward = 0
-        self.ep_length = []
-        self.ep_reward = []
-        for i in range(epochs):
-            state, episode_reward = self.env.reset(), 0
-            for s in range(0, 10000):
-                action = self.action_choice(state)
-                state, reward, done, _ = self.env.step(action)
-                if render:
-                    self.env.render()
-                self.model.save_rewards.append(reward)
-                episode_reward += reward
-                if done:
-                    self.ep_length.append(s)
-                    self.ep_reward.append(episode_reward)
-                    break
-                
-            running_reward += 0.05 * episode_reward  + (1-0.05) * running_reward
-            if solved_threshold and len(self.ep_reward) > 100:
-                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
-                    print('\r Environment solved in {} steps. Ending training.'.format(i))
-                    return self.ep_reward, self.ep_length
-            if verbose:
-                print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
-            sys.stdout.flush()
-            self.update_()
-            self.env.close()
-        print('\n')
-        return self.ep_reward, self.ep_length
-
-class PPO(ActorCritic):
-    def __init__(self, env, network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
-        steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
-        policy_train_iters=80, verbose=True):
-        self.env = env
-        self.model = network
-        if use_gpu:
-            self.model.cuda()
-        self.epsilon = epsilon
-        self.verbose = verbose
-
-        if adv_fn is not None:
-            self.adv_fn = adv_fn
-        else:
-            self.aeu_ = aeu(gamma, lam)
-            self.adv_fn = self.aeu_.basic_adv_estimator
-
-        self.optimizer = optimizer(self.model.parameters(), lr=lr)
-
-        self.gamma = gamma
-        self.lam = lam
-        self.standardize = standardize_rewards
-        self.steps_per_epoch = steps_per_epoch
-        self.target_kl = target_kl
-        self.policy_train_iters = policy_train_iters
-        self.val_loss = nn.MSELoss()
-
-    def update_(self):
-        return_ = 0
-        rewards = self.model.save_rewards
-        policy_loss = []
-        value_loss = []
-        returns = []
-        for reward in self.model.save_rewards[::-1]:
-            return_ = reward + self.gamma * return_
-            returns.insert(0, return_)
-        returns = torch.Tensor(returns)
-        if self.standardize:
-            if len(returns) > 1:
-                if not torch.equal(returns, torch.full(returns.shape, returns[0])):
-                    returns = (returns - returns.mean()) / returns.std()
-        
-        states_ = torch.stack(self.model.save_states)
-        actions_ = torch.stack(self.model.save_actions)
-        logprobs_ = torch.stack(self.model.save_log_probs)
-
-        if use_gpu:
-            states_ = states_.cuda()
-            actions_ = actions_.cuda()
-            logprobs_ = logprobs_.cuda()
-            returns = returns.cuda()
-
-        
-        for step in range(self.policy_train_iters):
-            probs, values, entropy = self.model.eval(states_, actions_)
-            pol_ratio = torch.exp(probs - logprobs_.detach())
-            approx_kl = (probs - logprobs_).mean()
-            if approx_kl > 1.5 * self.target_kl:
-                if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
-                sys.stdout.flush()
-                break
-            adv = returns - values.detach()
-            g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
-            loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
-            self.optimizer.zero_grad()
-            loss_fn.mean().backward(retain_graph=True)
-            self.optimizer.step()
-        
-        del self.model.save_rewards[:]
-        del self.model.save_log_probs[:]
-        del self.model.save_values[:]
-        del self.model.save_actions[:]
-        del self.model.save_states[:]
-
-    def train_loop_(self, render, epochs, solved_threshold=None):
-        running_reward = 0
-        self.ep_length = []
-        self.ep_reward = []
-        for i in range(epochs):
-            state, episode_reward = self.env.reset(), 0
-            for s in range(1, self.steps_per_epoch):
-                action = self.action_choice(state)
-                state, reward, done, _ = self.env.step(action)
-                if render:
-                    self.env.render()
-                self.model.save_rewards.append(reward)
-                episode_reward += reward
-                if done:
-                    self.ep_length.append(s)
-                    self.ep_reward.append(episode_reward)
-                    break
-                
-            running_reward += (1-self.gamma) * episode_reward  + (self.gamma) * running_reward
-            if i == 0:
-                self.log_probs_old = self.model.save_log_probs
-            self.update_()
-            self.env.close()
-            if solved_threshold and len(self.ep_reward) > 100:
-                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
-                    print('\r Environment solved in {} steps. Ending training.'.format(i))
-                    return self.ep_reward, self.ep_length
-            if self.verbose:
-                print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
-                sys.stdout.flush()
-        print('\n')
-        return self.ep_reward, self.ep_length
 
 
 
