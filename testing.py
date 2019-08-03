@@ -22,10 +22,10 @@ if __name__ == '__main__':
         ppo = algs.PPO(env, pn)
         a2c = algs.A2C(env, an, policy_train_iters=40)
 
-        re_rew, re_len = reinforce.train_loop_(False, 1000)
-        reward_results['reinforce_'+envname] = re_rew
-        p_rew, p_len = ppo.train_loop_(1000, solved_threshold=195)
-        reward_results['ppo_'+envname] = p_rew
+        #re_rew, re_len = reinforce.train_loop_(1000, solved_threshold=195)
+        #reward_results['reinforce_'+envname] = re_rew
+        #p_rew, p_len = ppo.train_loop_(1000, solved_threshold=195)
+        #reward_results['ppo_'+envname] = p_rew
         a_rew, a_len = a2c.train_loop_(100, solved_threshold=195)
         reward_results['a2c'+envname] = a_rew
 

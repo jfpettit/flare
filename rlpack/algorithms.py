@@ -156,7 +156,7 @@ class A2C:
 
         for step in range(self.policy_train_iters):
             probs, values, entropy = self.model.eval(states_, actions_)
-            adv = returns - values.detach()
+            adv = returns - values
             loss_fn = -(logprobs_ * adv).mean() + (0.5 * self.val_loss(returns, values))
             self.optimizer.zero_grad()
             loss_fn.backward(retain_graph=True)
