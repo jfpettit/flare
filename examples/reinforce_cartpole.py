@@ -2,7 +2,7 @@
 import argparse
 
 from rlpack.algorithms import REINFORCE
-from rlpack.neural_nets import SimplePolicyNet
+from rlpack.neural_nets import PolicyNet
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,7 +11,7 @@ import torch
 # make env 
 env = gym.make('CartPole-v1')
 # set up network. REINFORCE only needs a network to paramaterize the policy. This is defined in rlpack/neural_nets.py
-network = SimplePolicyNet(4, 2)
+network = PolicyNet(4, 2)
 
 # set up argparser. --watch is a boolean whether or not to watch the agent in the env after training
 #					--plot is bool, whether or not to plot rewards earned over training
@@ -27,13 +27,14 @@ if __name__ == '__main__':
 	trainer = REINFORCE(env, network)
 	# train network for 500 episodes, it stops early if the mean reward over last 100 episodes exceeds the solved_threshold
 	# criterion for solving from this gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
-	rew, leng = trainer.train_loop_(False, 500, solved_threshold=195)
+	rew, leng = trainer.train_loop_(500, solved_threshold=400)
 
 	# watch agent interact with environment
 	if args.watch:
 		obs = env.reset()
 		for i in range(1000):
-			action = trainer.action_choice(torch.tensor(obs))
+			#action = trainer.action_choice(torch.tensor(obs))
+			action = trainer.exploit(torch.tensor(obs))
 			obs, reward, done, _ = env.step(int(action))
 			env.render()
 			if done:

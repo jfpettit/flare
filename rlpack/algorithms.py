@@ -1,4 +1,5 @@
 import numpy as np
+import gym
 import random
 from collections import namedtuple
 import torch
@@ -19,6 +20,8 @@ class REINFORCE:
     def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam):
         self.gamma = gamma
         self.env = env
+        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
+
         self.model = model
         if use_gpu:
             self.model.cuda()
@@ -40,7 +43,7 @@ class REINFORCE:
             logps = logps.cuda()
             returns = returns.cuda()
         self.optimizer.zero_grad()
-        policy_loss = (-logps * returns)
+        policy_loss = (-logps * returns) - (self.normal.entropy()*1e-4) if self.continuous else (-logps * returns)
         policy_loss.mean().backward()
         self.optimizer.step()
         del self.model.save_rewards[:]
@@ -51,11 +54,32 @@ class REINFORCE:
         state = torch.from_numpy(state).float()
         if use_gpu:
             state = state.cuda()
+        
+        if not self.continuous:
+            action_probabilities = self.model(state)
+            m_ = torch.distributions.Categorical(action_probabilities)
+            action = m_.sample()
+            lp = m_.log_prob(action)
+
+        elif self.continuous:
+            mu, sig = self.model(state)
+            self.normal = torch.distributions.Normal(mu, sig)
+            action = self.normal.sample(self.env.action_space.shape)
+            action = torch.clamp(action, float(self.env.action_space.low), float(self.env.action_space.high))
+            lp = self.normal.log_prob(action)
+
+        self.model.save_log_probs.append(lp)
+        return action if self.continuous else action.item() 
+
+    def exploit(self, state):
+        state = np.asarray(state)
+        state = torch.from_numpy(state).float()
+        if use_gpu:
+            state = state.cuda()
+
         action_probabilities = self.model(state)
-        m_ = torch.distributions.Categorical(action_probabilities)
-        choice = m_.sample()
-        self.model.save_log_probs.append(m_.log_prob(choice))
-        return choice.item() 
+        action = torch.argmax(action_probabilities)
+        return action.item() 
     
     def train_loop_(self, epochs, render=False, verbose=True, solved_threshold=None):
         running_reward = 0
@@ -92,6 +116,8 @@ class A2C:
     def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer='adam', standardize_rewards=True,
         policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
         self.env = env
+        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
+
         self.model=model
         if use_gpu:
             self.model.cuda()
@@ -109,7 +135,8 @@ class A2C:
             self.adv_fn = adv_fn
         else:
             self.aeu_ = aeu(self.gamma, self.lam)
-            self.adv_fn = self.aeu_.basic_adv_estimator
+            #self.adv_fn = self.aeu_.basic_adv_estimator
+            self.adv_fn = self.aeu_.gae_lambda
 
         self.policy_train_iters = policy_train_iters
         self.val_loss = val_loss
@@ -121,14 +148,25 @@ class A2C:
         state = torch.from_numpy(state).float()
         if use_gpu:
             state = state.cuda()
-        action_probabilities, state_value = self.model(state)
-        m_ = torch.distributions.Categorical(action_probabilities)
-        choice = m_.sample()
-        self.model.save_log_probs.append(m_.log_prob(choice))
+        
+        if not self.continuous:
+            action_probabilities, state_value = self.model(state)
+            m_ = torch.distributions.Categorical(action_probabilities)
+            action = m_.sample()
+            lp = m_.log_prob(action)
+
+        elif self.continuous:
+            mu, sig, state_value = self.model(state)
+            self.normal = torch.distributions.Normal(mu, torch.sqrt(sig))
+            action = self.normal.sample(self.env.action_space.shape)
+            action = torch.clamp(action, float(self.env.action_space.low), float(self.env.action_space.high))
+            lp = self.normal.log_prob(action)
+
+        self.model.save_log_probs.append(lp)
         self.model.save_values.append(state_value)
-        self.model.save_actions.append(choice)
+        self.model.save_actions.append(action)
         self.model.save_states.append(state)
-        return choice.item()    
+        return action if self.continuous else action.item()    
 
     def update_(self):
         return_ = 0
@@ -146,21 +184,35 @@ class A2C:
         states_ = torch.stack(self.model.save_states)
         actions_ = torch.stack(self.model.save_actions)
         logprobs_ = torch.stack(self.model.save_log_probs)
+        vals_ = torch.stack(self.model.save_values).squeeze()
 
         if use_gpu:
             states_ = states_.cuda()
             actions_ = actions_.cuda()
             logprobs_ = logprobs_.cuda()
             returns = returns.cuda()
+            vals_ = vals_.cuda()
 
+        #adv = returns - vals_
+        adv = self.adv_fn(returns, vals_)
+        pol_loss = -(logprobs_ * adv).mean()
+        v_loss = 0.5 * self.val_loss(returns, vals_)
+        if self.continuous:
+            loss_fn = pol_loss + v_loss - (1e-2 * self.normal.entropy())
+        else:
+            loss_fn = pol_loss + v_loss
+        self.optimizer.zero_grad()
+        loss_fn.backward(retain_graph=True)
+        self.optimizer.step()
 
-        for step in range(self.policy_train_iters):
-            probs, values, entropy = self.model.eval(states_, actions_)
-            adv = returns - values
-            loss_fn = -(logprobs_ * adv).mean() + (0.5 * self.val_loss(returns, values))
-            self.optimizer.zero_grad()
-            loss_fn.backward(retain_graph=True)
-            self.optimizer.step()
+        #for step in range(self.policy_train_iters):
+        #    probs, values, entropy = self.model.eval(states_, actions_)
+        #    v_loss = 0.5 * self.val_loss(returns, values)
+            #adv = returns - values
+            #loss_fn = -(logprobs_ * adv).mean() + (0.5 * self.val_loss(returns, values))
+        #    self.optimizer.zero_grad()
+        #    v_loss.backward(retain_graph=True)
+        #    self.optimizer.step()
             
         
         del self.model.save_rewards[:]
@@ -207,8 +259,10 @@ class A2C:
 class PPO(A2C):
     def __init__(self, env, network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
         steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
-        policy_train_iters=80, verbose=True):
+        policy_train_iters=80, verbose=True, kl_max=None):
         self.env = env
+        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
+
         self.model = network
         if use_gpu:
             self.model.cuda()
@@ -219,7 +273,9 @@ class PPO(A2C):
             self.adv_fn = adv_fn
         else:
             self.aeu_ = aeu(gamma, lam)
-            self.adv_fn = self.aeu_.basic_adv_estimator
+            #self.adv_fn = self.aeu_.basic_adv_estimator
+            #self.adv_fn = self.aeu_.td_residual
+            self.adv_fn = self.aeu_.gae_lambda
 
         self.optimizer = optimizer(self.model.parameters(), lr=lr)
 
@@ -228,6 +284,8 @@ class PPO(A2C):
         self.standardize = standardize_rewards
         self.steps_per_epoch = steps_per_epoch
         self.target_kl = target_kl
+        self.kl_max = kl_max
+
         self.policy_train_iters = policy_train_iters
         self.val_loss = nn.MSELoss()
 
@@ -261,13 +319,17 @@ class PPO(A2C):
             probs, values, entropy = self.model.eval(states_, actions_)
             pol_ratio = torch.exp(probs - logprobs_.detach())
             approx_kl = (probs - logprobs_).mean()
-            if approx_kl > 1.5 * self.target_kl:
+            if approx_kl > 2.0 * self.target_kl:
                 if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
                 sys.stdout.flush()
                 break
-            adv = returns - values.detach()
+            #adv = returns - values.detach()
+            adv = self.adv_fn(returns, values)
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
-            loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
+            if self.continuous:
+                loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values)) + (1e-4 * self.normal.entropy())
+            else:
+                loss_fn = -torch.min(pol_ratio*adv, g_) + (0.5 * self.val_loss(returns, values))
             self.optimizer.zero_grad()
             loss_fn.mean().backward(retain_graph=True)
             self.optimizer.step()

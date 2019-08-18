@@ -96,16 +96,21 @@ class AdvantageEstimatorsUtils:
         self.gamma = gamma
         self.lam = lam
         
-    def gae_lambda(self, reward, value_new, value, l):
-        delta = self.td_residual(reward, value_new, value, l)
-        adv = (self.gamma*self.lam)**l * delta
-        return delta
+    def gae_lambda(self, return_, values):
+        deltas = self.td_residual(return_, values)
+        ls = torch.arange(1, values.size()[0]+1).float()
+        adv = torch.pow((self.gamma*self.lam), ls) * deltas
+        return adv
 
-    def td_residual(self, reward, value_new, value, l):
-        return reward - self.gamma * value_new + value
+    def td_residual(self, return_, values):
+        residuals = []
+        residuals.append(return_[0] + values[1] - values[0])
+        for i in range(1, len(values)):
+            residuals.append(return_[i-1] + (self.gamma * values[i]) - values[i-1])
+        return torch.stack(residuals).float()
 
-    def basic_adv_estimator(self, return_, value_new, values, l):
-        return return_ - value_new
+    def basic_adv_estimator(self, return_, values):
+        return return_ - values
 
 class NetworkUtils:
     def __init__(self):
