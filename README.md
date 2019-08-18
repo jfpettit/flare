@@ -44,6 +44,7 @@ Algorithms currently implemented are:
 	- Simple, direct, REINFORCE policy gradient. Should work with any gym environment.
 	- A simple NN architecture is built into the file here, but the training utility is built to take in any Pytorch NN.
 - DQN
+	- Testing showed DQN doesn't yet work on all environments. I'm working on fixing it.
 	- The Deep Q Network from DeepMind's [Nature paper](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf) (fair warning, that link is to a PDF). I implemented the architecture from their paper, as well as a fully connected flavor of that architecture. Again, though, the training utility will take any Pytorch NN.
 	- This will also work with any (discrete action) gym environment. 
 - A2C

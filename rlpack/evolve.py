@@ -52,7 +52,7 @@ class ES:
             mu.grad.zero_()
         return mu
 
-    def train_loop_(self, net, wstd=0.01, generations=50, EPOCHS=5, standardize_fits=False, anneal_std=False, anneal_wstd=False, solved_threshold=None):
+    def evolution(self, net, wstd=0.01, generations=50, EPOCHS=5, standardize_fits=False, anneal_std=False, anneal_wstd=False, solved_threshold=None):
         for generation in range(generations):
             if anneal_std:
                 stdrange = torch.linspace(self.std, self.std/generations, steps=generations)

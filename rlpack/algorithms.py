@@ -81,7 +81,7 @@ class REINFORCE:
         action = torch.argmax(action_probabilities)
         return action.item() 
     
-    def train_loop_(self, epochs, render=False, verbose=True, solved_threshold=None):
+    def learn(self, epochs, render=False, verbose=True, solved_threshold=None):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -223,7 +223,7 @@ class A2C:
 
 
         
-    def train_loop_(self, epochs, render=False, solved_threshold=None):
+    def learn(self, epochs, render=False, solved_threshold=None):
         running_reward = 0
         self.ep_length = []
         self.ep_reward = []
@@ -431,7 +431,7 @@ class DQNtraining:
         clip_grad_value_(self.policy_net.parameters(), 1)
         self.optimizer.step()
 
-    def train_loop_(self, num_epochs, verbose=True, n=5):
+    def learn(self, num_epochs, verbose=True, n=5):
         running_reward = 0
         eplen, eprew = [], []
         for i in range(num_epochs):
