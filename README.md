@@ -64,8 +64,8 @@ I've added a folder containing some trained models. These models were saved usin
 - 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the SimpleActorCritic network, but I'm not certain.
 
 ## More to come!
-- A2C, PPO, and (hopefully) REINFORCE will be extended to continuous action spaces
 - Implement DDPG
 - Implement SAC (maybe?)
 - Comment code to make it clearer
 - Blog post
+- A2C, PPO, and (hopefully) REINFORCE might be extended to continuous action spaces

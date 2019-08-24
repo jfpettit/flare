@@ -1,44 +1,32 @@
 from rlpack import algorithms as algs
-import roboschool
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
 from rlpack import neural_nets as nets
-from rlpack.evolve import ES
 import torch
 
 
 re_net = nets.PolicyNet
 ppo_net = nets.ActorCritic
 a2c_net = nets.ActorCritic
-dqn = nets.FullyConnectedDQN
 
 envnames = ['CartPole-v0', 'Acrobot-v1', 'LunarLander-v2']
 
 if __name__ == '__main__':
-    #env = gym.make('RoboschoolInvertedPendulum-v1')
-    env = gym.make('CartPole-v0')
-    #an = a2c_net(env.observation_space.shape[0], env.action_space.shape[0], continuous=True)
-    #a2c = algs.A2C(env, an)
-    #rewa, lenga = a2c.learn(1000)
-    #pn = ppo_net(env.observation_space.shape[0], env.action_space.shape[0], continuous=True)
-    #ppo = algs.PPO(env, pn, target_kl=0.05)
-    #rewp, lengp = ppo.learn(250)
-    #rn = re_net(env.observation_space.shape[0], env.action_space.shape[0], continuous=True)
-    #es = ES(env, mean=0.0, population_size=50)
-    #es.evolution(re_net, wstd=1.0, generations=50, EPOCHS=25, standardize_fits=True, anneal_std=True, solved_threshold=195)
-    #sd = es.get_best_state_dict()
+    env = gym.make(envnames[2])
+    #an = a2c_net(env.observation_space.shape[0], env.action_space.n)
+    #a2c = algs.A2C(env, an, steps_per_epoch=2048)
+    #rewa, lenga = a2c.learn(500)
+    pn = ppo_net(env.observation_space.shape[0], env.action_space.n)
+    ppo = algs.PPO(env, pn, steps_per_epoch=2048)
+    rewp, lengp = ppo.learn(1000)
     #rn = re_net(env.observation_space.shape[0], env.action_space.n)
-    #rn.load_state_dict(sd)
     #reinforce = algs.REINFORCE(env, rn)
-    #rew, leng = reinforce.learn(1000, solved_threshold=195)
-    dqn = dqn(env.observation_space.shape[0], env.action_space.n)
-    qlearner = algs.DQNtraining(env, dqn)
-    rew, leng = qlearner.learn(500)
+    #rew, leng = reinforce.learn(500)
 
     #plt.plot(rewa, label='a2c')
-    #plt.plot(rewp, label='ppo')
-    plt.plot(rew, label='reinforce')
+    plt.plot(rewp, label='ppo')
+    #plt.plot(rew, label='reinforce')
     plt.legend()
     plt.show()
     '''
