@@ -27,7 +27,7 @@ if __name__ == '__main__':
 	trainer = REINFORCE(env, network)
 	# train network for 500 episodes, it stops early if the mean reward over last 100 episodes exceeds the solved_threshold
 	# criterion for solving from this gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
-	rew, leng = trainer.train_loop_(500, solved_threshold=400)
+	rew, leng = trainer.learn(500, solved_threshold=400)
 
 	# watch agent interact with environment
 	if args.watch:

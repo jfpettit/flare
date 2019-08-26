@@ -1,5 +1,6 @@
 import numpy as np
 import gym
+import roboschool
 import random
 from collections import namedtuple
 import torch
@@ -12,45 +13,24 @@ from rlpack.utils import MathUtils as mathu
 from rlpack.utils import AdvantageEstimatorsUtils as aeu
 from rlpack.utils import NetworkUtils as netu
 import sys
-from torch.nn.utils import clip_grad_value_
+from torch.nn.utils import clip_grad_value_, clip_grad_norm_
 
 use_gpu = True if torch.cuda.is_available() else False
 
 class REINFORCE:
-    def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam):
+    def __init__(self, env, model, gamma=0.99, optimizer=optim.Adam, steps_per_epoch=1000):
         self.gamma = gamma
-        self.env = env
         self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
+        self.env = env
 
         self.model = model
+        self.entropies = []
+        self.steps_per_epoch = steps_per_epoch
         if use_gpu:
             self.model.cuda()
-        self.optimizer = optimizer(self.model.parameters())
+        self.optimizer = optimizer(self.model.parameters(), lr=1e-3)
     
-    def update_(self):
-        return_ = 0
-        policy_loss = []
-        returns = []
-        for reward in self.model.save_rewards[::-1]:
-            return_ = reward + self.gamma * return_
-            returns.insert(0, return_)
-
-        returns = torch.Tensor(returns)
-        returns = (returns - returns.mean()) / returns.std()
-
-        logps = torch.stack(self.model.save_log_probs)
-        if use_gpu: 
-            logps = logps.cuda()
-            returns = returns.cuda()
-        self.optimizer.zero_grad()
-        policy_loss = (-logps * returns) - (self.normal.entropy()*1e-4) if self.continuous else (-logps * returns)
-        policy_loss.mean().backward()
-        self.optimizer.step()
-        del self.model.save_rewards[:]
-        del self.model.save_log_probs[:]
-
     def action_choice(self, state):
-        state = np.asarray(state)
         state = torch.from_numpy(state).float()
         if use_gpu:
             state = state.cuda()
@@ -62,24 +42,44 @@ class REINFORCE:
             lp = m_.log_prob(action)
 
         elif self.continuous:
-            mu, sig = self.model(state)
-            self.normal = torch.distributions.Normal(mu, sig)
-            action = self.normal.sample(self.env.action_space.shape)
-            action = torch.clamp(action, float(self.env.action_space.low), float(self.env.action_space.high))
+            mu, sig_sq = self.model(state)
+            sig_sq = F.relu(sig_sq)
+            eps = torch.randn(mu.size())
+            #eps = torch.distributions.Normal(mu, sig_sq.sqrt()).sample()
+            action = (mu + sig_sq.sqrt()*eps).data
+            self.normal = torch.distributions.Normal(mu, sig_sq.sqrt())
+            #action = self.normal.sample(self.env.action_space.shape)
+            #action = torch.clamp(action, float(self.env.action_space.low), float(self.env.action_space.high))
             lp = self.normal.log_prob(action)
+            self.entropies.append(self.normal.entropy())
 
         self.model.save_log_probs.append(lp)
         return action if self.continuous else action.item() 
 
-    def exploit(self, state):
-        state = np.asarray(state)
-        state = torch.from_numpy(state).float()
-        if use_gpu:
-            state = state.cuda()
+    def update_(self):
+        return_ = 0
+        policy_loss = []
+        returns = []
+        for reward in self.model.save_rewards[::-1]:
+            return_ = reward + self.gamma * return_
+            returns.insert(0, return_)
 
-        action_probabilities = self.model(state)
-        action = torch.argmax(action_probabilities)
-        return action.item() 
+        returns = torch.tensor(returns)
+        returns = (returns - returns.mean()) / returns.std()
+
+        logps = torch.stack(self.model.save_log_probs)
+
+        if use_gpu: 
+            logps = logps.cuda()
+            returns = returns.cuda()
+        self.optimizer.zero_grad()
+        policy_loss = ((-logps.detach() * returns) - self.normal.entropy()*1e-1) if self.continuous else (-logps * returns)
+        policy_loss.mean().backward()
+        #clip_grad_norm_(self.model.parameters(), 40)
+        self.optimizer.step()
+        del self.model.save_rewards[:]
+        del self.model.save_log_probs[:]
+        del self.entropies[:]
     
     def learn(self, epochs, render=False, verbose=True, solved_threshold=None):
         running_reward = 0
@@ -87,7 +87,7 @@ class REINFORCE:
         self.ep_reward = []
         for i in range(epochs):
             state, episode_reward = self.env.reset(), 0
-            for s in range(0, 10000):
+            for s in range(self.steps_per_epoch):
                 action = self.action_choice(state)
                 state, reward, done, _ = self.env.step(action)
                 if render:
@@ -111,6 +111,16 @@ class REINFORCE:
             self.env.close()
         print('\n')
         return self.ep_reward, self.ep_length
+
+    def exploit(self, state):
+        state = np.asarray(state)
+        state = torch.from_numpy(state).float()
+        if use_gpu:
+            state = state.cuda()
+
+        action_probabilities = self.model(state)
+        action = torch.argmax(action_probabilities)
+        return action.item() 
 
 class A2C:
     def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True,
@@ -136,6 +146,7 @@ class A2C:
         self.policy_train_iters = policy_train_iters
         self.val_loss = val_loss
         self.verbose = verbose
+        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
         
 
     def action_choice(self, state):
@@ -223,6 +234,16 @@ class A2C:
         print('\n')
         return self.ep_reward, self.ep_length
 
+    def exploit(self, state):
+        state = np.asarray(state)
+        state = torch.from_numpy(state).float()
+        if use_gpu:
+            state = state.cuda()
+
+        action_probabilities, value = self.model(state)
+        action = torch.argmax(action_probabilities)
+        return action.item() 
+
 class PPO(A2C):
     def __init__(self, env, network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
         steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
@@ -290,8 +311,6 @@ class PPO(A2C):
                 break
             adv = returns - values.detach()
             g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * adv
-            #g_ = torch.tensor([(1+self.epsilon)*adv[i] if adv[i] >= 0 else (1-self.epsilon)*adv[i] for i in range(len(adv))])
-            #g_ = torch.where(adv>0, (1+self.epsilon)*adv, (1-self.epsilon)*adv)
             self.optimizer.zero_grad()
             loss_fn = -torch.min(pol_ratio*adv, g_).mean() + (0.5 * self.val_loss(returns, values))
             loss_fn.backward()

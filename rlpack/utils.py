@@ -131,15 +131,38 @@ def save_frames_as_gif(frames, filename=None):
 
     This code from this floydhub blog post: https://blog.floydhub.com/spinning-up-with-deep-reinforcement-learning/
     """
-    patch = plt.imshow(frames[0])
+    #patch = plt.imshow(frames[0])
+    fig = plt.figure()
     plt.axis('off')
     def animate(i):
         patch.set_data(frames[i])
-    anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50)
+    #anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50)
+    anim = animation.ArtistAnimation(fig, frames, interval=50)
     if filename:
-        anim.save(filename, dpi=72, writer='imagemagick')
+        anim.save(filename)
 
 
+import gym
+
+
+class NormalizedActions(gym.ActionWrapper):
+    '''
+    Normalize actions for continuous policy
+
+    From here: https://github.com/JamesChuanggg/pytorch-REINFORCE/blob/master/normalized_actions.py
+    '''
+
+    def _action(self, action):
+        action = (action + 1) / 2  # [-1, 1] => [0, 1]
+        action *= (self.action_space.high - self.action_space.low)
+        action += self.action_space.low
+        return action
+
+    def _reverse_action(self, action):
+        action -= self.action_space.low
+        action /= (self.action_space.high - self.action_space.low)
+        action = action * 2 - 1
+        return actions
 
     
 
