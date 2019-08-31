@@ -7,6 +7,7 @@ import gym
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from gym import wrappers
 
 # make env 
 env = gym.make('Acrobot-v1')
@@ -19,6 +20,7 @@ network = ActorCritic(env.observation_space.shape[0], env.action_space.n)
 parser = argparse.ArgumentParser(description='Get args for running REINFORCE agent on CartPole')
 parser.add_argument('--watch', action='store_true', help='choose whether to watch trained agent')
 parser.add_argument('--plot', action='store_true', help='choose whether to view plots of reward over training')
+parser.add_argument('--save_mv', action='store_true', help='choose whether to save a mp4 of the agent acting')
 
 # get args from argparser
 args = parser.parse_args()
@@ -32,6 +34,8 @@ if __name__ == '__main__':
 
     # watch agent interact with environment
     if args.watch:
+        if args.save_mv:
+            env = wrappers.Monitor(env, 'a2c_solving_acrobot', video_callable=lambda episode_id: True, force=True)
         obs = env.reset()
         for i in range(10000):
             #action = trainer.action_choice(torch.tensor(obs))

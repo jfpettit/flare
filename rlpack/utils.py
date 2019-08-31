@@ -4,6 +4,8 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import signal
+import gym
+from gym import wrappers
 
 class MathUtils:
     def __init__(self):
@@ -139,7 +141,7 @@ def save_frames_as_gif(frames, filename=None):
     #anim = animation.FuncAnimation(plt.gcf(), animate, frames = len(frames), interval=50)
     anim = animation.ArtistAnimation(fig, frames, interval=50)
     if filename:
-        anim.save(filename)
+        anim.save(filename, writer='imagemagick')
 
 
 import gym

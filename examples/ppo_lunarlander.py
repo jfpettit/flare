@@ -8,6 +8,7 @@ import gym
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+from gym import wrappers
 
 # make env 
 env = gym.make('LunarLander-v2')
@@ -17,10 +18,10 @@ network = ActorCritic(env.observation_space.shape[0], env.action_space.n)
 
 # set up argparser. --watch is a boolean whether or not to watch the agent in the env after training
 #                   --plot is bool, whether or not to plot rewards earned over training
-parser = argparse.ArgumentParser(description='Get args for running REINFORCE agent on CartPole')
+parser = argparse.ArgumentParser(description='Get args for running PPO on LunarLander-v2')
 parser.add_argument('--watch', action='store_true', help='choose whether to watch trained agent')
 parser.add_argument('--plot', action='store_true', help='choose whether to view plots of reward over training')
-parser.add_argument('--save_gif', action='store_true', help='choose whether to save a gif of the agent acting')
+parser.add_argument('--save_mv', action='store_true', help='choose whether to save a mp4 of the agent acting')
 
 # get args from argparser
 args = parser.parse_args()
@@ -30,25 +31,20 @@ if __name__ == '__main__':
     trainer = PPO(env, network)
     # train network for 1000 episodes, it stops early if the mean reward over last 100 episodes exceeds the solved_threshold
     # criterion for solving from this gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
-    rew, leng = trainer.learn(10, solved_threshold=200)
+    rew, leng = trainer.learn(1000, solved_threshold=200)
 
     # watch agent interact with environment
-    frames = []
     if args.watch:
+        if args.save_mv:
+            env = wrappers.Monitor(env, 'ppo_solving_lunarlander', video_callable=lambda episode_id: True, force=True)
         obs = env.reset()
-        for i in range(100):
-            #action = trainer.action_choice(torch.tensor(obs))
-            if args.save_gif:
-                frames.append([plt.imshow(env.render(mode='rgb_array'), animated=True)])
+        for i in range(5000):
             action = trainer.exploit(torch.tensor(obs))
             obs, reward, done, _ = env.step(int(action))
             env.render()
             if done:
                 obs = env.reset()
         env.close()
-
-    if len(frames) > 0:
-        save_frames_as_gif(frames, filename='ppo_lunarlander.gif')
 
     # plot reward earned per episode over training
     if args.plot:
