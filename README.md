@@ -17,17 +17,17 @@ These are under development, but one is done! There is an example training REINF
 With the repository installed:
 ```
 cd rl-pack/examples
-python reinforce_cartpole.py --watch --plot
+python reinforce_cartpole.py --watch --plot --save_mv
 ```
 
-The ```--watch``` and ```--plot``` tags are optional. They represent whether you want to watch the agent playing CartPole after it is done training and whether you want to plot the reward earned over training after training is done, respectively.
+The ```--watch```, ```--plot``` and ```--save_mv``` tags are optional. They represent whether you want to watch the agent playing CartPole after it is done training, whether you want to plot the reward earned over training after training is done, and if you'd like to save a video of your trained agent, respectively.
 
 ## Details
 
 This repository is intended to be a learning resource for anyone trying to find beginner-level code covering some RL algorithms. Some of my code isn't very well documented or clear, but I'm working on improving that. My learning path has followed Sutton and Barto's [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book.html) and more recently, OpenAI's [SpinningUp](https://spinningup.openai.com/en/latest/). Many of the algorithms contained here are based on exercises and recommendations from those resources. The traditional RL stuff is inspired by Sutton and Barto, while much of the Deep RL stuff is inspired by SpinningUp.
 
 
-Currently, all of the algorithms here are only implemented for Gym environments with discrete action spaces. It's on my to-do list to extend them (except DQN) to continuous action spaces.
+Currently, all of the algorithms here are only implemented for Gym environments with discrete action spaces.
 
 A2C, REINFORCE, and PPO are tested on GPUs. 
 
@@ -43,10 +43,6 @@ Algorithms currently implemented are:
 - REINFORCE
 	- Simple, direct, REINFORCE policy gradient. Should work with any gym environment.
 	- A simple NN architecture is built into the file here, but the training utility is built to take in any Pytorch NN.
-- DQN
-	- Testing showed DQN doesn't yet work on all environments. I'm working on fixing it.
-	- The Deep Q Network from DeepMind's [Nature paper](https://storage.googleapis.com/deepmind-media/dqn/DQNNaturePaper.pdf) (fair warning, that link is to a PDF). I implemented the architecture from their paper, as well as a fully connected flavor of that architecture. Again, though, the training utility will take any Pytorch NN.
-	- This will also work with any (discrete action) gym environment. 
 - A2C
 	- This is an implementation of the Advantage Actor Critic algorithm. This should also work with any gym environment.
 	- Again, it'll take any Pytorch NN and train it. 
@@ -64,8 +60,8 @@ I've added a folder containing some trained models. These models were saved usin
 - 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the SimpleActorCritic network, but I'm not certain.
 
 ## More to come!
-- Implement DDPG
-- Implement SAC (maybe?)
+- MPI parallelization
+- Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
 - Blog post
 - A2C, PPO, and (hopefully) REINFORCE might be extended to continuous action spaces

@@ -106,8 +106,6 @@ class PolicyNet(nn.Module):
         else:
             return F.softmax(self.layer3(x), dim=-1)
 
-
-
 class NatureDQN(nn.Module):
     def __init__(self, in_channels, out_channels, h, w):
         super(NatureDQN, self).__init__()
@@ -152,3 +150,6 @@ class FullyConnectedDQN(nn.Module):
         x = self.fc5(x)
         return x
 
+    def evaluate(self, states, actions):
+        action_values = self.forward(states.float())
+        return action_values.gather(1, actions)
