@@ -13,14 +13,14 @@ pip install -e .
 ```
 ## Examples
 
-These are under development, but one is done! There is an example training REINFORCE on CartPole.
+There are a few example files demonstrating training REINFORCE on CartPole, A2C on Acrobot, and PPO on LunarLander and CartPoleSwingup.
 With the repository installed:
 ```
 cd rl-pack/examples
-python reinforce_cartpole.py --watch --plot --save_mv
+python [PATH_TO_EXAMPLE_PYTHON_FILE] --watch --plot --save_mv
 ```
 
-The ```--watch```, ```--plot``` and ```--save_mv``` tags are optional. They represent whether you want to watch the agent playing CartPole after it is done training, whether you want to plot the reward earned over training after training is done, and if you'd like to save a video of your trained agent, respectively.
+The ```--watch```, ```--plot``` and ```--save_mv``` tags are optional. They represent whether you want to watch the agent in the environment after it is done training, whether you want to plot the reward earned over training after training is done, and if you'd like to save a video of your trained agent, respectively.
 
 ## Details
 
@@ -55,13 +55,13 @@ Algorithms currently implemented are:
 There is also a utils file containing some different advantage function estimators and math utilities and other stuff. Some of it is used, other stuff I thought might just come in handy at some point and wrote it anyway.
 
 I've added a folder containing some trained models. These models were saved using ```torch.save(model.cpu().state_dict(), PATH)``` so you can load them by initializing an architecture identical to the one used to produce the model, loading the saved model file and setting your new networks state_dict to the saved one. To make this easier, I'll list which architectures produced which files:
-- 'gpu_ppo_acrobot_run1' used the SimpleActorCritic network in neural_nets.py
-- 'gpu_reinforce_cartpole_run1' used the SimplePolicyNet also in neural_nets.py
-- 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the SimpleActorCritic network, but I'm not certain.
+- 'gpu_ppo_acrobot_run1' used the ActorCritic network in neural_nets.py
+- 'gpu_reinforce_cartpole_run1' used the PolicyNet also in neural_nets.py
+- 'reallygoodCartPolePPOrun' (wasn't actually that good) I think also used the ActorCritic network, but I'm not certain.
 
 ## More to come!
 - MPI parallelization
 - Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
 - Blog post
-- A2C, PPO, and (hopefully) REINFORCE might be extended to continuous action spaces
+- Extend alglrithms to continuous action spaces

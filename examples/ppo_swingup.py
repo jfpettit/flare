@@ -32,7 +32,7 @@ if __name__ == '__main__':
     trainer = PPO(env, network)
     # train network for 1000 episodes, it stops early if the mean reward over last 100 episodes exceeds the solved_threshold
     # criterion for solving from this gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
-    rew, leng = trainer.learn(250, solved_threshold=200)
+    rew, leng = trainer.learn(1000, solved_threshold=900)
 
     # watch agent interact with environment
     frames = []
