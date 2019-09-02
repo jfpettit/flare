@@ -1,5 +1,7 @@
 # rl-pack
 
+Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
+
 ## Installation
 
 Clone the repository, cd into it: 
@@ -61,5 +63,4 @@ I've added a folder containing some trained models. These models were saved usin
 - MPI parallelization
 - Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
-- Blog post
 - Extend alglrithms to continuous action spaces
