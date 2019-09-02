@@ -1,7 +1,5 @@
 # rl-pack
 
-**This repository is actively under development and is not stable.**
-
 ## Installation
 
 Clone the repository, cd into it: 
