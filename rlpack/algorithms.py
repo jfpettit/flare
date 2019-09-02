@@ -150,6 +150,7 @@ class A2C:
         
 
     def action_choice(self, state):
+        state = np.asarray(state)
         state = torch.from_numpy(state).float()
         if use_gpu:
             state = state.cuda()
@@ -302,7 +303,7 @@ class PPO(A2C):
 
         
         for step in range(self.policy_train_iters):
-            probs, values, entropy = self.model.eval(states_, actions_)
+            probs, values, entropy = self.model.evaluate(states_, actions_)
             pol_ratio = torch.exp(probs - logprobs_.detach())
             approx_kl = (logprobs_ - probs).mean()
             if approx_kl > 1.5 * self.target_kl:

@@ -36,7 +36,7 @@ class ActorCritic(nn.Module):
         action = self.layer3(x)
         return F.softmax(action, dim=-1), value
 
-    def eval(self, state, action):
+    def evaluate(self, state, action):
         action_ps, values = self.forward(state)
         action_dist = torch.distributions.Categorical(action_ps)
         action_logprobs = action_dist.log_prob(action)
