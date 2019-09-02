@@ -2,3 +2,6 @@
 /rlpack.egg-info
 CartPoleSwingUpDiscrete-v0performance.png
 testing.py
+/__pycache__
+/.ipynb_checkpoints
+
