@@ -43,68 +43,75 @@ class ActorCritic(nn.Module):
         entropy = action_dist.entropy()
         return action_logprobs, torch.squeeze(values), entropy
 
-class ContinuousActorCritic(nn.Module):
+class ContinuousPolicy(nn.Module):
     def __init__(self, in_size, out_size):
         super(ContinuousActorCritic, self).__init__()
-        self.save_log_probs = []
-        self.save_states = []
-        self.save_rewards = []
-        self.save_values = []
-        self.save_actions = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.mu_out = nn.Linear(64, out_size)
-        self.sig_sq_out = nn.Linear(64, out_size)
-        self.val = nn.Linear(64, 1)
+        self.layer1 = nn.Linear(in_size, 64)
+        self.layer2 = nn.Linear(64, 32)
+        self.mu_out = nn.Linear(32, out_size)
+        self.sig_sq_out = nn.Linear(32, out_size)
 
     def forward(self, x):
         x = F.relu(self.layer1(x))
         x = F.relu(self.layer2(x))
         mu = self.mu_out(x)
         sig_sq = self.sig_sq_out(x)
-        value = self.val(x)
         return mu, sig_sq, value
 
 
 class ContinuousPolicyNet(nn.Module):
     def __init__(self, in_size, out_size):
         super(ContinuousPolicyNet, self).__init__()
-        self.save_log_probs = []
-        self.save_rewards = []
-        self.save_values = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.mu_out = nn.Linear(64, out_size)
-        self.sig_sq_out = nn.Linear(64, out_size)
+        self.layer1 = nn.Linear(in_size, 64)
+        self.layer2 = nn.Linear(64, 32)
+        self.mu_out = nn.Linear(32, out_size)
+        self.sig_sq_out = nn.Linear(32, out_size)
 
     def forward(self, x):
-        x = self.layer1(x)
-        x = F.relu(self.layer2(x))
+        x = torch.tanh(self.layer1(x))
+        x = torch.tanh((self.layer2(x)))
         mu = self.mu_out(x)
         sig_sq = self.sig_sq_out(x)
         return mu, sig_sq
 
-class PolicyNet(nn.Module):
-    def __init__(self, in_size, out_size, is_val_func=False):
-        super(PolicyNet, self).__init__()
-        self.is_val = is_val_func
-        self.save_log_probs = []
-        self.save_rewards = []
-        self.save_values = []
+    def evaluate(self, states, actions):
+        action_mu, action_sig = self.forward(states)
+        action_dist = torch.distributions.normal.Normal(action_mu, action_sig)
+        action_logprobs = action_dist.log_prob(actions).sum(1)
+        self.entropy = action_dist.entropy()
+        return action_logprobs, self.entropy
 
+class PolicyNet(nn.Module):
+    def __init__(self, in_size, out_size):
+        super(PolicyNet, self).__init__()
         self.layer1 = nn.Linear(in_size, 128)
         self.layer2 = nn.Linear(128, 64)
         self.layer3 = nn.Linear(64, out_size)
 
     def forward(self, x):
-        x = self.layer1(x)
-        x = F.relu(self.layer2(x))
-        if self.is_val:
-            return self.layer3(x)
-        else:
-            return F.softmax(self.layer3(x), dim=-1)
+        x = torch.tanh(self.layer1(x))
+        x = torch.tanh(self.layer2(x))
+        return F.softmax(self.layer3(x), dim=-1)
+
+    def evaluate(self, state, action):
+        action_ps = self.forward(state)
+        action_dist = torch.distributions.Categorical(action_ps)
+        action_logprobs = action_dist.log_prob(action)
+        entropy = action_dist.entropy()
+        return action_logprobs, entropy
+
+class ValueNet(nn.Module):
+    def __init__(self, in_size):
+        super(ValueNet, self).__init__()
+        self.layer1 = nn.Linear(in_size, 64)
+        self.layer2 = nn.Linear(64, 32)
+        self.layer3 = nn.Linear(32, 1)
+
+    def forward(self, x):
+        x = torch.tanh(self.layer1(x))
+        x = torch.tanh(self.layer2(x))
+        x = self.layer3(x)
+        return x
 
 class NatureDQN(nn.Module):
     def __init__(self, in_channels, out_channels, h, w):

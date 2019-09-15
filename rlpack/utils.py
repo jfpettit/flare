@@ -4,8 +4,76 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import signal
+import scipy
 import gym
 from gym import wrappers
+
+class Buffer:
+    def __init__(self, state_dim, action_dim, size, gamma=0.99, lam=0.95):
+        self.size = size
+        self.gamma = gamma
+        self.lam = lam
+
+        self.state_record = torch.zeros((size, state_dim), dtype=torch.float32)
+        self.action_record = torch.zeros((size, action_dim), dtype=torch.float32)
+        self.advantage_record = torch.zeros(size, dtype=torch.float32)
+        #self.rew_record = torch.zeros(size, dtype=torch.float32)
+        self.return_record = torch.zeros(size, dtype=torch.float32)
+        #self.value_record = torch.zeros(size, dtype=torch.float32)
+        self.logprobs_record = torch.zeros(size, dtype=torch.float32, requires_grad=True)
+        self.rew_record = []
+        self.value_record = []
+
+        self.point_idx, self.start_idx = 0, 0
+
+    def push(self, state, action, reward, value, logprob):
+        assert self.point_idx < self.size
+        self.state_record[self.point_idx] = torch.from_numpy(state)
+        self.action_record[self.point_idx] = action
+        #self.rew_record[self.point_idx] = reward
+        self.rew_record.append(reward)
+        #self.value_record[self.point_idx] = torch.from_numpy(value)
+        self.value_record.append(torch.from_numpy(value))
+        self.logprobs_record[self.point_idx] = logprob
+        #self.logprobs_record.append(torch.from_numpy(logprob))
+        self.point_idx += 1
+
+    def discount_cumulative_sum(self, x, discount):
+        x = x.numpy()
+        return scipy.signal.lfilter([1], [1, float(-discount)], x[::-1], axis=0)[::-1]
+
+    def end_trajectory(self, last_value=0):
+        traj_slice = slice(self.start_idx, self.point_idx)
+        #rews = np.append(self.rew_record[traj_slice], last_value)
+        #vals = np.append(self.value_record[traj_slice], last_value)
+        rews = self.rew_record[traj_slice]
+        #rews.append(last_value)
+        vals = self.value_record[traj_slice]
+        vals.append(last_value)
+
+        rews = torch.tensor(rews)
+        vals = torch.tensor(vals)
+
+        deltas = rews + self.gamma * vals[1:] - vals[:-1]
+        self.advantage_record[traj_slice] = torch.tensor(list(self.discount_cumulative_sum(deltas, self.gamma * self.lam)))
+
+        self.return_record[traj_slice] = torch.tensor(list(self.discount_cumulative_sum(rews, self.gamma)))
+
+        self.start_idx = self.point_idx
+
+    def gather(self):
+        assert self.point_idx == self.size
+
+        self.point_idx, self.start_idx = 0, 0
+        self.advantage_record = (self.advantage_record - torch.mean(self.advantage_record))/(torch.std(self.advantage_record) + 1e-8)
+
+        return [self.state_record, self.action_record, self.advantage_record, self.return_record, self.logprobs_record]
+
+    def reset(self):
+        self.rew_record = []
+        self.value_record = []
+
+
 
 class MathUtils:
     def __init__(self):
@@ -124,9 +192,6 @@ class NetworkUtils:
     def squared_error_loss(self, target, actual):
         return (actual - target)**2
 
-import matplotlib.pyplot as plt
-from matplotlib import animation
-
 def save_frames_as_gif(frames, filename=None):
     """
     Save a list of frames as a gif
@@ -134,6 +199,8 @@ def save_frames_as_gif(frames, filename=None):
     This code from this floydhub blog post: https://blog.floydhub.com/spinning-up-with-deep-reinforcement-learning/
     """
     #patch = plt.imshow(frames[0])
+    import matplotlib.pyplot as plt
+    from matplotlib import animation
     fig = plt.figure()
     plt.axis('off')
     def animate(i):
