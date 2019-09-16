@@ -37,7 +37,7 @@ Each of the Deep RL algorithms needs to be more extensively tested, so far they'
 
 Algorithms currently implemented are:
 - Temporal Difference (TD) learning:
-	- This algorithm only works with the tic-tac-toe environment I custom-built specifically for the purpose of training a tic-tac-toe agent using TD learning, and so you can look at how to quickly run this code [here](https://jfpettit.github.io/TicTacToeInterface/). That'll get you set up playing tic-tac-toe against the agent. 
+	- This algorithm only works with the tic-tac-toe environment I custom-built specifically for the purpose of training a tic-tac-toe agent using TD learning, and so you can look at how to quickly run this code [here](https://jfpettit.svbtle.com/making-it-easier-to-play-my-tic-tac-toe-agent). That'll get you set up playing tic-tac-toe against the agent. 
 - Dynamic Programming policy iteration:
 	- This is a typical Dynamic Programming approach to policy iteration, and it works on a gridworld environment.
 - REINFORCE
