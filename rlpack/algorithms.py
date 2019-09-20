@@ -152,8 +152,8 @@ class REINFORCE:
         return action.item() 
 
 class A2C:
-    def __init__(self, env, pol_model, val_model, adv_fn=None, gamma=.99, lam=.97, steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True,
-        value_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
+    def __init__(self, env, pol_model, val_model, adv_fn=None, gamma=.99, lam=.97, steps_per_epoch=1000, optimizer=optim.Adam, 
+        standardize_rewards=True, value_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
         self.env = env
         self.policy_net = pol_model
         self.value_net = val_model
@@ -181,8 +181,16 @@ class A2C:
         self.verbose = verbose
         self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
 
-        self.buffer = Buffer(env.observation_space.shape[0], env.action_space.shape[0], steps_per_epoch, gamma=gamma, lam=lam)
+        if isinstance(env.action_space, Box):
+            action_space = env.action_space.shape[0]
+        elif isinstance(env.action_space, Discrete):
+            action_space = 1
+        self.buffer = Buffer(env.observation_space.shape[0], action_space, steps_per_epoch, gamma=gamma, lam=lam)
         
+
+    def calc_log_probs(self, action_mu, action_logstd, action):
+        lp = -0.5 * (((action-action_mu)/(torch.exp(action_logstd)+1e-8))**2 + 2*action_logstd + torch.log(torch.tensor(2*math.pi)))
+        return lp
 
     def action_choice(self, state):
         # convert state to torch tensor, dtype=float
@@ -192,17 +200,18 @@ class A2C:
             state = state.cuda()
         
         # same as with REINFORCE, sample action from categorical distribution paramaterizes by the network's output of action probabilities
-        action_mu, action_logstd = self.policy_net(state)
-        state_value = self.value_net(state)
-        #m_ = torch.distributions.Categorical(action_probabilities)
-        #m_ = torch.distributions.Normal(0.0, 1.0)
-        #m_ = torch.distributions.Normal(action_mu, torch.exp(action_logstd))
-        #action = action_mu + m_.sample(self.env.action_space.shape) * action_sig
-        action = action_mu + torch.randn(self.env.action_space.shape) * torch.exp(action_logstd) + 1e-8
-        # save action log probabilities
-        #print(action_std)
-        lp = -0.5 * (((action-action_mu)/(torch.exp(action_logstd)+1e-8))**2 + 2*action_logstd + torch.log(torch.tensor(2*math.pi)))
-        #lp = m_.log_prob(action)
+        if isinstance(self.env.action_space, Box):
+            action_mu, action_logstd = self.policy_net(state)
+            state_value = self.value_net(state)
+            action = action_mu + torch.randn(self.env.action_space.shape) * torch.exp(action_logstd)
+            lp = -0.5 * (((action-action_mu)/(torch.exp(action_logstd)+1e-8))**2 + 2*action_logstd + torch.log(torch.tensor(2*math.pi)))
+        elif isinstance(self.env.action_space, Discrete):
+            action_probabilities = self.policy_net(state)
+            state_value = self.value_net(state)
+            m_ = torch.distributions.Categorical(action_probabilities)
+            action = m_.sample()
+            lp = m_.log_prob(action)
+        
         self.approx_entropy = -lp.mean()
         return action, lp.mean(), state_value    
 
@@ -216,10 +225,14 @@ class A2C:
             returns = returns.cuda()
             advs = advs.cuda()
 
+        #action_mu, action_logstd = self.policy_net(states.detach())
+        #logprobs_ = self.calc_log_probs(action_mu.detach(), action_logstd.detach(), actions.detach())
+        logprobs_, entropy = self.policy_net.evaluate(states.detach(), actions.detach())
+
         self.policy_optimizer.zero_grad()
-        logprobs_ = logprobs_.detach().requires_grad_()
-        loss = -(logprobs_ * advs).mean()
-        loss.backward()
+        #logprobs_ = logprobs_.detach().requires_grad_()
+        pol_loss = -(logprobs_ * advs).mean()
+        pol_loss.backward()
         self.policy_optimizer.step()
 
         # estimate advantage and policy and value loss for each sample in the batch
@@ -233,8 +246,10 @@ class A2C:
             loss = val_loss
             loss.backward()
             self.value_optimizer.step()
+
+        return pol_loss.detach(), val_loss.detach()
         
-    def learn(self, epochs, solved_threshold=None):
+    def learn(self, epochs, solved_threshold=None, render_epochs=None, render_frames=1000):
         # functionality and stuff happening in the learn function is the same as REINFORCE
         self.ep_length = []
         self.ep_reward = []
@@ -263,7 +278,7 @@ class A2C:
                     
                     state, reward, done, episode_reward, episode_len = self.env.reset(), 0, False, 0, 0
             
-            self.update_()
+            pol_loss, val_loss = self.update_()
             self.buffer.reset()
             
             if solved_threshold and len(self.ep_reward) > 100:
@@ -281,7 +296,18 @@ class A2C:
                     'EpRewardMin: {}\n'.format(np.min(epochrew)), 
                     'EpLenMean: {}\n'.format(np.mean(epochlen)),
                     'PolicyEntropy: {}\n'.format(self.approx_entropy),
+                    'PolicyLoss: {}\n'.format(pol_loss),
+                    'ValueLoss: {}\n'.format(val_loss),
                     '\n', end='')
+            if render_epochs is not None and i in render_epochs:
+                state = self.env.reset()
+                for i in range(render_frames):
+                    action, logprob, value = self.action_choice(state)
+                    state, reward, done, _ = self.env.step(action.detach().numpy())
+                    self.env.render()
+                    if done:
+                        state = self.env.reset()
+                self.env.close()
         print('\n')
         return self.ep_reward, self.ep_length
 
@@ -299,9 +325,9 @@ class A2C:
 class PPO(A2C):
     # PPO subclasses A2C and the only function it needs set up is the update() function. Everything else stays the same.
     # OpenAI PPO blog post: https://openai.com/blog/openai-baselines-ppo/
-    def __init__(self, env, policy_network=PolicyNet, value_network=ValueNet, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
-        steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True, lr=3e-4, target_kl=0.03,
-        policy_train_iters=80, verbose=True, kl_max=None):
+    def __init__(self, env, policy_network, value_network, epsilon=0.2, adv_fn=None, gamma=.99, lam=.95, 
+        steps_per_epoch=1000, optimizer=optim.Adam, lr=3e-4, target_kl=0.03,
+        policy_train_iters=80, value_train_iters=80, verbose=True, entropy_coeff=0):
         self.env = env
 
         self.policy_net = policy_network
@@ -312,6 +338,8 @@ class PPO(A2C):
             self.value_net.cuda()
 
         self.epsilon = epsilon
+        self.entropy_coeff = entropy_coeff
+
         self.verbose = verbose
 
         if adv_fn is not None:
@@ -323,17 +351,19 @@ class PPO(A2C):
         self.policy_optimizer = optimizer(self.policy_net.parameters())
         self.value_optimizer = optimizer(self.value_net.parameters())
 
-        self.gamma = gamma
-        self.lam = lam
-        self.standardize = standardize_rewards
+        
         self.steps_per_epoch = steps_per_epoch
         self.target_kl = target_kl
-        self.kl_max = kl_max
 
         self.policy_train_iters = policy_train_iters
+        self.value_train_iters = value_train_iters
         self.val_loss = nn.MSELoss()
 
-        self.buffer = Buffer(env.observation_space.shape[0], env.action_space.shape[0], steps_per_epoch, gamma=gamma, lam=lam)
+        if isinstance(env.action_space, Box):
+            action_space = env.action_space.shape[0]
+        elif isinstance(env.action_space, Discrete):
+            action_space = 1
+        self.buffer = Buffer(env.observation_space.shape[0], action_space, steps_per_epoch, gamma=gamma, lam=lam)
 
     def update_(self):
         # the main difference between the PPO update function and A2C update function is in the loss function update rule
@@ -344,34 +374,46 @@ class PPO(A2C):
             returns = returns.cuda()
             advs = advs.cuda()
 
-        logprobs_ = logprobs_.detach().requires_grad_()
+        logprobs_ = logprobs_.detach()
+        states = states.detach()
+        actions = actions.detach()
+
         # train on the collected batch of data self.policy_train_iters times
         for step in range(self.policy_train_iters):
             # get action log probabilities, values, and action distribution entropy for the states and actions in the batch
             # The models and their functions are defined in neural_nets.py
             probs, entropy = self.policy_net.evaluate(states, actions)
+            #print('probs {} \n entropy {}'.format(probs, entropy))
             # compute the policy ratio between the new and old policies
-            pol_ratio = torch.exp(probs - logprobs_)
+            pol_ratio = torch.exp(probs - logprobs_) * advs
+            #print('policy ratio {}'.format(pol_ratio))
             # calculate the approximate KL divergence
-            approx_kl = (logprobs_ - probs).mean()
+            approx_kl = 0.5 * ((logprobs_ - probs)**2).mean()
+            
+            g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * advs
+            pol_loss = -(torch.min(pol_ratio, g_) - (entropy*self.entropy_coeff)).mean()
+
+            values = self.value_net(states)
+            val_loss = (self.val_loss(torch.squeeze(values), torch.squeeze(returns)))
             # if the policy update is too big, skip this update
-            if approx_kl > 1.5 * self.target_kl:
-                if self.verbose: print('\r Early stopping due to {} hitting max KL'.format(approx_kl), '\n', end="")
-                sys.stdout.flush()
-                break
+            #if approx_kl > 1.5 * self.target_kl:
+                #if self.verbose: print('\r Warning: {} hit max KL of {} on policy update {}'.format(approx_kl, self.target_kl, step),
+                #'\n', end="")
+                #sys.stdout.flush()
+                #break
             # estimate the advantage
             # clamp the PPO-clip update to 1-epsilon, 1+epsilon
-            g_ = torch.clamp(pol_ratio, 1-self.epsilon, 1+self.epsilon) * advs
             # zero optimizer
             self.policy_optimizer.zero_grad()
             # calculate PPO loss function. min(policy ratio * advantage, clip(policy ratio, 1-epsilon, 1+epsilon)*advantage)
-            loss_fn = -torch.min(pol_ratio*advs, g_).mean()
             # backpropagate loss, step optimizer
-            loss_fn.backward()
+            pol_loss.backward()
+            #nn.utils.clip_grad_norm_(self.policy_net.parameters(), 0.5)
             self.policy_optimizer.step()
 
-            values = self.value_net(states)
+            #for step in range(self.value_train_iters):
             self.value_optimizer.zero_grad()
-            loss_fn = (0.5 * self.val_loss(torch.squeeze(returns), torch.squeeze(values)))
-            loss_fn.backward()
+            val_loss.backward()
             self.value_optimizer.step()
+
+        return pol_loss.detach(), val_loss.detach()

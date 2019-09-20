@@ -28,7 +28,7 @@ class Buffer:
 
     def push(self, state, action, reward, value, logprob):
         assert self.point_idx < self.size
-        self.state_record[self.point_idx] = torch.from_numpy(state)
+        self.state_record[self.point_idx] = torch.from_numpy(np.asarray(state))
         self.action_record[self.point_idx] = action
         #self.rew_record[self.point_idx] = reward
         self.rew_record.append(reward)
