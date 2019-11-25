@@ -25,7 +25,7 @@ use_gpu = True if torch.cuda.is_available() else False
 
 # REINFORCE policy gradient. Currently only discrete actions are seriously supported. Continuous is under development. 
 class REINFORCE:
-    def __init__(self, env, model, gamma=0.99, lam=0.95, optimizer=optim.Adam, steps_per_epoch=1000):
+    def __init__(self, env, model, gamma=0.99, lam=0.95, optimizer=optim.Adam, steps_per_epoch=4000):
         self.gamma = gamma
         self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
         self.env = env
@@ -107,6 +107,7 @@ class REINFORCE:
         for i in range(epochs):
             # reset environment and episode reward
             state, episode_reward = self.env.reset(), 0
+            eplen = 0
             # limit the amount of interaction allowed in one epoch
             for s in range(self.steps_per_epoch):
                 # pick an action
@@ -118,11 +119,13 @@ class REINFORCE:
                 # save the collected reward
                 self.model.save_rewards.append(reward)
                 episode_reward += reward
+                eplen += 1
                 if done:
                     # if the episode is over, save how long it was and reward earned. break for next episode
-                    self.ep_length.append(s)
+                    self.ep_length.append(eplen)
                     self.ep_reward.append(episode_reward)
-                    break
+                    state, episode_reward = self.env.reset(), 0
+                    elpen = 0
                 
             if solved_threshold and len(self.ep_reward) > 100:
                 # if the reward over last 100 episodes is greater than the threshold, break training
@@ -130,11 +133,16 @@ class REINFORCE:
                     print('\r Environment solved in {} steps. Ending training.'.format(i))
                     return self.ep_reward, self.ep_length
             if verbose:
-                print('\r Episode {} of {}'.format(i+1, epochs), '\t Episode reward:', episode_reward, end="")
-            sys.stdout.flush()
+                print(f'Epoch {i} of {epochs}\n',
+                    f'MeanEpRet: {np.mean(self.ep_reward)}\n',
+                    f'StdEpRet: {np.std(self.ep_reward)}\n',
+                    f'MeanEpLen: {np.mean(self.ep_length)}\n',
+                    f'StdEpLen: {np.std(self.ep_length)}\n')
             # update every epoch
             self.update_()
-            self.env.close()
+            self.ep_reward = []
+            self.ep_length = []
+            #self.env.close()
         print('\n')
         return self.ep_reward, self.ep_length
 

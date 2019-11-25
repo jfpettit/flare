@@ -84,6 +84,12 @@ class ContinuousPolicyNet(nn.Module):
 class PolicyNet(nn.Module):
     def __init__(self, in_size, out_size):
         super(PolicyNet, self).__init__()
+        self.save_log_probs = []
+        self.save_states = []
+        self.save_rewards = []
+        self.save_values = []
+        self.save_actions = []
+        
         self.layer1 = nn.Linear(in_size, 64)
         self.layer2 = nn.Linear(64, 32)
         self.layer3 = nn.Linear(32, out_size)
