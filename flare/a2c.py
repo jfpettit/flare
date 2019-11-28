@@ -4,6 +4,7 @@ import gym
 import torch
 import torch.nn as nn
 import flare.neural_nets as nets
+from flare import utils
 from torch.nn.utils import clip_grad_norm_
 
 # figure whether a GPU is available. In the future, this will be changed to use torch.tensor().to(device) syntax to maximize GPU usage
@@ -14,7 +15,7 @@ class A2C:
         policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
         self.env = env
 
-        self.ac = actorcritic(env.observation_space.shape[0], env.action_space.n)
+        self.ac = actorcritic(env.observation_space.shape[0], env.action_space.shape[0])
         self.ac.buffer_init(steps_per_epoch, gamma=gamma, lam=lam)
 
         if use_gpu:
@@ -40,16 +41,24 @@ class A2C:
         if use_gpu:
             state = state.cuda()
         
-        logsoft = nn.LogSoftmax()
-        soft = nn.Softmax()
-        action_logits, state_value = self.ac(state)
-        all_logprobs = logsoft(action_logits)
-        pi = torch.multinomial(soft(action_logits), 1)
-        onehot = torch.zeros((self.env.action_space.n,))
-        onehot[pi] = 1
-        logprobs_act = torch.sum(onehot * all_logprobs)
+        if not self.continuous:
+            logsoft = nn.LogSoftmax()
+            soft = nn.Softmax()
+            action_logits, state_value = self.ac(state)
+            all_logprobs = logsoft(action_logits)
+            pi = torch.multinomial(soft(action_logits), 1)
+            onehot = torch.zeros((self.env.action_space.n,))
+            onehot[pi] = 1
+            logprobs_act = torch.sum(onehot * all_logprobs)
         
-        return pi.numpy(), state_value, logprobs_act    
+        elif self.continuous:
+            act_dim = self.env.action_space.shape[0]
+            mu, state_value = self.ac(state)
+            log_stds = -0.5 * torch.ones(act_dim)
+            std = torch.exp(log_stds)
+            pi = mu + torch.randn(mu.shape) * std
+            logprobs_act = utils.gaussian_likelihood(pi, mu, log_stds)
+        return pi.detach().numpy(), state_value, logprobs_act    
 
     def update_(self):
         states, acts, advs, rets, logprobs, values = self.ac.gather()
@@ -80,7 +89,7 @@ class A2C:
             state, episode_reward, episode_length = self.env.reset(), 0, 0
             for _ in range(self.steps_per_epoch):
                 action, value, logprob = self.action_choice(state)
-                state, reward, done, _ = self.env.step(action[0])
+                state, reward, done, _ = self.env.step(action)
                 if render:
                     self.env.render()
                 self.ac.store(state, action, reward, value, logprob)

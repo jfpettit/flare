@@ -6,6 +6,7 @@ import torch.nn.functional as F
 from scipy import signal
 import gym
 from gym import wrappers
+import math
 
 class MathUtils:
     def __init__(self):
@@ -32,10 +33,6 @@ class MathUtils:
         encoding[encoding == vec_imax] = 1
         return encoding[:, :depth]
 
-    def gaussian_likelihood(self, x, mu, log_std):
-        vals = -.5 * (((x - mu)/np.exp(log_std)+self.EPS))**2 + 2 * log_std + np.log(2*np.pi)
-        return self.reduce_sum(vals, axis=1)
-
     def conjugate_gradient(self, Ax, b, iters=10, tol=1e-4):
         x = torch.zeros_like(b)
         r = b.clone()
@@ -54,6 +51,9 @@ class MathUtils:
             i += 1
         return x
 
+def gaussian_likelihood(x, mu, log_std):
+    vals = -.5 * (((x - mu)/torch.exp(log_std)+1e-8))**2 + 2 * log_std + torch.log(torch.tensor(2*math.pi))
+    return vals.sum()
 
 class MlpPolicyUtils:
     def __init__(self, mlp, action_space):
