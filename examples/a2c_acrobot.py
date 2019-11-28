@@ -1,7 +1,7 @@
 # import required packages
 import argparse
 
-from rlpack.algorithms import A2C
+from rlpack.a2c import A2C
 from rlpack.neural_nets import ActorCritic
 import gym
 import matplotlib.pyplot as plt
@@ -10,24 +10,24 @@ import torch
 from gym import wrappers
 
 # make env 
-env = gym.make('Acrobot-v1')
+env = gym.make('LunarLander-v2')
 # set up network. A2C is an actor-critic method and requires paramaterizations of the policy and value function. 
 # This is defined in rlpack/neural_nets.py
 network = ActorCritic(env.observation_space.shape[0], env.action_space.n)
 
 # set up argparser. --watch is a boolean whether or not to watch the agent in the env after training
 #                   --plot is bool, whether or not to plot rewards earned over training
-parser = argparse.ArgumentParser(description='Get args for running REINFORCE agent on CartPole')
-parser.add_argument('--watch', action='store_true', help='choose whether to watch trained agent')
-parser.add_argument('--plot', action='store_true', help='choose whether to view plots of reward over training')
-parser.add_argument('--save_mv', action='store_true', help='choose whether to save a mp4 of the agent acting')
+parser = argparse.ArgumentParser()
+parser.add_argument('--watch', type=bool, help='choose whether to watch trained agent', default=False)
+parser.add_argument('--plot', type=bool, help='choose whether to view plots of reward over training', default=True)
+parser.add_argument('--save_mv', type=bool, help='choose whether to save a mp4 of the agent acting', default=False)
 
 # get args from argparser
 args = parser.parse_args()
 
 if __name__ == '__main__':
     # initialize training object. defined in rlpack/algorithms.py
-    trainer = A2C(env, network)
+    trainer = A2C(env)
     # According to the gym leaderboard below, Acrobot-v1 is considered an unsolved task, so there is no reward threshold at which it is solved.
     # gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
     rew, leng = trainer.learn(1000)

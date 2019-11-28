@@ -13,6 +13,7 @@ from rlpack.utils import MlpPolicyUtils as mlpu
 from rlpack.utils import MathUtils as mathu
 from rlpack.utils import AdvantageEstimatorsUtils as aeu
 from rlpack.utils import NetworkUtils as netu
+import rlpack.neural_nets as nets
 import sys
 from torch.nn.utils import clip_grad_value_, clip_grad_norm_
 
@@ -147,137 +148,7 @@ class REINFORCE:
         action = torch.argmax(action_probabilities)
         return action.item() 
 
-class A2C:
-    def __init__(self, env, model, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=1000, optimizer=optim.Adam, standardize_rewards=True,
-        policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
-        self.env = env
 
-        self.model=model
-        if use_gpu:
-            self.model.cuda()
-        self.gamma = gamma
-        self.lam = lam
-        self.steps_per_epoch = steps_per_epoch
-        self.standardize_rewards = standardize_rewards
-
-        self.optimizer = optimizer(self.model.parameters())
-        
-        # advantage estimator setup
-        if adv_fn is not None:
-            self.adv_fn = adv_fn
-        else:
-            self.aeu_ = aeu(self.gamma, self.lam)
-            self.adv_fn = self.aeu_.basic_adv_estimator
-
-        self.policy_train_iters = policy_train_iters
-        self.val_loss = val_loss
-        self.verbose = verbose
-        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
-        
-
-    def action_choice(self, state):
-        # convert state to torch tensor, dtype=float
-        state = np.asarray(state)
-        state = torch.from_numpy(state).float()
-        if use_gpu:
-            state = state.cuda()
-        
-        # same as with REINFORCE, sample action from categorical distribution paramaterizes by the network's output of action probabilities
-        action_probabilities, state_value = self.model(state)
-        m_ = torch.distributions.Categorical(action_probabilities)
-        action = m_.sample()
-        # save action log probabilities
-        lp = m_.log_prob(action)
-
-        # stuff we need to track for A2C and for PPO
-        self.model.save_log_probs.append(lp)
-        self.model.save_values.append(state_value)
-        self.model.save_actions.append(action)
-        self.model.save_states.append(state)
-        return action.item()    
-
-    def update_(self):
-        # update function is more or less the same as REINFORCE. I'll highlight the important differences. 
-        return_ = 0
-        rewards = self.model.save_rewards
-        returns = []
-        for reward in self.model.save_rewards[::-1]:
-            return_ = reward + self.gamma * return_
-            returns.insert(0, return_)
-        returns = torch.tensor(returns)
-        if self.standardize_rewards:
-            # if the user chooses to standardize the rewards, then do so
-            returns = (returns - returns.mean()) / returns.std()
-        
-        # get log probabilities and value estimates from the model
-        logprobs_ = torch.stack(self.model.save_log_probs)
-        vals_ = torch.stack(self.model.save_values).squeeze().detach()
-
-        if use_gpu:
-            logprobs_ = logprobs_.cuda()
-            returns = returns.cuda()
-            vals_ = vals_.cuda()
-
-        # estimate advantage and policy and value loss for each sample in the batch
-        pol_loss, val_loss = [], []
-        for i in range(len(returns)):
-            adv = returns[i] - vals_[i]
-            pol_loss.append(-logprobs_[i] * adv)
-            val_loss.append(0.5 * self.val_loss(returns[i], vals_[i]))
-
-        self.optimizer.zero_grad()
-        # compute A2C loss, it is sum(policy loss) + sum(value loss). Policy loss is negative log probabilities times advantage and 
-        # value loss is mean squared error loss
-        loss = torch.stack(pol_loss).sum() + torch.stack(val_loss).sum()
-        loss.backward()
-        self.optimizer.step()
-        
-        del self.model.save_rewards[:]
-        del self.model.save_log_probs[:]
-        del self.model.save_values[:]
-        del self.model.save_actions[:]
-        del self.model.save_states[:]
-        
-    def learn(self, epochs, render=False, solved_threshold=None):
-        # functionality and stuff happening in the learn function is the same as REINFORCE
-        running_reward = 0
-        self.ep_length = []
-        self.ep_reward = []
-        for i in range(epochs):
-            state, episode_reward = self.env.reset(), 0
-            for s in range(1, self.steps_per_epoch):
-                action = self.action_choice(state)
-                state, reward, done, _ = self.env.step(action)
-                if render:
-                    self.env.render()
-                self.model.save_rewards.append(reward)
-                episode_reward += reward
-                if done:
-                    self.ep_length.append(s)
-                    self.ep_reward.append(episode_reward)
-                    break
-            self.update_()
-            self.env.close()
-            if solved_threshold and len(self.ep_reward) > 100:
-                if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
-                    print('\r Environment solved in {} steps. Ending training.'.format(i))
-                    return self.ep_reward, self.ep_length
-            if self.verbose:
-                print('\rEpisode {} of {}'.format(i+1, epochs), '\t Episode reward: ', episode_reward, end='')
-                sys.stdout.flush()
-        print('\n')
-        return self.ep_reward, self.ep_length
-
-    def exploit(self, state):
-        # this is also the same as REINFORCE
-        state = np.asarray(state)
-        state = torch.from_numpy(state).float()
-        if use_gpu:
-            state = state.cuda()
-
-        action_probabilities, value = self.model(state)
-        action = torch.argmax(action_probabilities)
-        return action.item() 
 
 class PPO(A2C):
     # PPO subclasses A2C and the only function it needs set up is the update() function. Everything else stays the same.

@@ -13,35 +13,89 @@ from rlpack.utils import NetworkUtils as netu
 import sys
 from torch.nn.utils import clip_grad_value_
 import gym
+from scipy.signal import lfilter
 
 class ActorCritic(nn.Module):
     def __init__(self, in_size, out_size):
         super(ActorCritic, self).__init__()
-        self.save_log_probs = []
-        self.save_states = []
-        self.save_rewards = []
-        self.save_values = []
-        self.save_actions = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.layer3 = nn.Linear(64, out_size)
-        self.val = nn.Linear(64, 1)
+        self.layer1 = nn.Linear(in_size, 64)
+        self.layer2 = nn.Linear(64, 32)
+        self.layer3 = nn.Linear(32, out_size)
+        self.val = nn.Linear(32, 1)
 
 
     def forward(self, x):
-        x = F.relu(self.layer1(x))
-        x = F.relu(self.layer2(x))
+        x = torch.tanh(self.layer1(x))
+        x = torch.tanh(self.layer2(x))
         value = self.val(x)
         action = self.layer3(x)
-        return F.softmax(action, dim=-1), value
+        return action, value
 
-    def evaluate(self, state, action):
-        action_ps, values = self.forward(state)
-        action_dist = torch.distributions.Categorical(action_ps)
-        action_logprobs = action_dist.log_prob(action)
-        entropy = action_dist.entropy()
-        return action_logprobs, torch.squeeze(values), entropy
+    def buffer_init(self, epoch_interaction_size, gamma=0.99, lam=0.95):
+        self.size = epoch_interaction_size
+        self.save_log_probs = []
+        self.save_states = []
+        self.save_rewards = np.zeros(self.size, dtype=np.float32)
+        self.save_values = np.zeros(self.size, dtype=np.float32)
+        self.save_value_tensors = []
+        self.save_actions = []
+        
+        self.gamma = gamma
+        self.lam = lam
+
+        self.adv_record = np.zeros(self.size, dtype=np.float32)
+        self.ret_record = np.zeros(self.size, dtype=np.float32)
+
+        self.ptr, self.strt = 0, 0
+
+    def store(self, state, action, reward, value, logprob):
+        assert self.ptr < self.size
+        self.save_states.append(state)
+        self.save_log_probs.append(logprob)
+        self.save_rewards[self.ptr] = reward
+        self.save_values[self.ptr] = value
+        self.save_actions.append(action)
+        self.save_value_tensors.append(torch.tensor(value))
+
+        self.ptr += 1
+
+    def discount_cumulative_sum(self, x, discount):
+        return lfilter([1], [1, float(-discount)], x[::-1], axis=0)[::-1]
+
+    def end_traj(self, last_val=0):
+        traj_slice = slice(self.strt, self.ptr)
+
+        rews = np.append(self.save_rewards[traj_slice], last_val)
+        vals = np.append(self.save_values[traj_slice], last_val)
+
+        deltas = rews[:-1] + self.gamma * vals[1:] - vals[:-1]
+
+        self.adv_record[traj_slice] = self.discount_cumulative_sum(deltas, self.gamma * self.lam)
+        self.ret_record[traj_slice] = self.discount_cumulative_sum(rews, self.gamma*self.lam)[:-1]
+
+        self.strt = self.ptr
+
+    def gather(self):
+        assert self.ptr == self.size, 'Buffer must be full before you gather.'
+
+        self.ptr, self.strt = 0, 0
+
+        self.adv_record = (self.adv_record - self.adv_record.mean()) / (self.adv_record.std() + 1e-8)
+
+        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors]
+
+    def clear_mem(self):
+        self.save_log_probs = []
+        self.save_states = []
+        self.save_actions = []
+        self.save_value_tensors = []
+
+        self.save_rewards = np.zeros(self.size, dtype=np.float32)
+        self.save_values = np.zeros(self.size, dtype=np.float32)
+
+        self.adv_record = np.zeros(self.size, dtype=np.float32)
+        self.ret_record = np.zeros(self.size, dtype=np.float32)
+
 
 class ContinuousActorCritic(nn.Module):
     def __init__(self, in_size, out_size):
@@ -85,6 +139,29 @@ class ContinuousPolicyNet(nn.Module):
         mu = self.mu_out(x)
         sig_sq = self.sig_sq_out(x)
         return mu, sig_sq
+
+class BaseNet(nn.Module):
+    def __init__(self, in_size, out_size, is_val_func=False):
+        super(BaseNet, self).__init__()
+        self.is_val = is_val_func
+        self.save_log_probs = []
+        self.save_rewards = []
+        self.save_values = []
+        self.save_states = []
+
+        self.layer1 = nn.Linear(in_size, 64)
+        self.layer2 = nn.Linear(64, 32)
+        self.layer3 = nn.Linear(32, out_size)
+
+        self.tanh = nn.Tanh()
+
+    def forward(self, x):
+        x = self.tanh(self.layer1(x))
+        x = self.tanh(self.layer2(x))
+        if self.is_val:
+            return self.layer3(x)
+        else:
+            return self.layer3(x)
 
 class PolicyNet(nn.Module):
     def __init__(self, in_size, out_size, is_val_func=False):
