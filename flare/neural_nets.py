@@ -1,17 +1,10 @@
 import numpy as np
-import random
 from collections import namedtuple
 import torch
-import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import signal
-from flare.utils import MlpPolicyUtils as mlpu
-from flare.utils import MathUtils as mathu
-from flare.utils import AdvantageEstimatorsUtils as aeu
 from flare.utils import NetworkUtils as netu
-import sys
-from torch.nn.utils import clip_grad_value_
 import gym
 from scipy.signal import lfilter
 
@@ -55,7 +48,7 @@ class ActorCritic(nn.Module):
         self.save_rewards[self.ptr] = reward
         self.save_values[self.ptr] = value
         self.save_actions.append(action)
-        self.save_value_tensors.append(torch.tensor(value))
+        self.save_value_tensors.append(value)
 
         self.ptr += 1
 

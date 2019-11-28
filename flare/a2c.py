@@ -1,24 +1,16 @@
 # import needed packages
 import numpy as np
 import gym
-import roboschool
-import random
-from collections import namedtuple
 import torch
-import torch.optim as optim
 import torch.nn as nn
-import torch.nn.functional as F
-from scipy import signal
 import flare.neural_nets as nets
-import sys
-from torch.nn.utils import clip_grad_value_, clip_grad_norm_
-import scipy
+from torch.nn.utils import clip_grad_norm_
 
 # figure whether a GPU is available. In the future, this will be changed to use torch.tensor().to(device) syntax to maximize GPU usage
 use_gpu = True if torch.cuda.is_available() else False
 
 class A2C:
-    def __init__(self, env, actorcritic=nets.ActorCritic, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=4000, optimizer=optim.Adam, standardize_rewards=True,
+    def __init__(self, env, actorcritic=nets.ActorCritic, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=4000, optimizer=torch.optim.Adam, standardize_rewards=True,
         policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
         self.env = env
 
