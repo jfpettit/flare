@@ -1,16 +1,16 @@
-# rl-pack
+# flare
 
 **Note: lots of updates coming. A2C reworked, will be reworking PPO and including a base NN class.**
 
-Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
+Blog post about this repository [here](https://jfpettit.svbtle.com/flare).
 
 ## Installation
 
 Clone the repository, cd into it: 
 
 ```
-git clone https://github.com/jfpettit/rl-pack.git
-cd rl-pack
+git clone https://github.com/jfpettit/flare.git
+cd flare
 pip install -e .
 ```
 ## Examples
@@ -18,7 +18,7 @@ pip install -e .
 There are a few example files demonstrating training REINFORCE on CartPole, A2C on Acrobot, and PPO on LunarLander and CartPoleSwingup.
 With the repository installed:
 ```
-cd rl-pack/examples
+cd flare/examples
 python [PATH_TO_EXAMPLE_PYTHON_FILE] --watch --plot --save_mv
 ```
 

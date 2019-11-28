@@ -9,7 +9,7 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import signal
-import rlpack.neural_nets as nets
+import flare.neural_nets as nets
 import sys
 from torch.nn.utils import clip_grad_value_, clip_grad_norm_
 import scipy

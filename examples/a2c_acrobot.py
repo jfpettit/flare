@@ -1,8 +1,8 @@
 # import required packages
 import argparse
 
-from rlpack.a2c import A2C
-from rlpack.neural_nets import ActorCritic
+from flare.a2c import A2C
+from flare.neural_nets import ActorCritic
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +12,7 @@ from gym import wrappers
 # make env 
 env = gym.make('LunarLander-v2')
 # set up network. A2C is an actor-critic method and requires paramaterizations of the policy and value function. 
-# This is defined in rlpack/neural_nets.py
+# This is defined in flare/neural_nets.py
 network = ActorCritic(env.observation_space.shape[0], env.action_space.n)
 
 # set up argparser. --watch is a boolean whether or not to watch the agent in the env after training
@@ -26,7 +26,7 @@ parser.add_argument('--save_mv', type=bool, help='choose whether to save a mp4 o
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    # initialize training object. defined in rlpack/algorithms.py
+    # initialize training object. defined in flare/algorithms.py
     trainer = A2C(env)
     # According to the gym leaderboard below, Acrobot-v1 is considered an unsolved task, so there is no reward threshold at which it is solved.
     # gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard

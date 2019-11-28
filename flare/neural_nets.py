@@ -6,10 +6,10 @@ import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
 from scipy import signal
-from rlpack.utils import MlpPolicyUtils as mlpu
-from rlpack.utils import MathUtils as mathu
-from rlpack.utils import AdvantageEstimatorsUtils as aeu
-from rlpack.utils import NetworkUtils as netu
+from flare.utils import MlpPolicyUtils as mlpu
+from flare.utils import MathUtils as mathu
+from flare.utils import AdvantageEstimatorsUtils as aeu
+from flare.utils import NetworkUtils as netu
 import sys
 from torch.nn.utils import clip_grad_value_
 import gym
