@@ -1,5 +1,7 @@
 # rl-pack
 
+**Note: lots of updates coming. A2C reworked, will be reworking PPO and including a base NN class.**
+
 Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
 
 ## Installation
