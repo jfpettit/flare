@@ -11,11 +11,17 @@ from torch.nn.utils import clip_grad_norm_
 use_gpu = True if torch.cuda.is_available() else False
 
 class A2C:
-    def __init__(self, env, actorcritic=nets.ActorCritic, adv_fn=None, gamma=.99, lam=.95, steps_per_epoch=4000, optimizer=torch.optim.Adam, standardize_rewards=True,
-        policy_train_iters=80, val_loss=nn.MSELoss(), verbose=True):
-        self.env = env
+    def __init__(self, env, actorcritic=nets.ActorCritic, gamma=.99, lam=.95, steps_per_epoch=4000):
+        
+        self.init_shared(env, actorcritic, gamma, lam, steps_per_epoch)
 
-        self.ac = actorcritic(env.observation_space.shape[0], env.action_space.shape[0])
+    def init_shared(self, env, actorcritic, gamma, lam, steps_per_epoch):
+        self.env = env
+        
+        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
+
+        act_space = env.action_space.n if not self.continuous else env.action_space.shape[0]
+        self.ac = actorcritic(env.observation_space.shape[0], act_space)
         self.ac.buffer_init(steps_per_epoch, gamma=gamma, lam=lam)
 
         if use_gpu:
@@ -24,15 +30,8 @@ class A2C:
         self.gamma = gamma
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
-        self.standardize_rewards = standardize_rewards
 
         self.optimizer = torch.optim.Adam(self.ac.parameters())
-        
-        self.policy_train_iters = policy_train_iters
-        self.val_loss = val_loss
-        self.verbose = verbose
-        self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
-        
 
     def action_choice(self, state):
         # convert state to torch tensor, dtype=float
@@ -42,14 +41,15 @@ class A2C:
             state = state.cuda()
         
         if not self.continuous:
-            logsoft = nn.LogSoftmax()
-            soft = nn.Softmax()
+            logsoft = nn.LogSoftmax(dim=-1)
+            soft = nn.Softmax(dim=-1)
             action_logits, state_value = self.ac(state)
             all_logprobs = logsoft(action_logits)
             pi = torch.multinomial(soft(action_logits), 1)
             onehot = torch.zeros((self.env.action_space.n,))
             onehot[pi] = 1
             logprobs_act = torch.sum(onehot * all_logprobs)
+            action = pi.detach().numpy()[0]
         
         elif self.continuous:
             act_dim = self.env.action_space.shape[0]
@@ -58,7 +58,9 @@ class A2C:
             std = torch.exp(log_stds)
             pi = mu + torch.randn(mu.shape) * std
             logprobs_act = utils.gaussian_likelihood(pi, mu, log_stds)
-        return pi.detach().numpy(), state_value, logprobs_act    
+            action = pi.detach().numpy()
+        
+        return action, state_value, logprobs_act    
 
     def update_(self):
         states, acts, advs, rets, logprobs, values = self.ac.gather()
@@ -106,23 +108,23 @@ class A2C:
                         episode_reward = 0
                         episode_length = 0
                         done = False
+                        reward = 0
             pol_loss, val_loss = self.update_()
             self.ac.clear_mem()
-            self.env.close()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
                     print('\r Environment solved in {} steps. Ending training.'.format(i))
                     return self.ep_reward, self.ep_length
-            if self.verbose:
-                print(f'\rEpoch {i} of {epochs}\n',
-                f'MeanEpRet: {np.mean(self.ep_reward)}\n',
-                f'StdEpRet: {np.std(self.ep_reward)}\n',
-                f'MaxEpRet: {np.max(self.ep_reward)}\n',
-                f'MinEpRet: {np.min(self.ep_reward)}\n',
-                f'MeanEpLen: {np.mean(self.ep_length)}\n',
-                f'StdEpLen: {np.std(self.ep_length)}\n',
-                f'PolicyLoss: {pol_loss}\n',
-                f'ValueLoss: {val_loss}\n')
+            print(f'\rEpoch {i} of {epochs}\n',
+            f'MeanEpRet: {np.mean(self.ep_reward)}\n',
+            f'StdEpRet: {np.std(self.ep_reward)}\n',
+            f'MaxEpRet: {np.max(self.ep_reward)}\n',
+            f'MinEpRet: {np.min(self.ep_reward)}\n',
+            f'MeanEpLen: {np.mean(self.ep_length)}\n',
+            f'StdEpLen: {np.std(self.ep_length)}\n',
+            f'PolicyLoss: {pol_loss}\n',
+            f'ValueLoss: {val_loss}\n',
+            f'Env: {self.env.unwrapped.spec.id}\n')
         print('\n')
         return self.ep_reward, self.ep_length
 
