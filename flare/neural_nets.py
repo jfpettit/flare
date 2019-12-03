@@ -48,7 +48,7 @@ class ActorCritic(nn.Module):
         self.save_rewards[self.ptr] = reward
         self.save_values[self.ptr] = value
         self.save_actions.append(action)
-        self.save_value_tensors.append(value)
+        self.save_value_tensors.append(value.clone().detach().requires_grad_(True))
 
         self.ptr += 1
 

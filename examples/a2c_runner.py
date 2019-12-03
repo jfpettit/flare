@@ -21,6 +21,7 @@ parser.add_argument('--watch', type=bool, help='choose whether to watch trained 
 parser.add_argument('--plot', type=bool, help='choose whether to view plots of reward over training', default=True)
 parser.add_argument('--save_mv', type=bool, help='choose whether to save a mp4 of the agent acting', default=False)
 parser.add_argument('--epochs', type=int, help='Number of epochs to train for', default=100)
+parser.add_argument('--horizon', type=int, help='Horizon length of each episode', default=1000)
 
 # get args from argparser
 args = parser.parse_args()
@@ -31,7 +32,7 @@ if __name__ == '__main__':
     trainer = A2C(env)
     # According to the gym leaderboard below, Acrobot-v1 is considered an unsolved task, so there is no reward threshold at which it is solved.
     # gym leaderboard: https://github.com/openai/gym/wiki/Leaderboard
-    rew, leng = trainer.learn(1000)
+    rew, leng = trainer.learn(1000, horizon=args.horizon)
 
     # watch agent interact with environment
     if args.watch:

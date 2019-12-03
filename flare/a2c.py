@@ -33,6 +33,9 @@ class A2C:
 
         self.optimizer = torch.optim.Adam(self.ac.parameters())
 
+    def approx_kl(self, logprobs_old, logprobs):
+        return torch.mean(logprobs_old - logprobs)
+
     def action_choice(self, state):
         # convert state to torch tensor, dtype=float
         state = np.asarray(state)
@@ -62,6 +65,11 @@ class A2C:
         
         return action, state_value, logprobs_act    
 
+    def loss_fcns(self, **kwargs):
+        pol_loss = -torch.mean(kwargs['logprobs'] * kwargs['advs'])
+        val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
+        return pol_loss, val_loss, pol_loss + 0.5 * val_loss
+
     def update_(self):
         states, acts, advs, rets, logprobs, values = self.ac.gather()
         logprobs_ = torch.stack(logprobs)
@@ -71,20 +79,18 @@ class A2C:
             logprobs_ = logprobs_.cuda()
             returns = returns.cuda()
             vals_ = vals_.cuda()
-
-        pol_loss = -torch.mean(logprobs_ * advs)
-        val_loss = 0.5 * torch.mean((rets - vals_)**2)
         
         self.optimizer.zero_grad()
-        loss = pol_loss + 0.5 * val_loss
+        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_, vals_=vals_)
         loss.backward()
         grad_norm = torch.nn.utils.clip_grad_norm_(
             self.ac.parameters(), 1)
         self.optimizer.step()
 
-        return pol_loss, val_loss
+        approx_ent = torch.mean(-logprobs_)
+        return pol_loss, val_loss, approx_ent
         
-    def learn(self, epochs, render=False, solved_threshold=None):
+    def learn(self, epochs, render=False, solved_threshold=None, horizon=1000):
         for i in range(epochs):
             self.ep_length = []
             self.ep_reward = []
@@ -97,7 +103,7 @@ class A2C:
                 self.ac.store(state, action, reward, value, logprob)
                 episode_reward += reward
                 episode_length += 1
-                over = done or (episode_length == 1000)
+                over = done or (episode_length == horizon)
                 if over or (_ == self.steps_per_epoch - 1):
                     last_val = reward if done else self.ac(torch.from_numpy(state).float())[1]
                     self.ac.end_traj(last_val=last_val)
@@ -109,7 +115,7 @@ class A2C:
                         episode_length = 0
                         done = False
                         reward = 0
-            pol_loss, val_loss = self.update_()
+            pol_loss, val_loss, approx_ent = self.update_()
             self.ac.clear_mem()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
@@ -124,6 +130,7 @@ class A2C:
             f'StdEpLen: {np.std(self.ep_length)}\n',
             f'PolicyLoss: {pol_loss}\n',
             f'ValueLoss: {val_loss}\n',
+            f'ApproxEntropy: {approx_ent}\n',
             f'Env: {self.env.unwrapped.spec.id}\n')
         print('\n')
         return self.ep_reward, self.ep_length
