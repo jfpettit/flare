@@ -24,12 +24,17 @@ class ActorCritic(nn.Module):
         action = self.layer3(x)
         return action, value
 
+    def evaluate_acts(self, states):
+        return self.forward(states)
+
+
     def buffer_init(self, epoch_interaction_size, gamma=0.99, lam=0.95):
         self.size = epoch_interaction_size
         self.save_log_probs = []
         self.save_states = []
         self.save_rewards = np.zeros(self.size, dtype=np.float32)
         self.save_values = np.zeros(self.size, dtype=np.float32)
+        self.old_log_probs = np.zeros(self.size, dtype=np.float32)
         self.save_value_tensors = []
         self.save_actions = []
         
@@ -75,9 +80,10 @@ class ActorCritic(nn.Module):
 
         self.adv_record = (self.adv_record - self.adv_record.mean()) / (self.adv_record.std() + 1e-8)
 
-        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors]
+        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors, self.old_log_probs]
 
     def clear_mem(self):
+        self.old_log_probs = self.save_log_probs
         self.save_log_probs = []
         self.save_states = []
         self.save_actions = []

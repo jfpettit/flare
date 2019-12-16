@@ -7,7 +7,6 @@ import flare.neural_nets as nets
 from flare import utils
 from torch.nn.utils import clip_grad_norm_
 
-# figure whether a GPU is available. In the future, this will be changed to use torch.tensor().to(device) syntax to maximize GPU usage
 use_gpu = True if torch.cuda.is_available() else False
 
 class A2C:
@@ -44,6 +43,7 @@ class A2C:
             state = state.cuda()
         
         if not self.continuous:
+            self.act_dim = self.env.action_space.n
             logsoft = nn.LogSoftmax(dim=-1)
             soft = nn.Softmax(dim=-1)
             action_logits, state_value = self.ac(state)
@@ -55,7 +55,7 @@ class A2C:
             action = pi.detach().numpy()[0]
         
         elif self.continuous:
-            act_dim = self.env.action_space.shape[0]
+            self.act_dim = self.env.action_space.shape[0]
             mu, state_value = self.ac(state)
             log_stds = -0.5 * torch.ones(act_dim)
             std = torch.exp(log_stds)
@@ -65,15 +65,41 @@ class A2C:
         
         return action, state_value, logprobs_act    
 
+    def eval_actions(self, states, acts):
+        state_vals, logprobs_acts = [], []
+        
+        mus, state_vals = self.ac(torch.tensor(states).float())
+        log_stds = -.5 * torch.ones(self.act_dim)
+        std = torch.exp(log_stds)
+        pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
+        logprobs_acts = torch.stack([utils.gaussian_likelihood(pi, mu, log_stds) for pi, mu in zip(pis, mus)])
+        
+        #for i in range(len(states)):
+        #    mu, state_val = self.ac(torch.from_numpy(states[i]).float())
+        #    log_stds = -0.5 * torch.ones(self.act_dim)
+        #    std = torch.exp(log_stds)
+        #    pi = mu + torch.randn(mu.shape) * std
+        #    lps = utils.gaussian_likelihood(pi, mu, log_stds)
+        #    state_vals.append(state_val)
+        #    logprobs_acts.append(lps) 
+        
+        #outs = list(zip(*[self.ac(torch.tensor(state).float()) for state in states]))
+        #mus, state_vals = outs[0], outs[1]
+        #log_stds = -0.5 * torch.ones(self.act_dim)
+        #pis = [torch.randn(mu.shape) for mu in mus]
+        #logprobs_acts = [utils.gaussian_likelihood(pi, mu, log_stds) for pi, mu in zip(pis, mus)]
+        return state_vals, logprobs_acts
+
     def loss_fcns(self, **kwargs):
         pol_loss = -torch.mean(kwargs['logprobs'] * kwargs['advs'])
         val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
         return pol_loss, val_loss, pol_loss + 0.5 * val_loss
 
     def update_(self):
-        states, acts, advs, rets, logprobs, values = self.ac.gather()
+        states, acts, advs, rets, logprobs, values, logprobs_old = self.ac.gather()
         logprobs_ = torch.stack(logprobs)
         vals_ = torch.stack(values).squeeze()
+        logprobs_old = torch.tensor(logprobs_old)
         
         if use_gpu:
             logprobs_ = logprobs_.cuda()
@@ -81,14 +107,16 @@ class A2C:
             vals_ = vals_.cuda()
         
         self.optimizer.zero_grad()
-        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_, vals_=vals_)
+        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_, vals_=vals_, logprobs_old=logprobs_old)
         loss.backward()
         grad_norm = torch.nn.utils.clip_grad_norm_(
             self.ac.parameters(), 1)
         self.optimizer.step()
 
         approx_ent = torch.mean(-logprobs_)
-        return pol_loss, val_loss, approx_ent
+        approx_kl = self.approx_kl(logprobs_old, logprobs_)
+
+        return pol_loss, val_loss, approx_ent, approx_kl
         
     def learn(self, epochs, render=False, solved_threshold=None, horizon=1000):
         for i in range(epochs):
@@ -115,7 +143,7 @@ class A2C:
                         episode_length = 0
                         done = False
                         reward = 0
-            pol_loss, val_loss, approx_ent = self.update_()
+            pol_loss, val_loss, approx_ent, approx_kl = self.update_()
             self.ac.clear_mem()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
@@ -131,6 +159,7 @@ class A2C:
             f'PolicyLoss: {pol_loss}\n',
             f'ValueLoss: {val_loss}\n',
             f'ApproxEntropy: {approx_ent}\n',
+            f'ApproxKL: {approx_kl}\n',
             f'Env: {self.env.unwrapped.spec.id}\n')
         print('\n')
         return self.ep_reward, self.ep_length
