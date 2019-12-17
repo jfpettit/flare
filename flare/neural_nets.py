@@ -80,10 +80,9 @@ class ActorCritic(nn.Module):
 
         self.adv_record = (self.adv_record - self.adv_record.mean()) / (self.adv_record.std() + 1e-8)
 
-        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors, self.old_log_probs]
+        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors]
 
     def clear_mem(self):
-        self.old_log_probs = self.save_log_probs
         self.save_log_probs = []
         self.save_states = []
         self.save_actions = []

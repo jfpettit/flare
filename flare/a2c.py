@@ -57,7 +57,7 @@ class A2C:
         elif self.continuous:
             self.act_dim = self.env.action_space.shape[0]
             mu, state_value = self.ac(state)
-            log_stds = -0.5 * torch.ones(act_dim)
+            log_stds = -0.5 * torch.ones(self.act_dim)
             std = torch.exp(log_stds)
             pi = mu + torch.randn(mu.shape) * std
             logprobs_act = utils.gaussian_likelihood(pi, mu, log_stds)
@@ -68,11 +68,23 @@ class A2C:
     def eval_actions(self, states, acts):
         state_vals, logprobs_acts = [], []
         
-        mus, state_vals = self.ac(torch.tensor(states).float())
-        log_stds = -.5 * torch.ones(self.act_dim)
-        std = torch.exp(log_stds)
-        pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
-        logprobs_acts = torch.stack([utils.gaussian_likelihood(pi, mu, log_stds) for pi, mu in zip(pis, mus)])
+        if not self.continuous:
+            logsoft = nn.LogSoftmax(dim=-1)
+            soft = nn.Softmax(dim=-1)
+            logits, state_vals = self.ac(torch.tensor(states).float())
+            lps = logsoft(logits)
+            pis = torch.stack([torch.multinomial(soft(logit), 1) for logit in logits])
+            onehots = torch.zeros((self.steps_per_epoch, self.env.action_space.n))
+            onehots[pis] = 1
+            logprobs_acts = torch.stack([torch.sum(onehot*logprob) for onehot, logprob in zip(onehots, lps)])
+
+            
+        elif self.continuous:
+            mus, state_vals = self.ac(torch.tensor(states).float())
+            log_stds = -.5 * torch.ones(self.act_dim)
+            std = torch.exp(log_stds)
+            pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
+            logprobs_acts = torch.stack([utils.gaussian_likelihood(pi, mu, log_stds) for pi, mu in zip(pis, mus)])
         
         #for i in range(len(states)):
         #    mu, state_val = self.ac(torch.from_numpy(states[i]).float())
@@ -133,7 +145,7 @@ class A2C:
                 episode_length += 1
                 over = done or (episode_length == horizon)
                 if over or (_ == self.steps_per_epoch - 1):
-                    last_val = reward if done else self.ac(torch.from_numpy(state).float())[1]
+                    last_val = reward if done else self.ac(torch.from_numpy(state).float())[1].detach().numpy()
                     self.ac.end_traj(last_val=last_val)
                     if over:
                         state = self.env.reset()

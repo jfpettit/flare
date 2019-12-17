@@ -19,22 +19,23 @@ class PPO(A2C):
         pol_ratio = torch.exp(kwargs['logprobs'] - kwargs['logprobs_old'])
         surrogate1 = pol_ratio * kwargs['advs']
         surrogate2 = torch.clamp(pol_ratio, 1.0 - self.eps, 1.0 + self.eps) * kwargs['advs']
-        pol_loss = -torch.mean(torch.min(surrogate1, surrogate2))
+        pol_loss = -torch.min(surrogate1, surrogate2).mean()
         val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
-        return pol_loss, val_loss, pol_loss + 0.5 * val_loss
+        return pol_loss, val_loss, pol_loss + val_loss
 
     def update_(self):
-        states, acts, advs, rets, logprobs_old, values, logprobs_old_ = self.ac.gather()
-        logprobs_old = torch.stack(logprobs_old)
+        states, acts, advs, rets, logprobs_old, values = self.ac.gather()
+        logprobs_old = torch.tensor(logprobs_old)
         vals_ = torch.stack(values).squeeze()
         #logprobs_old = torch.tensor(logprobs_old)
-        vals_, logprobs_ = self.eval_actions(states, acts)
-        
-        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_, vals_=vals_, logprobs_old=logprobs_old)
         
         for _ in range(self.train_steps):
+            vals_, logprobs_ = self.eval_actions(states, acts)
+            #delts = self.ac.
+            #advs = self.ac.discount_cumulative_sum()
+            pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets.detach(), logprobs=logprobs_, vals_=vals_.squeeze(), logprobs_old=logprobs_old.detach())
             self.optimizer.zero_grad()
-            loss.backward(retain_graph=True)
+            loss.backward()
             #grad_norm = torch.nn.utils.clip_grad_norm_(
             #    self.ac.parameters(), 1)
             self.optimizer.step()
@@ -43,4 +44,4 @@ class PPO(A2C):
         approx_ent = torch.mean(-logprobs_)
         approx_kl = self.approx_kl(logprobs_old, logprobs_)
 
-        return pol_loss, val_loss, approx_ent, approx_kl
+        return pol_loss.mean(), val_loss, approx_ent, approx_kl
