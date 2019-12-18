@@ -70,6 +70,7 @@ class ActorCritic(nn.Module):
 
         self.adv_record[traj_slice] = self.discount_cumulative_sum(deltas, self.gamma * self.lam)
         self.ret_record[traj_slice] = self.discount_cumulative_sum(rews, self.gamma*self.lam)[:-1]
+        #self.adv_record[traj_slice] = self.discount_cumulative_sum(rews[:-1] - vals[:-1], self.gamma*self.lam)
 
         self.strt = self.ptr
 

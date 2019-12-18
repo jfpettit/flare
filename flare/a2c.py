@@ -6,6 +6,7 @@ import torch.nn as nn
 import flare.neural_nets as nets
 from flare import utils
 from torch.nn.utils import clip_grad_norm_
+import time
 
 use_gpu = True if torch.cuda.is_available() else False
 
@@ -30,10 +31,10 @@ class A2C:
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
 
-        self.optimizer = torch.optim.Adam(self.ac.parameters(), lr=0.0003)
+        self.optimizer = torch.optim.Adam(self.ac.parameters())
 
     def approx_kl(self, logprobs_old, logprobs):
-        return torch.mean(logprobs_old - logprobs)
+        return 0.5 * torch.mean(logprobs_old - logprobs)
 
     def action_choice(self, state):
         # convert state to torch tensor, dtype=float
@@ -93,11 +94,14 @@ class A2C:
 
             
         elif self.continuous:
+            #start = time.time()
             mus, state_vals = self.ac(torch.tensor(states).float())
+            #end = time.time()
+            #print(f'Forward pass took {end - start} seconds.')
             log_stds = -.5 * torch.ones(self.act_dim)
             std = torch.exp(log_stds)
             #pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
-            logprobs_acts = torch.stack([utils.gaussian_likelihood(torch.tensor(act), mu, log_stds) for act, mu in zip(acts, mus)])
+            logprobs_acts = torch.stack([utils.gaussian_likelihood(act, mu, log_stds) for act, mu in zip(acts, mus)])
         
         #for i in range(len(states)):
         #    mu, state_val = self.ac(torch.from_numpy(states[i]).float())
