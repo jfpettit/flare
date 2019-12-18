@@ -30,7 +30,7 @@ class A2C:
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
 
-        self.optimizer = torch.optim.Adam(self.ac.parameters())
+        self.optimizer = torch.optim.Adam(self.ac.parameters(), lr=0.0003)
 
     def approx_kl(self, logprobs_old, logprobs):
         return torch.mean(logprobs_old - logprobs)
@@ -67,24 +67,37 @@ class A2C:
 
     def eval_actions(self, states, acts):
         state_vals, logprobs_acts = [], []
-        
+        acts = torch.tensor(acts)
         if not self.continuous:
             logsoft = nn.LogSoftmax(dim=-1)
             soft = nn.Softmax(dim=-1)
+            '''
+            for i in range(len(states)):
+                logit, state_val = self.ac(torch.tensor(states[i]).float())
+                lp = logsoft(logit)
+                #pi = torch.multinomial(soft(logit), 1)
+                onehot = torch.zeros((self.env.action_space.n,))
+                onehot[acts[i]] = 1
+                lp_act = torch.sum(onehot * lp)
+                state_vals.append(state_val)
+                logprobs_acts.append(lp_act)
+            state_vals = torch.stack(state_vals)
+            logprobs_acts = torch.stack(logprobs_acts)
+            '''
             logits, state_vals = self.ac(torch.tensor(states).float())
             lps = logsoft(logits)
-            pis = torch.stack([torch.multinomial(soft(logit), 1) for logit in logits])
-            onehots = torch.zeros((self.steps_per_epoch, self.env.action_space.n))
-            onehots[pis] = 1
-            logprobs_acts = torch.stack([torch.sum(onehot*logprob) for onehot, logprob in zip(onehots, lps)])
+            #pis = torch.stack([torch.multinomial(soft(logit), 1) for logit in logits])
+            logprobs_acts = torch.stack([lp[act] for lp, act in zip(lps, acts)])
+            #onehots = torch.zeros((self.steps_per_epoch, self.env.action_space.n))
+            #logprobs_acts = torch.stack([torch.sum(onehot*logprob) for onehot, logprob in zip(onehots, lps)])
 
             
         elif self.continuous:
             mus, state_vals = self.ac(torch.tensor(states).float())
             log_stds = -.5 * torch.ones(self.act_dim)
             std = torch.exp(log_stds)
-            pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
-            logprobs_acts = torch.stack([utils.gaussian_likelihood(pi, mu, log_stds) for pi, mu in zip(pis, mus)])
+            #pis = torch.stack([mu + torch.randn(mu.shape) * std for mu in mus])
+            logprobs_acts = torch.stack([utils.gaussian_likelihood(torch.tensor(act), mu, log_stds) for act, mu in zip(acts, mus)])
         
         #for i in range(len(states)):
         #    mu, state_val = self.ac(torch.from_numpy(states[i]).float())
@@ -105,13 +118,12 @@ class A2C:
     def loss_fcns(self, **kwargs):
         pol_loss = -torch.mean(kwargs['logprobs'] * kwargs['advs'])
         val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
-        return pol_loss, val_loss, pol_loss + 0.5 * val_loss
+        return pol_loss, val_loss, pol_loss + val_loss
 
     def update_(self):
-        states, acts, advs, rets, logprobs, values, logprobs_old = self.ac.gather()
-        logprobs_ = torch.stack(logprobs)
+        states, acts, advs, rets, logprobs_old, values = self.ac.gather()
+        logprobs_old = torch.stack(logprobs_old)
         vals_ = torch.stack(values).squeeze()
-        logprobs_old = torch.tensor(logprobs_old)
         
         if use_gpu:
             logprobs_ = logprobs_.cuda()
@@ -119,14 +131,19 @@ class A2C:
             vals_ = vals_.cuda()
         
         self.optimizer.zero_grad()
-        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_, vals_=vals_, logprobs_old=logprobs_old)
+        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_old, vals_=vals_)
         loss.backward()
         grad_norm = torch.nn.utils.clip_grad_norm_(
-            self.ac.parameters(), 1)
+            self.ac.parameters(), 1.)
         self.optimizer.step()
 
-        approx_ent = torch.mean(-logprobs_)
-        approx_kl = self.approx_kl(logprobs_old, logprobs_)
+        vals, logprobs = self.eval_actions(states, acts)
+        #print(logprobs_old)
+        #print('\r----------------------------\n')
+        #print(logprobs)
+        #return
+        approx_ent = torch.mean(-logprobs)
+        approx_kl = self.approx_kl(logprobs_old, logprobs)
 
         return pol_loss, val_loss, approx_ent, approx_kl
         
