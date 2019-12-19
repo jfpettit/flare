@@ -17,12 +17,26 @@ class PPO(A2C):
         self.eps = epsilon
         self.train_steps = train_steps
 
+        self.val_loss = nn.MSELoss()
+
     def loss_fcns(self, **kwargs):
-        pol_ratio = torch.exp(kwargs['logprobs'] - kwargs['logprobs_old'])
-        surrogate1 = pol_ratio * kwargs['advs'].detach()
-        surrogate2 = torch.clamp(pol_ratio, (1.0 - self.eps), (1.0 + self.eps)) * kwargs['advs'].detach()
+        #import ipdb; ipdb.set_trace()
+        pol_ratio = torch.exp(kwargs['logprobs'] - kwargs['logprobs_old'].detach())
+        surrogate1 = pol_ratio * kwargs['advs']
+        #surrogate2 = torch.clamp(pol_ratio * kwargs['advs'], (1.0 - self.eps), (1.0 + self.eps))
+        #pol_ratio[pol_ratio > ((1.0 + self.eps)* kwargs['advs'])] = 1.0 + self.eps
+        #pol_ratio[pol_ratio < ((1.0 - self.eps)* kwargs['advs'])] = 1.0 - self.eps
+        #inds1 = torch.where(pol_ratio * kwargs['advs'] > (1 + self.eps))
+        #inds2 = torch.where(pol_ratio * kwargs['advs'] < (1 - self.eps))
+        #pol_ratio[inds1] = 1 + self.eps
+        #pol_ratio[inds2] = 1 - self.eps
+        surrogate2 = torch.where(kwargs['advs'] > 0, (1+self.eps) * kwargs['advs'], (1 - self.eps) * kwargs['advs'])
+        #surrogate2 = pol_ratio
         pol_loss = -torch.mean(torch.min(surrogate1, surrogate2))
-        val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
+        #val_loss = 0.5 * torch.mean((kwargs['rets'] - kwargs['vals_'])**2)
+        val_loss = 0.5 * self.val_loss(kwargs['rets'], kwargs['vals_'])
+        clipped = (pol_ratio > (1 + self.eps)) | (pol_ratio < (1 - self.eps))
+        self.eps = torch.mean(clipped.float())
         return pol_loss, val_loss, pol_loss + val_loss
 
     def update_(self):

@@ -31,7 +31,7 @@ class A2C:
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
 
-        self.optimizer = torch.optim.Adam(self.ac.parameters())
+        self.optimizer = torch.optim.Adam(self.ac.parameters(), lr=1e-3)
 
     def approx_kl(self, logprobs_old, logprobs):
         return 0.5 * torch.mean(logprobs_old - logprobs)
