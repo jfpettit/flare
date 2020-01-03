@@ -39,8 +39,8 @@ class PPO(BasePolicyGradient):
             _, logp, _ = self.ac.policy(states, acts)
             kl = (logprobs_old - logp).mean()
             if kl > 1.5 * self.maxkl:
-                print(
-                    'Early stopping at step %d due to reaching max kl.' % i)
+                cprint(
+                    f'Early stopping at step {i} due to reaching max kl.', 'yellow')
                 break
 
         vals = self.ac.value_f(states)

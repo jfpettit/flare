@@ -3,6 +3,7 @@ import torch
 import flare.neural_nets as nets
 from flare import utils
 import abc
+from termcolor import cprint
 
 class BasePolicyGradient:
     def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32)):
@@ -48,7 +49,7 @@ class BasePolicyGradient:
             pol_loss, val_loss, approx_ent, approx_kl = self.update()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
-                    print('\r Environment solved in {} steps. Ending training.'.format(i))
+                    cprint(f'\r Environment solved in {i} steps. Ending training.', 'green')
                     return self.ep_reward, self.ep_length
             print(f'\rEpoch {i} of {epochs}\n',
             f'MeanEpRet: {np.mean(self.ep_reward)}\n',
