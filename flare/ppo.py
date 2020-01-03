@@ -2,22 +2,18 @@ from flare.base import BasePolicyGradient
 import numpy as np
 import torch
 import gym
-import torch.nn as nn
-import torch.nn.functional as F
 import flare.neural_nets as nets
-from flare import utils
-from torch.nn.utils import clip_grad_norm_
-import time
+import torch.nn.functional as F
 
 class PPO(BasePolicyGradient):
-    def __init__(self, env, epsilon=0.2, actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, maxkl=0.01, train_steps=80):
-        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch)
+    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3):
+        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes)
         self.eps = epsilon
         self.maxkl = maxkl
         self.train_steps = train_steps
         
-        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=3e-4)
-        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=1e-3)
+        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
+        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
 
     def update(self):
         self.ac.train()

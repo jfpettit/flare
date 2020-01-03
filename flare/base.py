@@ -1,18 +1,13 @@
 import numpy as np
-import gym
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import flare.neural_nets as nets
 from flare import utils
-from torch.nn.utils import clip_grad_norm_
-import time
 import abc
 
 class BasePolicyGradient:
-    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000):
+    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32)):
         self.env=env
-        self.ac = actorcritic(env.observation_space.shape[0], env.action_space)
+        self.ac = actorcritic(env.observation_space.shape[0], env.action_space, hidden_sizes=hid_sizes)
         self.steps_per_epoch = steps_per_epoch
 
         self.buffer = utils.Buffer(env.observation_space.shape, env.action_space.shape, steps_per_epoch, gamma, lam)
