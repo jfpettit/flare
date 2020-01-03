@@ -41,6 +41,7 @@ class PPO(A2C):
         return pol_loss, val_loss, pol_loss + val_loss, pol_ratio
 
     def update_(self):
+        self.ac.train()
         states, acts, advs, rets, logprobs_old = [torch.Tensor(x) for x in self.buffer.get()]
         _, logp, _ = self.ac.policy(states, acts)
         pol_ratio = torch.exp(logp - logprobs_old)
