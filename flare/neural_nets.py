@@ -8,6 +8,86 @@ from flare.utils import NetworkUtils as netu
 import gym
 from scipy.signal import lfilter
 
+class MLP(nn.Module):
+    def __init__(self, layer_szs, activations=torch.tanh, out_act=None, out_squeeze=False):
+        super(MLP, self).__init__()
+        self.layers = nn.ModuleList()
+        self.activations = activations
+        self.out_act = out_act
+        self.out_squeeze = out_squeeze
+
+        for i, l in enumerate(layer_szs[1:]):
+            self.layers.append(nn.Linear(layer_szs[i], l))
+        
+    def forward(self, x):
+        for l in self.layers[:-1]:
+            x = self.activations(l(x))
+        
+        if self.out_act is None:
+            x = self.layers[-1](x)
+        else:
+            x = self.out_act(self.layers[-1](x))
+
+        return x.squeeze() if self.out_squeeze else x
+
+class CategoricalPolicy(nn.Module):
+    def __init__(self, state_features, hidden_sizes, activation, out_activation, action_dim):
+        super(CategoricalPolicy, self).__init__()
+        self.mlp = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation)
+
+    def forward(self, x, a=None):
+        logits = self.mlp(x)
+
+        policy = torch.distributions.Categorical(logits=logits)
+        pi = policy.sample()
+        logp_pi = policy.log_prob(pi).squeeze()
+
+        if a is not None:
+            logp = policy.log_prob(a).squeeze()
+        else:
+            logp = None
+
+        return pi, logp, logp_pi
+
+class GaussianPolicy(nn.Module):
+    def __init__(self, state_features, hidden_sizes, activation, out_activation, action_dim):
+        super(GaussianPolicy, self).__init__()
+
+        self.mlp = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_act=out_activation)
+        self.logstd = nn.Parameter(-0.5 * torch.ones(action_dim))
+
+    def forward(self, x, a=None):
+        mu = self.mlp(x)
+        std = torch.exp(self.logstd)
+        policy = torch.distributions.Normal(mu, std)
+        pi = policy.sample()
+        logp_pi = policy.log_prob(pi).sum(dim=1)
+        if a is not None:
+            logp = policy.log_prob(a).sum(dim=1)
+        else:
+            logp = None
+
+        return pi, logp, logp_pi
+
+class FireActorCritic(nn.Module):
+    def __init__(self, state_features, action_space, hidden_sizes=(64, 64), activation=torch.tanh, out_activation=None, policy=None):
+        super(FireActorCritic, self).__init__()
+
+        if policy is None and isinstance(action_space, gym.spaces.Box):
+            self.policy = GaussianPolicy(state_features, hidden_sizes, activation, out_activation, action_space.shape[0])
+        elif policy is None and isinstance(action_space, gym.spaces.Discrete):
+            self.policy = CategoricalPolicy(state_features, hidden_sizes, activation, out_activation, action_space.n)
+        else:
+            self.policy = policy(state_features, hidden_sizes, activation, out_activation, action_space)
+
+        self.value_f = MLP([state_features]+list(hidden_sizes)+[1], activations=activation, out_squeeze=True)
+
+    def forward(self, x):
+        pi, logp, logp_pi = self.policy(x)
+        value = self.value_f(x)
+
+        return pi, logp, logp_pi, value
+
 class ActorCritic(nn.Module):
     def __init__(self, in_size, out_size):
         super(ActorCritic, self).__init__()

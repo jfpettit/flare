@@ -3,6 +3,7 @@ import numpy as np
 import gym
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import flare.neural_nets as nets
 from flare import utils
 from torch.nn.utils import clip_grad_norm_
@@ -11,7 +12,7 @@ import time
 use_gpu = True if torch.cuda.is_available() else False
 
 class A2C:
-    def __init__(self, env, actorcritic=nets.ActorCritic, gamma=.99, lam=.95, steps_per_epoch=4000):
+    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.95, steps_per_epoch=4000):
         
         self.init_shared(env, actorcritic, gamma, lam, steps_per_epoch)
 
@@ -20,9 +21,11 @@ class A2C:
         
         self.continuous = True if type(env.action_space) is gym.spaces.box.Box else False
 
-        act_space = env.action_space.n if not self.continuous else env.action_space.shape[0]
-        self.ac = actorcritic(env.observation_space.shape[0], act_space)
-        self.ac.buffer_init(steps_per_epoch, gamma=gamma, lam=lam)
+        #act_space = env.action_space.n if not self.continuous else env.action_space.shape[0]
+        #obs_space = env.observation_space.shape[0] if isinstance(env.observation_space, gym.spaces.Box) else env.observation_space.n
+        self.ac = actorcritic(self.env.observation_space.shape[0], self.env.action_space)
+        #self.ac.buffer_init(steps_per_epoch, gamma=gamma, lam=lam)
+        self.buffer = utils.Buffer(env.observation_space.shape, env.action_space.shape, steps_per_epoch, gamma=gamma, lam=lam)
 
         if use_gpu:
             self.ac.cuda()
@@ -31,10 +34,11 @@ class A2C:
         self.lam = lam
         self.steps_per_epoch = steps_per_epoch
 
-        self.optimizer = torch.optim.Adam(self.ac.parameters(), lr=1e-3)
+        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=3e-4)
+        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=1e-3)
 
     def approx_kl(self, logprobs_old, logprobs):
-        return 0.5 * torch.mean(logprobs_old - logprobs)
+        return torch.mean(logprobs_old - logprobs)
 
     def action_choice(self, state):
         # convert state to torch tensor, dtype=float
@@ -125,29 +129,42 @@ class A2C:
         return pol_loss, val_loss, pol_loss + val_loss
 
     def update_(self):
-        states, acts, advs, rets, logprobs_old, values = self.ac.gather()
-        logprobs_old = torch.stack(logprobs_old)
-        vals_ = torch.stack(values).squeeze()
+        states, acts, advs, rets, logprobs_old = [torch.Tensor(x) for x in self.buffer.get()]
+        #logprobs_old = torch.stack(logprobs_old)
+        #vals_ = torch.stack(values).squeeze()
         
         if use_gpu:
             logprobs_ = logprobs_.cuda()
             returns = returns.cuda()
             vals_ = vals_.cuda()
         
-        self.optimizer.zero_grad()
-        pol_loss, val_loss, loss = self.loss_fcns(advs=advs, rets=rets, logprobs=logprobs_old, vals_=vals_)
-        loss.backward()
-        grad_norm = torch.nn.utils.clip_grad_norm_(
-            self.ac.parameters(), 1.)
-        self.optimizer.step()
+        _, logp, _ = self.ac.policy(states, acts)
+        approx_ent = torch.mean(-logp)
 
-        vals, logprobs = self.eval_actions(states, acts)
-        #print(logprobs_old)
-        #print('\r----------------------------\n')
-        #print(logprobs)
-        #return
-        approx_ent = torch.mean(-logprobs)
-        approx_kl = self.approx_kl(logprobs_old, logprobs)
+        pol_loss = -(logp*advs).mean()
+
+        self.policy_optimizer.zero_grad()
+        pol_loss.backward()
+        grad_norm = torch.nn.utils.clip_grad_norm_(
+            self.ac.policy.parameters(), 1.)
+        self.policy_optimizer.step()
+
+        values = self.ac.value_f(states)
+        val_loss_old = F.mse_loss(values, rets)
+        for _ in range(80):
+            values = self.ac.value_f(states)
+            val_loss = F.mse_loss(values, rets)
+
+            self.value_optimizer.zero_grad()
+            val_loss.backward()
+            grad_norm = torch.nn.utils.clip_grad_norm_(
+                self.ac.value_f.parameters(), 1.
+            )
+            self.value_optimizer.step()
+
+        #vals, logprobs = self.eval_actions(states, acts)
+        #approx_ent = torch.mean(-logprobs)
+        approx_kl = self.approx_kl(logprobs_old, logp)
 
         return pol_loss, val_loss, approx_ent, approx_kl
         
@@ -156,18 +173,20 @@ class A2C:
             self.ep_length = []
             self.ep_reward = []
             state, episode_reward, episode_length = self.env.reset(), 0, 0
+            self.ac.eval()
             for _ in range(self.steps_per_epoch):
-                action, value, logprob = self.action_choice(state)
-                state, reward, done, _ = self.env.step(action)
+                #action, value, logprob = self.action_choice(state)
+                action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
+                state, reward, done, _ = self.env.step(action.detach().numpy()[0])
                 if render:
                     self.env.render()
-                self.ac.store(state, action, reward, value, logprob)
+                self.buffer.store(state, action.detach().numpy(), reward, value.item(), logp.detach().numpy())
                 episode_reward += reward
                 episode_length += 1
                 over = done or (episode_length == horizon)
                 if over or (_ == self.steps_per_epoch - 1):
-                    last_val = reward if done else self.ac(torch.from_numpy(state).float())[1].detach().numpy()
-                    self.ac.end_traj(last_val=last_val)
+                    last_val = reward if done else self.ac.value_f(torch.Tensor(state.reshape(1, -1))).item()
+                    self.buffer.finish_path(last_val)
                     if over:
                         state = self.env.reset()
                         self.ep_length.append(episode_length)
@@ -177,7 +196,7 @@ class A2C:
                         done = False
                         reward = 0
             pol_loss, val_loss, approx_ent, approx_kl = self.update_()
-            self.ac.clear_mem()
+            #self.ac.clear_mem()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
                     print('\r Environment solved in {} steps. Ending training.'.format(i))
