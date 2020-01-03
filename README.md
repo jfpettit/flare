@@ -1,7 +1,5 @@
 # flare
 
-**Note: lots of updates coming. A2C reworked, will be reworking PPO and including a base NN class.**
-
 (old) Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
 
 ## Installation
@@ -16,12 +14,12 @@ pip install -e .
 
 ## Running from command line
 
-Presently, A2C is the only properly written algorithm. I'm working on PPO. Run A2C from the command line with:
+Presently, A2C and PPO are implemented and working. Run from the command line with:
 ```
 cd flare/examples
-python a2c_runner.py -h
+python runner.py -h
 ```
-The ```-h``` tag will show you the available optional arguments for the file. To use the defaults, just do: ```python a2c_runner.py```.
+The ```-h``` tag will show you the available optional arguments for the file. To use the defaults, just do: ```python runner.py```.
 
 ## Running in a Python file
 
@@ -31,7 +29,7 @@ Import required packages:
 import gym
 from flare.a2c import A2C
 
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v0') # or other gym env
 agent = A2C(env)
 agent.learn(100)
 ```
@@ -46,6 +44,10 @@ Algorithms will be listed here as they are implemented:
 
 - A2C
 	- This is an implementation of the Advantage Actor Critic algorithm. It works with any Gym environment.
+- PPO
+	- This is an implementation of the Proximal Policy Optimization algorithm, it also works with any Gym environment.
+
+**This architecture is deprecated and no longer works with the code. I'll be updating the base actor critic class accordingly.**
 
 An actor critic network is [included](https://github.com/jfpettit/flare/blob/aad21963f7f67f78be1ea3ae7238b2ff7ca86e9e/flare/neural_nets.py#L11). But, if you'd like to define your own architecture, just subclass this one and write your forward pass to return action logits and state values. Make sure your ```__init__``` call takes the same arguments as the ActorCritic class does. For example:
 
@@ -62,7 +64,6 @@ class CustomNet(ActorCritic):
 ```
 
 ## More to come!
-- Implement PPO
 - Improve features (i.e. automatic result plotting/saving, etc.)
 - Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
