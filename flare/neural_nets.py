@@ -70,7 +70,7 @@ class GaussianPolicy(nn.Module):
         return pi, logp, logp_pi
 
 class FireActorCritic(nn.Module):
-    def __init__(self, state_features, action_space, hidden_sizes=(64, 64), activation=torch.tanh, out_activation=None, policy=None):
+    def __init__(self, state_features, action_space, hidden_sizes=(32, 32), activation=torch.tanh, out_activation=None, policy=None):
         super(FireActorCritic, self).__init__()
 
         if policy is None and isinstance(action_space, gym.spaces.Box):
@@ -82,7 +82,7 @@ class FireActorCritic(nn.Module):
 
         self.value_f = MLP([state_features]+list(hidden_sizes)+[1], activations=activation, out_squeeze=True)
 
-    def forward(self, x):
+    def forward(self, x, a=None):
         pi, logp, logp_pi = self.policy(x)
         value = self.value_f(x)
 
@@ -174,93 +174,6 @@ class ActorCritic(nn.Module):
 
         self.adv_record = np.zeros(self.size, dtype=np.float32)
         self.ret_record = np.zeros(self.size, dtype=np.float32)
-
-
-class ContinuousActorCritic(nn.Module):
-    def __init__(self, in_size, out_size):
-        super(ContinuousActorCritic, self).__init__()
-        self.save_log_probs = []
-        self.save_states = []
-        self.save_rewards = []
-        self.save_values = []
-        self.save_actions = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.mu_out = nn.Linear(64, out_size)
-        self.sig_sq_out = nn.Linear(64, out_size)
-        self.val = nn.Linear(64, 1)
-
-    def forward(self, x):
-        x = F.relu(self.layer1(x))
-        x = F.relu(self.layer2(x))
-        mu = self.mu_out(x)
-        sig_sq = self.sig_sq_out(x)
-        value = self.val(x)
-        return mu, sig_sq, value
-
-
-class ContinuousPolicyNet(nn.Module):
-    def __init__(self, in_size, out_size):
-        super(ContinuousPolicyNet, self).__init__()
-        self.save_log_probs = []
-        self.save_rewards = []
-        self.save_values = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.mu_out = nn.Linear(64, out_size)
-        self.sig_sq_out = nn.Linear(64, out_size)
-
-    def forward(self, x):
-        x = self.layer1(x)
-        x = F.relu(self.layer2(x))
-        mu = self.mu_out(x)
-        sig_sq = self.sig_sq_out(x)
-        return mu, sig_sq
-
-class BaseNet(nn.Module):
-    def __init__(self, in_size, out_size, is_val_func=False):
-        super(BaseNet, self).__init__()
-        self.is_val = is_val_func
-        self.save_log_probs = []
-        self.save_rewards = []
-        self.save_values = []
-        self.save_states = []
-
-        self.layer1 = nn.Linear(in_size, 64)
-        self.layer2 = nn.Linear(64, 32)
-        self.layer3 = nn.Linear(32, out_size)
-
-        self.tanh = nn.Tanh()
-
-    def forward(self, x):
-        x = self.tanh(self.layer1(x))
-        x = self.tanh(self.layer2(x))
-        if self.is_val:
-            return self.layer3(x)
-        else:
-            return self.layer3(x)
-
-class PolicyNet(nn.Module):
-    def __init__(self, in_size, out_size, is_val_func=False):
-        super(PolicyNet, self).__init__()
-        self.is_val = is_val_func
-        self.save_log_probs = []
-        self.save_rewards = []
-        self.save_values = []
-
-        self.layer1 = nn.Linear(in_size, 128)
-        self.layer2 = nn.Linear(128, 64)
-        self.layer3 = nn.Linear(64, out_size)
-
-    def forward(self, x):
-        x = self.layer1(x)
-        x = F.relu(self.layer2(x))
-        if self.is_val:
-            return self.layer3(x)
-        else:
-            return F.softmax(self.layer3(x), dim=-1)
 
 class NatureDQN(nn.Module):
     def __init__(self, in_channels, out_channels, h, w):
