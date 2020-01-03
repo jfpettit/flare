@@ -23,6 +23,8 @@ class BasePolicyGradient:
         return
 
     def learn(self, epochs, render=False, solved_threshold=None, horizon=1000):
+        if render and 'Bullet' in self.env.unwrapped.spec.id:
+            self.env.render()
         state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
         for i in range(epochs):
             self.ep_length = []
@@ -30,7 +32,7 @@ class BasePolicyGradient:
             self.ac.eval()
             for _ in range(self.steps_per_epoch):
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
-                if render:
+                if render and 'Bullet' not in self.env.unwrapped.spec.id:
                     self.env.render()
                 self.buffer.store(state, action.detach().numpy(), reward, value.item(), logp.detach().numpy())
                 state, reward, done, _ = self.env.step(action.detach().numpy()[0])

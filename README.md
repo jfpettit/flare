@@ -63,6 +63,13 @@ class CustomNet(ActorCritic):
 		return logits, value
 ```
 
+## References
+- [OpenAI SpinningUp](https://spinningup.openai.com/en/latest/)
+- [FiredUp](https://github.com/kashif/firedup)
+- [PPO paper](https://arxiv.org/abs/1707.06347)
+- [A3C paper](https://arxiv.org/abs/1602.01783)
+- [Pytorch RL examples](https://github.com/pytorch/examples/tree/master/reinforcement_learning)
+
 ## More to come!
 - Improve features (i.e. automatic result plotting/saving, etc.)
 - Implement DQN, DDPG and SAC (maybe?)
