@@ -8,6 +8,7 @@ from termcolor import cprint
 from gym.spaces import Box
 import torch.nn as nn
 from flare.logging import EpochLogger
+import pickle as pkl
 
 class BasePolicyGradient:
     def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32)):
@@ -19,12 +20,15 @@ class BasePolicyGradient:
 
         self.logger = EpochLogger()
 
+        
+        self.screen_saver = []
+
     @abc.abstractmethod
     def update(self):
         """Update rule for policy gradient algo."""
         return
 
-    def learn(self, epochs, render=False, solved_threshold=None, horizon=1000, logstd_anneal=None):
+    def learn(self, epochs, render=False, solved_threshold=None, horizon=1000, logstd_anneal=None, save_screen=False):
         if render and 'Bullet' in self.env.unwrapped.spec.id:
             self.env.render()
         if logstd_anneal is not None:
@@ -39,6 +43,9 @@ class BasePolicyGradient:
                 self.ac.logstds = nn.Parameter(logstds[i] * torch.ones(self.env.action_space.shape[0]))
             self.ac.eval()
             for _ in range(self.steps_per_epoch):
+                if save_screen:
+                    screen = self.env.render(mode='rgb_array')
+                    self.screen_saver.append(screen)
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
                 self.logger.store(Values=value)
                 if render and 'Bullet' not in self.env.unwrapped.spec.id:
@@ -58,6 +65,9 @@ class BasePolicyGradient:
                     episode_length = 0
                     done = False
                     reward = 0
+            if save_screen:
+                with open(self.env.unwrapped.spec.id+'_'+str(start_time)+'.pkl', 'wb') as f:
+                    pkl.dump(self.screen_saver, f)
             pol_loss, val_loss, approx_ent, approx_kl = self.update()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:

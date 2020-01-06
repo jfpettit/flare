@@ -11,6 +11,6 @@ setuptools.setup(
     short_description='Simple implementations of reinforcement learning algorithms.',
     long_description=long_description,
 	url='https://github.com/jfpettit/flare',
-	install_requires=['numpy', 'torch', 'gym', 'scipy', 'roboschool', 'pybullet', 'termcolor']
+	install_requires=['numpy', 'torch', 'gym', 'scipy', 'roboschool', 'pybullet', 'termcolor', 'joblib']
 	,
 )
