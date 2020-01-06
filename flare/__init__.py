@@ -7,3 +7,4 @@ from . import neural_nets
 from . import a2c
 from . import ppo
 from . import base
+from . import logging

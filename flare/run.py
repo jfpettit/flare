@@ -24,6 +24,7 @@ parser.add_argument('--render', type=bool, help='Whether to render agent during 
 parser.add_argument('--gamma', type=float, help='Discount factor for GAE-lambda advantage calculation', default=.999)
 parser.add_argument('--lam', type=float, help='Lambda for GAE-lambda advantage calculation', default=.97)
 parser.add_argument('--layers', nargs='+', help='MLP hidden layer sizes. Enter like this: --layers 64 64. Makes MLP w/ 2 hidden layers w/ 64 nodes each.', default=[32, 32])
+parser.add_argument('--std_anneal', nargs='+', help='Whether or not to anneal policy log standard deviation over training', default=None)
 
 # get args from argparser
 args = parser.parse_args()
@@ -31,12 +32,13 @@ args = parser.parse_args()
 if __name__ == '__main__':
     # initialize training object. defined in flare/algorithms.py
     hids = [int(i) for i in args.layers]
+    logstds_anneal = [float(i) for i in args.std_anneal]
     env = gym.make(args.env)
     if args.alg == 'PPO':
         trainer = PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
     elif args.alg == 'A2C':
         trainer = A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
-    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render)
+    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal)
 
     # watch agent interact with environment
     if args.watch:

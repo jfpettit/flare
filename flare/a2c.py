@@ -8,8 +8,8 @@ from flare.base import BasePolicyGradient
 import torch.nn.functional as F
 
 class A2C(BasePolicyGradient):
-    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, pol_lr=3e-4, val_lr=1e-3):
-        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes)
+    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, pol_lr=3e-4, val_lr=1e-3, logstd_anneal=None):
+        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, logstd_anneal=logstd_anneal)
         
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
@@ -37,7 +37,10 @@ class A2C(BasePolicyGradient):
             val_loss.backward()
             self.value_optimizer.step()
 
+        _, _, logp, vals = self.ac(states, acts)
+        pol_loss_new = -(logp*advs).mean()
+        val_loss_new = F.mse_loss(vals, rets)
         approx_kl = (logprobs_old - logp).mean()
-
+        self.logger.store(PolicyLoss=pol_loss, ValueLoss=val_loss_old, KL=approx_kl, Entropy=approx_ent, DeltaPolLoss=(pol_loss_new - pol_loss), DeltaValLoss=(val_loss_new-val_loss))
         return pol_loss, val_loss_old, approx_ent, approx_kl
         

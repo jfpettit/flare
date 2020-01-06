@@ -4,6 +4,7 @@ import torch
 import gym
 import flare.neural_nets as nets
 import torch.nn.functional as F
+from termcolor import cprint
 
 class PPO(BasePolicyGradient):
     def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3):
@@ -55,4 +56,5 @@ class PPO(BasePolicyGradient):
             self.value_optimizer.step()
             
         approx_kl = kl
+        self.logger.store(PolicyLoss=pol_loss_old, ValueLoss=val_loss_old, KL=approx_kl, Entropy=approx_ent, DeltaPolLoss=(pol_loss - pol_loss_old), DeltaValLoss=(val_loss-val_loss_old))
         return pol_loss_old.detach().numpy(), val_loss_old.detach().numpy(), approx_ent.detach().numpy(), approx_kl.detach().numpy()
