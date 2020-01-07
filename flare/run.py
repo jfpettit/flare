@@ -26,6 +26,7 @@ parser.add_argument('--lam', type=float, help='Lambda for GAE-lambda advantage c
 parser.add_argument('--layers', nargs='+', help='MLP hidden layer sizes. Enter like this: --layers 64 64. Makes MLP w/ 2 hidden layers w/ 64 nodes each.', default=[32, 32])
 parser.add_argument('--std_anneal', nargs='+', help='Whether or not to anneal policy log standard deviation over training', default=None)
 parser.add_argument('--save_screen', type=bool, help='Whether to save the screens over training. Saves as .npy list of NumPy arrays.', default=False)
+parser.add_argument('--n_anneal_cycles', type=int, help='If using std annealing, how many cycles to anneal over. Default: 0', default=0)
 
 # get args from argparser
 args = parser.parse_args()
@@ -39,7 +40,7 @@ if __name__ == '__main__':
         trainer = PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
     elif args.alg == 'A2C':
         trainer = A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
-    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen)
+    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen, n_anneal_cycles=args.n_anneal_cycles)
 
     # watch agent interact with environment
     if args.watch:
@@ -47,9 +48,8 @@ if __name__ == '__main__':
             env = wrappers.Monitor(env, args.alg+'_on_'+env.unwrapped.spec.id, video_callable=lambda episode_id: True, force=True)
         obs = env.reset()
         for i in range(10000):
-            #action = trainer.action_choice(torch.tensor(obs))
-            action = trainer.exploit(torch.tensor(obs))
-            obs, reward, done, _ = env.step(int(action))
+            action, _, _, _ = trainer.ac(torch.Tensor(obs.reshape(1, -1)))
+            obs, reward, done, _ = env.step(action.detach().numpy()[0])
             env.render()
             if done:
                 obs = env.reset()

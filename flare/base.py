@@ -30,12 +30,17 @@ class BasePolicyGradient:
         """Update rule for policy gradient algo."""
         return
 
-    def learn(self, epochs, render=False, solved_threshold=None, horizon=1000, logstd_anneal=None, save_screen=False):
+    def learn(self, epochs, render=False, solved_threshold=None, horizon=1000, logstd_anneal=None, save_screen=False, n_anneal_cycles=0):
         if render and 'Bullet' in self.env.unwrapped.spec.id:
             self.env.render()
         if logstd_anneal is not None:
             assert isinstance(self.env.action_space, Box), 'Log standard deviation only used in environments with continuous action spaces. Your current environment uses a discrete action space.'
-            logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs)
+            if n_anneal_cycles > 0:
+                logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs//n_anneal_cycles)
+                for _ in range(n_anneal_cycles):
+                    logstds = np.hstack((logstds, logstds))
+            else:    
+                logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs)
         start_time = time.time()
         state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
         for i in range(epochs):
