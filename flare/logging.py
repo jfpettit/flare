@@ -2,6 +2,7 @@
 Some simple logging functionality, inspired by rllab's logging.
 Logs to a tab-separated-values file (path/to/output_directory/progress.txt)
 """
+# pylint: disable=import-error
 import json
 import joblib
 import shutil
@@ -140,8 +141,6 @@ class Logger:
             joblib.dump(state_dict, osp.join(self.output_dir, fname))
         except:
             self.log('Warning: could not pickle state_dict.', color='red')
-        if hasattr(self, 'tf_saver_elements'):
-            self._tf_simple_save(itr)
 
     
     def dump_tabular(self):

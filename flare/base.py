@@ -1,3 +1,5 @@
+# pylint: disable=import-error
+# pylint: disable=no-member
 import numpy as np
 import time
 import torch
@@ -68,7 +70,7 @@ class BasePolicyGradient:
             if save_screen:
                 with open(self.env.unwrapped.spec.id+'_'+str(start_time)+'.pkl', 'wb') as f:
                     pkl.dump(self.screen_saver, f)
-            pol_loss, val_loss, approx_ent, approx_kl = self.update()
+            self.update()
             if solved_threshold and len(self.ep_reward) > 100:
                 if np.mean(self.ep_reward[i-100:i]) >= solved_threshold:
                     cprint(f'\r Environment solved in {i} steps. Ending training.', 'green')
@@ -93,9 +95,7 @@ class BasePolicyGradient:
     def exploit(self, state):
         state = np.asarray(state)
         state = torch.from_numpy(state).float()
-        if use_gpu:
-            state = state.cuda()
 
-        action_probabilities, value = self.model(state)
+        action_probabilities, _ = self.ac(state)
         action = torch.argmax(action_probabilities)
         return action.item() 
