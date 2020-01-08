@@ -47,10 +47,13 @@ if __name__ == '__main__':
         if args.save_mv:
             env = wrappers.Monitor(env, args.alg+'_on_'+env.unwrapped.spec.id, video_callable=lambda episode_id: True, force=True)
         obs = env.reset()
+        if 'Bullet' in env.unwrapped.spec.id:
+            env.render()
         for i in range(10000):
             action, _, _, _ = trainer.ac(torch.Tensor(obs.reshape(1, -1)))
             obs, reward, done, _ = env.step(action.detach().numpy()[0])
-            env.render()
+            if "Bullet" not in env.unwrapped.spec.id:
+                env.render()
             if done:
                 obs = env.reset()
         env.close()
