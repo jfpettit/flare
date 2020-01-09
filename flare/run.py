@@ -24,8 +24,9 @@ parser.add_argument('--render', type=bool, help='Whether to render agent during 
 parser.add_argument('--gamma', type=float, help='Discount factor for GAE-lambda advantage calculation', default=.999)
 parser.add_argument('--lam', type=float, help='Lambda for GAE-lambda advantage calculation', default=.97)
 parser.add_argument('--layers', nargs='+', help='MLP hidden layer sizes. Enter like this: --layers 64 64. Makes MLP w/ 2 hidden layers w/ 64 nodes each.', default=[32, 32])
-parser.add_argument('--std_anneal', nargs='+', help='Whether or not to anneal policy log standard deviation over training', default=None)
-parser.add_argument('--save_screen', type=bool, help='Whether to save the screens over training. Saves as .npy list of NumPy arrays.', default=False)
+parser.add_argument('--logstd_anneal', nargs='+', help='Whether or not to anneal policy log standard deviation over training', default=None)
+parser.add_argument('--save_states', type=bool, help='Whether or not to save states over training. Saves as pickled list of NumPy arrays.', default=False)
+parser.add_argument('--save_screen', type=bool, help='Whether to save the screens over training. Saves as pickled list of NumPy arrays.', default=False)
 parser.add_argument('--n_anneal_cycles', type=int, help='If using std annealing, how many cycles to anneal over. Default: 0', default=0)
 
 # get args from argparser
@@ -34,21 +35,22 @@ args = parser.parse_args()
 if __name__ == '__main__':
     # initialize training object. defined in flare/algorithms.py
     hids = [int(i) for i in args.layers]
-    logstds_anneal = [float(i) for i in args.std_anneal] if args.std_anneal is not None else None
+    logstds_anneal = [float(i) for i in args.logstd_anneal] if args.logstd_anneal is not None else None
     env = gym.make(args.env)
     if args.alg == 'PPO':
         trainer = PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
     elif args.alg == 'A2C':
         trainer = A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids)
-    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen, n_anneal_cycles=args.n_anneal_cycles)
+    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen, n_anneal_cycles=args.n_anneal_cycles, save_states=args.save_states)
 
     # watch agent interact with environment
     if args.watch:
+        env = gym.make(args.env)
         if args.save_mv:
             env = wrappers.Monitor(env, args.alg+'_on_'+env.unwrapped.spec.id, video_callable=lambda episode_id: True, force=True)
-        obs = env.reset()
         if 'Bullet' in env.unwrapped.spec.id:
             env.render()
+        obs = env.reset()
         for i in range(10000):
             action, _, _, _ = trainer.ac(torch.Tensor(obs.reshape(1, -1)))
             obs, reward, done, _ = env.step(action.detach().numpy()[0])
