@@ -7,8 +7,8 @@ import torch.nn.functional as F
 from termcolor import cprint
 
 class PPO(BasePolicyGradient):
-    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3):
-        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes)
+    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3, state_preproc=None, state_sze=None):
+        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, state_preproc=state_preproc, state_sze=state_sze)
         self.eps = epsilon
         self.maxkl = maxkl
         self.train_steps = train_steps

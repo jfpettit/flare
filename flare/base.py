@@ -13,12 +13,20 @@ from flare.logging import EpochLogger
 import pickle as pkl
 
 class BasePolicyGradient:
-    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32)):
+    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32), state_preproc=None, state_sze=None):
         self.env=env
-        self.ac = actorcritic(env.observation_space.shape[0], env.action_space, hidden_sizes=hid_sizes)
+        self.state_preproc = state_preproc
+        if state_preproc is None:
+            self.ac = actorcritic(env.observation_space.shape[0], env.action_space, hidden_sizes=hid_sizes)
+            self.buffer = utils.Buffer(env.observation_space.shape, env.action_space.shape, steps_per_epoch, gamma, lam)
+        elif state_preproc is not None:
+            assert state_sze is not None, 'If using some state preprocessing, must specify state size after preprocessing.'
+            self.ac = actorcritic(state_sze, env.action_space, hidden_sizes=hid_sizes)
+            self.buffer = utils.Buffer(state_sze, env.action_space.shape, steps_per_epoch, gamma, lam)
+
         self.steps_per_epoch = steps_per_epoch
 
-        self.buffer = utils.Buffer(env.observation_space.shape, env.action_space.shape, steps_per_epoch, gamma, lam)
+        
 
         self.logger = EpochLogger()
 
@@ -55,6 +63,8 @@ class BasePolicyGradient:
                 if save_screen:
                     screen = self.env.render(mode='rgb_array')
                     self.screen_saver.append(screen)
+                if self.state_preproc is not None:
+                    state = self.state_preproc(state)
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
                 self.logger.store(Values=value)
                 if render and 'Bullet' not in self.env.unwrapped.spec.id:
@@ -65,6 +75,8 @@ class BasePolicyGradient:
                 episode_length += 1
                 over = done or (episode_length == horizon)
                 if over or (_ == self.steps_per_epoch - 1):
+                    if self.state_preproc is not None:
+                        state = self.state_preproc(state)
                     last_val = reward if done else self.ac.value_f(torch.Tensor(state.reshape(1, -1))).item()
                     self.buffer.finish_path(last_val)
                     if over:
@@ -102,11 +114,3 @@ class BasePolicyGradient:
                 self.logger.log_tabular('CurrentLogStd', logstds[i])
             self.logger.dump_tabular()
         return self.ep_reward, self.ep_length
-
-    def exploit(self, state):
-        state = np.asarray(state)
-        state = torch.from_numpy(state).float()
-
-        action_probabilities, _ = self.ac(state)
-        action = torch.argmax(action_probabilities)
-        return action.item() 
