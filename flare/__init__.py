@@ -1,4 +1,4 @@
-name = "discite"
+name = "flare"
 
 __all__ = ['a2c', 'utils', 'neural_nets', 'ppo', 'base']
 
