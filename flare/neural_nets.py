@@ -1,3 +1,5 @@
+# pylint: disable=no-member
+# pylint: disable=not-callable
 import numpy as np
 from collections import namedtuple
 import torch
@@ -178,7 +180,7 @@ class ActorCritic(nn.Module):
 class NatureDQN(nn.Module):
     def __init__(self, in_channels, out_channels, h, w):
         super(NatureDQN, self).__init__()
-        self.netutil = neu()
+        self.netutil = netu()
 
         self.conv1 = nn.Conv2d(in_channels, 32, 8, stride=4)
         height = self.netutil.conv2d_output_size(8, 4, h)
