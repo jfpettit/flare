@@ -50,7 +50,7 @@ class BasePolicyGradient:
                     logstds = np.hstack((logstds, logstds))
             else:    
                 logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs)
-        start_time = time.time()
+        last_time = time.time()
         state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
         for i in range(epochs):
             self.ep_length = []
@@ -87,10 +87,10 @@ class BasePolicyGradient:
                     done = False
                     reward = 0
             if save_screen:
-                with open(self.env.unwrapped.spec.id+'_Screen_'+str(start_time)+'.pkl', 'wb') as f:
+                with open(self.env.unwrapped.spec.id+'_Screen_'+str(last_time)+'.pkl', 'wb') as f:
                     pkl.dump(self.screen_saver, f)
             if save_states:
-                with open(self.env.unwrapped.spec.id+'_States_'+str(start_time)+'.pkl', 'wb') as f:
+                with open(self.env.unwrapped.spec.id+'_States_'+str(last_time)+'.pkl', 'wb') as f:
                     pkl.dump(self.state_saver, f)
             
             self.update()
@@ -109,8 +109,10 @@ class BasePolicyGradient:
             self.logger.log_tabular('DeltaValLoss', average_only=True)
             self.logger.log_tabular('Entropy', average_only=True)
             self.logger.log_tabular('KL', average_only=True)
-            self.logger.log_tabular('Time', time.time() - start_time)
+            self.logger.log_tabular('EpochTime', time.time() - last_time)
+            last_time = time.time()
             if logstd_anneal is not None:
                 self.logger.log_tabular('CurrentLogStd', logstds[i])
+            self.logger.log_tabular('Env', self.env.unwrapped.spec.id)
             self.logger.dump_tabular()
         return self.ep_reward, self.ep_length
