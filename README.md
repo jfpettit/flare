@@ -1,7 +1,7 @@
 # flare
 ![**PPO agent on LunarLanderContinuous-v2**](/src/lunarlandercontinuous.gif)
 
-**PPO agent trained to play [LunarLanderContinuous-v2](https://gym.openai.com/envs/LunarLanderContinuous-v2/). Reward per episode at this point was ~230.**
+*PPO agent trained to play [LunarLanderContinuous-v2](https://gym.openai.com/envs/LunarLanderContinuous-v2/). Reward per episode at this point was ~230.*
 
 flare is a small reinforcement learning library. Currently, the use case for this library is small-scale RL experimentation/research. 
 
