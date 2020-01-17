@@ -1,5 +1,5 @@
 # flare
-
+![src/lunarlandercontinuous.gif]**PPO agent on LunarLanderContinuous-v2**
 flare is a small reinforcement learning library. Currently, the use case for this library is small-scale RL experimentation/research. 
 
 (old) Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
