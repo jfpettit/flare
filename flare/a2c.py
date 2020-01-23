@@ -8,8 +8,8 @@ from flare.base import BasePolicyGradient
 import torch.nn.functional as F
 
 class A2C(BasePolicyGradient):
-    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, pol_lr=3e-4, val_lr=1e-3, logstd_anneal=None, state_preproc=None, state_sze=None):
-        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, logstd_anneal=logstd_anneal, state_sze=state_sze, state_preproc=state_preproc)
+    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, pol_lr=3e-4, val_lr=1e-3, logstd_anneal=None, state_preproc=None, state_sze=None, logger_dir=None):
+        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, logstd_anneal=logstd_anneal, state_sze=state_sze, state_preproc=state_preproc, logger_dir=logger_dir)
         
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
