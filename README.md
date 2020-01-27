@@ -52,6 +52,8 @@ Algorithms will be listed here as they are implemented:
 - PPO
 	- This is an implementation of the Proximal Policy Optimization algorithm, it also works with any Gym environment.
 
+## Usage
+
 You may alter the architecture of your actor-critic network by passing in a tuple of hidden layer sizes to your agent initialization. i.e.:
 
 ```python
@@ -59,6 +61,8 @@ from flare.ppo import PPO
 agent = PPO(env, hidden_sizes=(64, 32))
 rew, leng = agent.learn(100)
 ```
+
+For a more detailed example using PPO, see the example file at: examples/ppo_example.py.
 
 If you wish to build your own actor-critic from scratch, then it is recommended to use the [FireActorCritic](https://github.com/jfpettit/flare/blob/master/flare/neural_nets.py#L72) as a template.
 
