@@ -62,7 +62,7 @@ agent = PPO(env, hidden_sizes=(64, 32))
 rew, leng = agent.learn(100)
 ```
 
-For a more detailed example using PPO, see the example file at: examples/ppo_example.py.
+For a more detailed example using PPO, see the example file at: [examples/ppo_example.py](https://github.com/jfpettit/flare/blob/master/examples/ppo_example.py).
 
 If you wish to build your own actor-critic from scratch, then it is recommended to use the [FireActorCritic](https://github.com/jfpettit/flare/blob/master/flare/neural_nets.py#L72) as a template.
 
