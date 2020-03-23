@@ -1,4 +1,5 @@
 **/environments
+**/.idea
 **/rlpack.egg-info
 **.egg-info
 CartPoleSwingUpDiscrete-v0performance.png
