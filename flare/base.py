@@ -51,7 +51,8 @@ class BasePolicyGradient:
                     logstds = np.hstack((logstds, logstds))
             else:    
                 logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs)
-        
+
+        infos_tracker = {}
         last_time = time.time()
         state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
         
@@ -82,6 +83,11 @@ class BasePolicyGradient:
                 
                 self.buffer.store(state, action.detach().numpy(), reward, value.item(), logp.detach().numpy())
                 state, reward, done, _ = self.env.step(action.detach().numpy()[0])
+                if len(_) > 0:
+                    if len(infos_tracker) == 0:
+                        infos_tracker = {k: [] for k in _}
+                    for k in _:
+                        infos_tracker[k].append(_[k])
                 episode_reward += reward
                 episode_length += 1
                 
@@ -129,6 +135,9 @@ class BasePolicyGradient:
                 self.logger.log_tabular('CurrentLogStd', logstds[i])
             
             self.logger.log_tabular('Env', self.env.unwrapped.spec.id)
+            if len(infos_tracker) > 0:
+                for k in infos_tracker:
+                    self.logger.log_tabular('Average ' + str(k), np.mean(infos_tracker[k]))
             self.logger.dump_tabular()
         
         return self.ep_reward, self.ep_length
