@@ -12,3 +12,4 @@ testing.py
 **/saved_models
 **/flare_runs
 **/.idea
+**/.mypy_cache
