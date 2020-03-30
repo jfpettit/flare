@@ -9,9 +9,17 @@ from scipy import signal
 from flare.kindling.utils import NetworkUtils as netu
 import gym
 from scipy.signal import lfilter
+from typing import Optional, Iterable, List, Dict, Callable, Union, Tuple
+
 
 class MLP(nn.Module):
-    def __init__(self, layer_szs, activations=torch.tanh, out_act=None, out_squeeze=False):
+    def __init__(
+        self,
+        layer_szs: Union[List, Tuple],
+        activations: Optional[Callable] = torch.tanh,
+        out_act: Optional[bool] = None,
+        out_squeeze: Optional[bool] = False,
+    ):
         super(MLP, self).__init__()
         self.layers = nn.ModuleList()
         self.activations = activations
@@ -20,11 +28,11 @@ class MLP(nn.Module):
 
         for i, l in enumerate(layer_szs[1:]):
             self.layers.append(nn.Linear(layer_szs[i], l))
-        
-    def forward(self, x):
+
+    def forward(self, x: torch.Tensor):
         for l in self.layers[:-1]:
             x = self.activations(l(x))
-        
+
         if self.out_act is None:
             x = self.layers[-1](x)
         else:
@@ -32,12 +40,22 @@ class MLP(nn.Module):
 
         return x.squeeze() if self.out_squeeze else x
 
-class CategoricalPolicy(nn.Module):
-    def __init__(self, state_features, hidden_sizes, activation, out_activation, action_dim):
-        super(CategoricalPolicy, self).__init__()
-        self.mlp = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation)
 
-    def forward(self, x, a=None):
+class CategoricalPolicy(nn.Module):
+    def __init__(
+        self,
+        state_features: int,
+        hidden_sizes: Union[List, Tuple],
+        activation: Callable,
+        out_activation: Callable,
+        action_dim: int,
+    ):
+        super(CategoricalPolicy, self).__init__()
+        self.mlp = MLP(
+            [state_features] + list(hidden_sizes) + [action_dim], activations=activation
+        )
+
+    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
         logits = self.mlp(x)
 
         policy = torch.distributions.Categorical(logits=logits)
@@ -51,14 +69,26 @@ class CategoricalPolicy(nn.Module):
 
         return pi, logp, logp_pi
 
+
 class GaussianPolicy(nn.Module):
-    def __init__(self, state_features, hidden_sizes, activation, out_activation, action_dim):
+    def __init__(
+        self,
+        state_features: int,
+        hidden_sizes: Union[List, Tuple],
+        activation: Callable,
+        out_activation: Callable,
+        action_dim: int,
+    ):
         super(GaussianPolicy, self).__init__()
 
-        self.mlp = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_act=out_activation)
+        self.mlp = MLP(
+            [state_features] + list(hidden_sizes) + [action_dim],
+            activations=activation,
+            out_act=out_activation,
+        )
         self.logstd = nn.Parameter(-0.5 * torch.ones(action_dim))
 
-    def forward(self, x, a=None):
+    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
         mu = self.mlp(x)
         std = torch.exp(self.logstd)
         policy = torch.distributions.Normal(mu, std)
@@ -71,41 +101,81 @@ class GaussianPolicy(nn.Module):
 
         return pi, logp, logp_pi
 
+
 class FireActorCritic(nn.Module):
-    def __init__(self, state_features, action_space, hidden_sizes=(32, 32), activation=torch.tanh, out_activation=None, policy=None):
+    def __init__(
+        self,
+        state_features: int,
+        action_space: int,
+        hidden_sizes: Optional[Union[Tuple, List]] = (32, 32),
+        activation: Optional[Callable] = torch.tanh,
+        out_activation: Optional[Callable] = None,
+        policy: Optional[nn.Module] = None,
+    ):
         super(FireActorCritic, self).__init__()
 
         if policy is None and isinstance(action_space, gym.spaces.Box):
-            self.policy = GaussianPolicy(state_features, hidden_sizes, activation, out_activation, action_space.shape[0])
+            self.policy = GaussianPolicy(
+                state_features,
+                hidden_sizes,
+                activation,
+                out_activation,
+                action_space.shape[0],
+            )
         elif policy is None and isinstance(action_space, gym.spaces.Discrete):
-            self.policy = CategoricalPolicy(state_features, hidden_sizes, activation, out_activation, action_space.n)
+            self.policy = CategoricalPolicy(
+                state_features, hidden_sizes, activation, out_activation, action_space.n
+            )
         else:
-            self.policy = policy(state_features, hidden_sizes, activation, out_activation, action_space)
+            self.policy = policy(
+                state_features, hidden_sizes, activation, out_activation, action_space
+            )
 
-        self.value_f = MLP([state_features]+list(hidden_sizes)+[1], activations=activation, out_squeeze=True)
+        self.value_f = MLP(
+            [state_features] + list(hidden_sizes) + [1],
+            activations=activation,
+            out_squeeze=True,
+        )
 
-    def forward(self, x, a=None):
+    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
         pi, logp, logp_pi = self.policy(x)
         value = self.value_f(x)
 
         return pi, logp, logp_pi, value
 
+
 class FireQActorCritic(nn.Module):
-    def __init__(self, state_features, action_space, hidden_sizes=(256, 128), activation=torch.relu, out_activation=nn.Identity):
+    def __init__(
+        self,
+        state_features: int,
+        action_space: int,
+        hidden_sizes: Optional[Union[Tuple, List]] = (256, 128),
+        activation: Optional[Callable] = torch.relu,
+        out_activation: Optional[Callable] = nn.Identity,
+    ):
         super(FireQActorCritic, self).__init__()
 
         action_dim = action_space.shape[0]
         action_lim = action_space.high[0]
 
-        self.policy = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_act=out_activation)
-        self.qfunc = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_squeeze=True)
+        self.policy = MLP(
+            [state_features] + list(hidden_sizes) + [action_dim],
+            activations=activation,
+            out_act=out_activation,
+        )
+        self.qfunc = MLP(
+            [state_features] + list(hidden_sizes) + [action_dim],
+            activations=activation,
+            out_squeeze=True,
+        )
 
-    def forward(self, x, a):
+    def forward(self, x: torch.Tensor, a: torch.Tensor):
         act = self.policy(x)
         q = self.qfunc(torch.cat(x, a, dim=1))
         q_act = self.qfunc(torch.cat(x, act, dim=1))
 
         return act, q, q_act
+
 
 class ActorCritic(nn.Module):
     def __init__(self, in_size, out_size):
@@ -114,7 +184,6 @@ class ActorCritic(nn.Module):
         self.layer2 = nn.Linear(64, 32)
         self.layer3 = nn.Linear(32, out_size)
         self.val = nn.Linear(32, 1)
-
 
     def forward(self, x):
         x = torch.tanh(self.layer1(x))
@@ -126,7 +195,6 @@ class ActorCritic(nn.Module):
     def evaluate_acts(self, states):
         return self.forward(states)
 
-
     def buffer_init(self, epoch_interaction_size, gamma=0.99, lam=0.95):
         self.size = epoch_interaction_size
         self.save_log_probs = []
@@ -136,7 +204,7 @@ class ActorCritic(nn.Module):
         self.old_log_probs = np.zeros(self.size, dtype=np.float32)
         self.save_value_tensors = []
         self.save_actions = []
-        
+
         self.gamma = gamma
         self.lam = lam
 
@@ -167,20 +235,33 @@ class ActorCritic(nn.Module):
 
         deltas = rews[:-1] + self.gamma * vals[1:] - vals[:-1]
 
-        self.adv_record[traj_slice] = self.discount_cumulative_sum(deltas, self.gamma * self.lam)
-        self.ret_record[traj_slice] = self.discount_cumulative_sum(rews, self.gamma*self.lam)[:-1]
-        #self.adv_record[traj_slice] = self.discount_cumulative_sum(rews[:-1] - vals[:-1], self.gamma*self.lam)
+        self.adv_record[traj_slice] = self.discount_cumulative_sum(
+            deltas, self.gamma * self.lam
+        )
+        self.ret_record[traj_slice] = self.discount_cumulative_sum(
+            rews, self.gamma * self.lam
+        )[:-1]
+        # self.adv_record[traj_slice] = self.discount_cumulative_sum(rews[:-1] - vals[:-1], self.gamma*self.lam)
 
         self.strt = self.ptr
 
     def gather(self):
-        assert self.ptr == self.size, 'Buffer must be full before you gather.'
+        assert self.ptr == self.size, "Buffer must be full before you gather."
 
         self.ptr, self.strt = 0, 0
 
-        self.adv_record = (self.adv_record - self.adv_record.mean()) / (self.adv_record.std() + 1e-8)
+        self.adv_record = (self.adv_record - self.adv_record.mean()) / (
+            self.adv_record.std() + 1e-8
+        )
 
-        return [self.save_states, self.save_actions, torch.tensor(self.adv_record), torch.tensor(self.ret_record), self.save_log_probs, self.save_value_tensors]
+        return [
+            self.save_states,
+            self.save_actions,
+            torch.tensor(self.adv_record),
+            torch.tensor(self.ret_record),
+            self.save_log_probs,
+            self.save_value_tensors,
+        ]
 
     def clear_mem(self):
         self.save_log_probs = []
@@ -193,6 +274,7 @@ class ActorCritic(nn.Module):
 
         self.adv_record = np.zeros(self.size, dtype=np.float32)
         self.ret_record = np.zeros(self.size, dtype=np.float32)
+
 
 class NatureDQN(nn.Module):
     def __init__(self, in_channels, out_channels, h, w):
@@ -208,9 +290,8 @@ class NatureDQN(nn.Module):
         self.conv3 = nn.Conv2d(64, 64, 3, stride=1)
         height = self.netutil.conv2d_output_size(3, 1, height)
         width = self.netutil.conv2d_output_size(3, 1, width)
-        
 
-        self.fc1 = nn.Linear(height*width*64, 512)
+        self.fc1 = nn.Linear(height * width * 64, 512)
         self.fc2 = nn.Linear(512, out_channels)
 
     def forward(self, x):
@@ -220,6 +301,7 @@ class NatureDQN(nn.Module):
         x = x.view(x.size(0), -1)
         x = F.relu(self.fc1(x))
         return self.fc2(x)
+
 
 class FullyConnectedDQN(nn.Module):
     def __init__(self, in_channels, out_channels):

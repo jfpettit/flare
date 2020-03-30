@@ -9,6 +9,7 @@ import shutil
 import numpy as np
 import os.path as osp, time, atexit, os
 import copy
+from typing import Optional, Any, Union
 
 color2num = dict(
     gray=30,
@@ -19,20 +20,28 @@ color2num = dict(
     magenta=35,
     cyan=36,
     white=37,
-    crimson=38
+    crimson=38,
 )
 
-def colorize(string, color, bold=False, highlight=False):
+
+def colorize(
+    string: str,
+    color: int,
+    bold: Optional[bool] = False,
+    highlight: Optional[bool] = False,
+):
     """
     Colorize a string.
     This function was originally written by John Schulman.
     """
     attr = []
     num = color2num[color]
-    if highlight: num += 10
+    if highlight:
+        num += 10
     attr.append(str(num))
-    if bold: attr.append('1')
-    return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
+    if bold:
+        attr.append("1")
+    return "\x1b[%sm%s\x1b[0m" % (";".join(attr), string)
 
 
 class Logger:
@@ -42,7 +51,12 @@ class Logger:
     state of a training run, and the trained model.
     """
 
-    def __init__(self, output_dir=None, output_fname='progress.txt', exp_name=None):
+    def __init__(
+        self,
+        output_dir: Optional[str] = None,
+        output_fname: Optional[str] = "progress.txt",
+        exp_name: Optional[str] = None,
+    ):
         """
         Initialize a Logger.
         Args:
@@ -58,29 +72,34 @@ class Logger:
                 hyperparameter configuration with multiple random seeds, you
                 should give them all the same ``exp_name``.)
         """
-        #if proc_id()==0:
-        self.output_dir = output_dir or "/tmp/experiments/%i"%int(time.time())
+        # if proc_id()==0:
+        self.output_dir = output_dir or "/tmp/experiments/%i" % int(time.time())
         if osp.exists(self.output_dir):
-            print("Warning: Log dir %s already exists! Storing info there anyway."%self.output_dir)
+            print(
+                "Warning: Log dir %s already exists! Storing info there anyway."
+                % self.output_dir
+            )
         else:
             os.makedirs(self.output_dir)
-        self.output_file = open(osp.join(self.output_dir, output_fname), 'w')
+        self.output_file = open(osp.join(self.output_dir, output_fname), "w")
         atexit.register(self.output_file.close)
-        print(colorize("Logging data to %s"%self.output_file.name, 'green', bold=True))
-        #else:
+        print(
+            colorize("Logging data to %s" % self.output_file.name, "green", bold=True)
+        )
+        # else:
         #    self.output_dir = None
         #    self.output_file = None
-        self.first_row=True
+        self.first_row = True
         self.log_headers = []
         self.log_current_row = {}
         self.exp_name = exp_name
 
-    def log(self, msg, color='green'):
+    def log(self, msg: str, color: Optional[str] = "green"):
         """Print a colorized message to stdout."""
-        #if proc_id()==0:
+        # if proc_id()==0:
         print(colorize(msg, color, bold=True))
 
-    def log_tabular(self, key, val):
+    def log_tabular(self, key: str, val: Any):
         """
         Log a value of some diagnostic.
         Call this only once for each diagnostic quantity, each iteration.
@@ -91,8 +110,14 @@ class Logger:
         if self.first_row:
             self.log_headers.append(key)
         else:
-            assert key in self.log_headers, "Trying to introduce a new key %s that you didn't include in the first iteration"%key
-        assert key not in self.log_current_row, "You already set %s this iteration. Maybe you forgot to call dump_tabular()"%key
+            assert key in self.log_headers, (
+                "Trying to introduce a new key %s that you didn't include in the first iteration"
+                % key
+            )
+        assert key not in self.log_current_row, (
+            "You already set %s this iteration. Maybe you forgot to call dump_tabular()"
+            % key
+        )
         self.log_current_row[key] = val
 
     '''
@@ -119,7 +144,7 @@ class Logger:
             out.write(output)
         '''
 
-    def save_state(self, state_dict, itr=None):
+    def save_state(self, state_dict: dict, itr: Optional[int] = None):
         """
         Saves the state of an experiment.
         To be clear: this is about saving *state*, not logging diagnostics.
@@ -136,40 +161,40 @@ class Logger:
                 describe the current state of training.
             itr: An int, or None. Current iteration of training.
         """
-        #if proc_id()==0:
-        fname = 'vars.pkl' if itr is None else 'vars%d.pkl'%itr
+        # if proc_id()==0:
+        fname = "vars.pkl" if itr is None else "vars%d.pkl" % itr
         try:
             joblib.dump(state_dict, osp.join(self.output_dir, fname))
         except:
-            self.log('Warning: could not pickle state_dict.', color='red')
+            self.log("Warning: could not pickle state_dict.", color="red")
 
-    
     def dump_tabular(self):
         """
         Write all of the diagnostics from the current iteration.
         Writes both to stdout, and to the output file.
         """
-        #if proc_id()==0:
+        # if proc_id()==0:
         vals = []
         key_lens = [len(key) for key in self.log_headers]
-        max_key_len = max(15,max(key_lens))
-        keystr = '%'+'%d'%max_key_len
+        max_key_len = max(15, max(key_lens))
+        keystr = "%" + "%d" % max_key_len
         fmt = "| " + keystr + "s | %15s |"
         n_slashes = 22 + max_key_len
-        print("-"*n_slashes)
+        print("-" * n_slashes)
         for key in self.log_headers:
             val = self.log_current_row.get(key, "")
-            valstr = "%8.3g"%val if hasattr(val, "__float__") else val
-            print(fmt%(key, valstr))
+            valstr = "%8.3g" % val if hasattr(val, "__float__") else val
+            print(fmt % (key, valstr))
             vals.append(val)
-        print("-"*n_slashes)
+        print("-" * n_slashes)
         if self.output_file is not None:
             if self.first_row:
-                self.output_file.write("\t".join(self.log_headers)+"\n")
-            self.output_file.write("\t".join(map(str,vals))+"\n")
+                self.output_file.write("\t".join(self.log_headers) + "\n")
+            self.output_file.write("\t".join(map(str, vals)) + "\n")
             self.output_file.flush()
         self.log_current_row.clear()
-        self.first_row=False
+        self.first_row = False
+
 
 class EpochLogger(Logger):
     """
@@ -198,13 +223,19 @@ class EpochLogger(Logger):
         Provide an arbitrary number of keyword arguments with numerical 
         values.
         """
-        for k,v in kwargs.items():
-            if not(k in self.epoch_dict.keys()):
+        for k, v in kwargs.items():
+            if not (k in self.epoch_dict.keys()):
                 self.epoch_dict[k] = []
             self.epoch_dict[k].append(v)
         self.epoch_dict_copy = self.epoch_dict
 
-    def log_tabular(self, key, val=None, with_min_and_max=False, average_only=False):
+    def log_tabular(
+        self,
+        key: str,
+        val: Optional[Any] = None,
+        with_min_and_max: Optional[bool] = False,
+        average_only: Optional[bool] = False,
+    ):
         """
         Log a value or possibly the mean/std/min/max values of a diagnostic.
         Args:
@@ -220,26 +251,32 @@ class EpochLogger(Logger):
                 of the diagnostic over the epoch.
         """
         if val is not None:
-            super().log_tabular(key,val)
+            super().log_tabular(key, val)
         else:
             v = self.epoch_dict[key]
-            vals = np.concatenate(v) if isinstance(v[0], np.ndarray) and len(v[0].shape)>0 else v
-            #stats = mpi_statistics_scalar(vals, with_min_and_max=with_min_and_max)
+            vals = (
+                np.concatenate(v)
+                if isinstance(v[0], np.ndarray) and len(v[0].shape) > 0
+                else v
+            )
+            # stats = mpi_statistics_scalar(vals, with_min_and_max=with_min_and_max)
             stats = self.stats_scalar(vals, with_min_and_max=with_min_and_max)
-            super().log_tabular(key if average_only else 'Average' + key, stats[0])
-            if not(average_only):
-                super().log_tabular('Std'+key, stats[1])
+            super().log_tabular(key if average_only else "Average" + key, stats[0])
+            if not (average_only):
+                super().log_tabular("Std" + key, stats[1])
             if with_min_and_max:
-                super().log_tabular('Max'+key, stats[3])
-                super().log_tabular('Min'+key, stats[2])
+                super().log_tabular("Max" + key, stats[3])
+                super().log_tabular("Min" + key, stats[2])
         self.epoch_dict[key] = []
 
-    def stats_scalar(self, x, with_min_and_max=False):
+    def stats_scalar(
+        self, x: Union[np.array, list, tuple], with_min_and_max: Optional[bool] = False
+    ):
         x = np.array(x, dtype=np.float32)
         n = len(x)
         sums = np.sum(x)
-        avg = sums/n
-        sumssq = np.sum((x - avg)**2)
+        avg = sums / n
+        sumssq = np.sum((x - avg) ** 2)
         std = np.sqrt(sumssq / n)
 
         if with_min_and_max:
@@ -247,11 +284,15 @@ class EpochLogger(Logger):
             maximum = np.max(x)
             return avg, std, minimum, maximum
         return avg, std
-    
-    def get_stats(self, key):
+
+    def get_stats(self, key: str):
         """
         Lets an algorithm ask the logger for mean/std/min/max of a diagnostic.
         """
         v = self.epoch_dict[key]
-        vals = np.concatenate(v) if isinstance(v[0], np.ndarray) and len(v[0].shape)>0 else v
+        vals = (
+            np.concatenate(v)
+            if isinstance(v[0], np.ndarray) and len(v[0].shape) > 0
+            else v
+        )
         return self.stats_scalar(vals)
