@@ -9,3 +9,4 @@ testing.py
 **/.vscode
 **/.DS_Store
 **/saved_models
+**/flare_runs

@@ -10,10 +10,11 @@ from termcolor import cprint
 from gym.spaces import Box
 import torch.nn as nn
 from flare.logging import EpochLogger
+from flare.tblog import TensorBoardWriter
 import pickle as pkl
 
 class BasePolicyGradient:
-    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32), state_preproc=None, state_sze=None, logger_dir=None):
+    def __init__(self, env, actorcritic=nets.FireActorCritic, gamma=.99, lam=.97, steps_per_epoch=4000, hid_sizes=(32, 32), state_preproc=None, state_sze=None, logger_dir=None, tensorboard=True):
         self.env=env
         self.state_preproc = state_preproc
         
@@ -29,6 +30,10 @@ class BasePolicyGradient:
         self.steps_per_epoch = steps_per_epoch
 
         self.logger = EpochLogger(output_dir=logger_dir)
+        self.tensorboard = tensorboard
+        if self.tensorboard:
+            self.tb_logger = TensorBoardWriter(fpath=logger_dir) 
+            print(f'TensorBoard Logdir: {self.tb_logger.full_logdir}')
         
         self.screen_saver = []
         self.state_saver = []
@@ -75,7 +80,7 @@ class BasePolicyGradient:
                     state = self.state_preproc(state)
                 
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
-                self.logger.store(Values=value)
+                self.logger.store(Values=np.array(value.detach().numpy()))
                 
                 if render and 'Bullet' not in self.env.unwrapped.spec.id:
                     self.env.render()
@@ -110,8 +115,14 @@ class BasePolicyGradient:
                 with open(self.env.unwrapped.spec.id+'_States_'+str(last_time)+'.pkl', 'wb') as f:
                     pkl.dump(self.state_saver, f)
             
+            
             self.update()
-            self.logger.log_tabular('Epoch', i)
+
+            ep_dict = self.logger.epoch_dict_copy 
+            if self.tensorboard:
+                self.tb_logger.add_vals(ep_dict, step=i)
+
+            self.logger.log_tabular('Iteration', i)
             self.logger.log_tabular('EpReturn', with_min_and_max=True)
             self.logger.log_tabular('EpLength', average_only=True)
             self.logger.log_tabular('Values', with_min_and_max=True)
@@ -122,13 +133,15 @@ class BasePolicyGradient:
             self.logger.log_tabular('DeltaValLoss', average_only=True)
             self.logger.log_tabular('Entropy', average_only=True)
             self.logger.log_tabular('KL', average_only=True)
-            self.logger.log_tabular('EpochTime', time.time() - last_time)
+            self.logger.log_tabular('IterationTime', time.time() - last_time)
             last_time = time.time()
             
             if logstd_anneal is not None:
                 self.logger.log_tabular('CurrentLogStd', logstds[i])
             
             self.logger.log_tabular('Env', self.env.unwrapped.spec.id)
+
             self.logger.dump_tabular()
         
+        self.tb_logger.end()
         return self.ep_reward, self.ep_length

@@ -8,6 +8,7 @@ import joblib
 import shutil
 import numpy as np
 import os.path as osp, time, atexit, os
+import copy
 
 color2num = dict(
     gray=30,
@@ -201,6 +202,7 @@ class EpochLogger(Logger):
             if not(k in self.epoch_dict.keys()):
                 self.epoch_dict[k] = []
             self.epoch_dict[k].append(v)
+        self.epoch_dict_copy = self.epoch_dict
 
     def log_tabular(self, key, val=None, with_min_and_max=False, average_only=False):
         """

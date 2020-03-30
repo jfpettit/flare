@@ -1,5 +1,5 @@
 # import required packages
-from flare.ppo import PPO
+from flare.polgrad import PPO
 import gym
 import matplotlib.pyplot as plt
 import numpy as np

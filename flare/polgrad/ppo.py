@@ -1,4 +1,4 @@
-from flare.base import BasePolicyGradient
+from flare.polgrad import BasePolicyGradient
 import numpy as np
 import torch
 import gym
@@ -7,14 +7,15 @@ import torch.nn.functional as F
 from termcolor import cprint
 
 class PPO(BasePolicyGradient):
-    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3, state_preproc=None, state_sze=None, logger_dir=None):
-        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, state_preproc=state_preproc, state_sze=state_sze, logger_dir=logger_dir)
+    def __init__(self, env, hidden_sizes=(32, 32), actorcritic=nets.FireActorCritic, gamma=0.99, lam=0.97, steps_per_epoch=4000, epsilon=0.2, maxkl=0.01, train_steps=80, pol_lr=3e-4, val_lr=1e-3, state_preproc=None, state_sze=None, logger_dir=None, tensorboard=True):
+        super().__init__(env, actorcritic=actorcritic, gamma=gamma, lam=lam, steps_per_epoch=steps_per_epoch, hid_sizes=hidden_sizes, state_preproc=state_preproc, state_sze=state_sze, logger_dir=logger_dir, tensorboard=tensorboard)
         self.eps = epsilon
         self.maxkl = maxkl
         self.train_steps = train_steps
         
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
+
 
     def update(self):
         self.ac.train()
@@ -56,5 +57,5 @@ class PPO(BasePolicyGradient):
             self.value_optimizer.step()
             
         approx_kl = kl
-        self.logger.store(PolicyLoss=pol_loss_old, ValueLoss=val_loss_old, KL=approx_kl, Entropy=approx_ent, DeltaPolLoss=(pol_loss - pol_loss_old), DeltaValLoss=(val_loss-val_loss_old))
+        self.logger.store(PolicyLoss=pol_loss_old.detach().numpy(), ValueLoss=val_loss_old.detach().numpy(), KL=approx_kl.detach().numpy(), Entropy=approx_ent.detach().numpy(), DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(), DeltaValLoss=(val_loss-val_loss_old).detach().numpy())
         return pol_loss_old.detach().numpy(), val_loss_old.detach().numpy(), approx_ent.detach().numpy(), approx_kl.detach().numpy()

@@ -1,10 +1,10 @@
 name = "flare"
 
-__all__ = ['a2c', 'utils', 'neural_nets', 'ppo', 'base']
+__all__ = ['utils', 'neural_nets', 'polgrad', 'logging', 'qpolgrad', 'tblog']
 
 from . import utils
 from . import neural_nets
-from . import a2c
-from . import ppo
-from . import base
 from . import logging
+from . import polgrad
+from . import qpolgrad
+from . import tblog

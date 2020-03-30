@@ -1,8 +1,7 @@
 # import required packages
 import argparse
 
-from flare.a2c import A2C
-from flare.ppo import PPO
+import flare.polgrad as pg
 from flare.neural_nets import ActorCritic
 import gym
 import matplotlib.pyplot as plt
@@ -38,9 +37,9 @@ if __name__ == '__main__':
     logstds_anneal = [float(i) for i in args.logstd_anneal] if args.logstd_anneal is not None else None
     env = gym.make(args.env)
     if args.alg == 'PPO':
-        trainer = PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
+        trainer = pg.PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
     elif args.alg == 'A2C':
-        trainer = A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
+        trainer = pg.A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
     rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen, n_anneal_cycles=args.n_anneal_cycles, save_states=args.save_states)
 
     # watch agent interact with environment

@@ -90,6 +90,23 @@ class FireActorCritic(nn.Module):
 
         return pi, logp, logp_pi, value
 
+class FireQActorCritic(nn.Module):
+    def __init__(self, state_features, action_space, hidden_sizes=(256, 128), activation=torch.relu, out_activation=nn.Identity):
+        super(FireQActorCritic, self).__init__()
+
+        action_dim = action_space.shape[0]
+        action_lim = action_space.high[0]
+
+        self.policy = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_act=out_activation)
+        self.qfunc = MLP([state_features]+list(hidden_sizes)+[action_dim], activations=activation, out_squeeze=True)
+
+    def forward(self, x, a):
+        act = self.policy(x)
+        q = self.qfunc(torch.cat(x, a, dim=1))
+        q_act = self.qfunc(torch.cat(x, act, dim=1))
+
+        return act, q, q_act
+
 class ActorCritic(nn.Module):
     def __init__(self, in_size, out_size):
         super(ActorCritic, self).__init__()

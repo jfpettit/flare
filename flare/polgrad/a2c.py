@@ -4,7 +4,7 @@ import gym
 import torch
 import flare.neural_nets as nets
 from flare import utils
-from flare.base import BasePolicyGradient
+from flare.polgrad import BasePolicyGradient
 import torch.nn.functional as F
 
 class A2C(BasePolicyGradient):
@@ -41,6 +41,6 @@ class A2C(BasePolicyGradient):
         pol_loss_new = -(logp*advs).mean()
         val_loss_new = F.mse_loss(vals, rets)
         approx_kl = (logprobs_old - logp).mean()
-        self.logger.store(PolicyLoss=pol_loss, ValueLoss=val_loss_old, KL=approx_kl, Entropy=approx_ent, DeltaPolLoss=(pol_loss_new - pol_loss), DeltaValLoss=(val_loss_new-val_loss))
+        self.logger.store(PolicyLoss=pol_loss_old.detach().numpy(), ValueLoss=val_loss_old.detach().numpy(), KL=approx_kl.detach().numpy(), Entropy=approx_ent.detach().numpy(), DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(), DeltaValLoss=(val_loss-val_loss_old).detach().numpy())
         return pol_loss, val_loss_old, approx_ent, approx_kl
         
