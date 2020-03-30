@@ -8,26 +8,28 @@ from flare.kindling import utils
 from flare.kindling.buffers import PGBuffer
 import abc
 from termcolor import cprint
+import gym
 from gym.spaces import Box
 import torch.nn as nn
 from flare.kindling.logging import EpochLogger
 from flare.kindling.tblog import TensorBoardWriter
 import pickle as pkl
+from typing import Optional, Any, Union, Callable
 
 
 class BasePolicyGradient:
     def __init__(
         self,
-        env,
-        actorcritic=nets.FireActorCritic,
-        gamma=0.99,
-        lam=0.97,
-        steps_per_epoch=4000,
-        hid_sizes=(32, 32),
-        state_preproc=None,
-        state_sze=None,
-        logger_dir=None,
-        tensorboard=True,
+        env: gym.Env,
+        actorcritic: Optional[nn.Module] = nets.FireActorCritic,
+        gamma: Optional[float] = 0.99,
+        lam: Optional[float] = 0.97,
+        steps_per_epoch: Optional[int] = 4000,
+        hid_sizes: Optional[tuple] = (32, 32),
+        state_preproc: Optional[Callable] = None,
+        state_sze: Optional[Union[int, tuple]] = None,
+        logger_dir: Optional[str] = None,
+        tensorboard: Optional[bool] = True,
     ):
         self.env = env
         self.state_preproc = state_preproc
