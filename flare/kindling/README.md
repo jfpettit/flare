@@ -28,3 +28,5 @@ This will be updated as things are added.
         - Compute squared error loss
     - save_frames_as_gif: Save a list of frames as a gif
     - NormalizedActions: a Gym action normalizing wrapper for a continuous policy
+- saver
+    - Saver: a class that saves arbitrary values in a dictionary and then dumps them to a pickle file.
