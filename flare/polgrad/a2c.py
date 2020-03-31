@@ -23,6 +23,9 @@ class A2C(BasePolicyGradient):
         state_preproc=None,
         state_sze=None,
         logger_dir=None,
+        tensorboard=True,
+        save_screen=False,
+        save_states=False
     ):
         super().__init__(
             env,
@@ -35,6 +38,9 @@ class A2C(BasePolicyGradient):
             state_sze=state_sze,
             state_preproc=state_preproc,
             logger_dir=logger_dir,
+            tensorboard=tensorboard,
+            save_screen=save_screen,
+            save_states=save_states
         )
 
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)

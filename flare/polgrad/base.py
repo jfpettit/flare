@@ -3,6 +3,7 @@
 import numpy as np
 import time
 import torch
+import flare.kindling as fk
 import flare.kindling.neural_nets as nets
 from flare.kindling import utils
 from flare.kindling.buffers import PGBuffer
@@ -30,6 +31,8 @@ class BasePolicyGradient:
         state_sze: Optional[Union[int, tuple]] = None,
         logger_dir: Optional[str] = None,
         tensorboard: Optional[bool] = True,
+        save_states: Optional[bool] = False,
+        save_screen: Optional[bool] = False
     ):
         self.env = env
         self.state_preproc = state_preproc
@@ -45,6 +48,7 @@ class BasePolicyGradient:
                 gamma,
                 lam,
             )
+            self.state_preproc = lambda x: x
 
         elif state_preproc is not None:
             assert (
@@ -57,14 +61,14 @@ class BasePolicyGradient:
 
         self.steps_per_epoch = steps_per_epoch
 
-        self.logger = EpochLogger(output_dir=logger_dir)
         self.tensorboard = tensorboard
         if self.tensorboard:
             self.tb_logger = TensorBoardWriter(fpath=logger_dir)
-            print(f"TensorBoard Logdir: {self.tb_logger.full_logdir}")
+            utils.colorize(f"TensorBoard Logdir: {self.tb_logger.full_logdir}", "green")
 
-        self.screen_saver = []
-        self.state_saver = []
+        self.save_states = save_states; self.save_screen = save_screen
+        self.logger = EpochLogger(output_dir=self.tb_logger.full_logdir)
+        self.saver = fk.saver.Saver(out_dir=self.tb_logger.full_logdir)
 
     @abc.abstractmethod
     def update(self):
@@ -77,9 +81,7 @@ class BasePolicyGradient:
         render=False,
         horizon=1000,
         logstd_anneal=None,
-        save_screen=False,
         n_anneal_cycles=0,
-        save_states=False,
     ):
         if render and "Bullet" in self.env.unwrapped.spec.id:
             self.env.render()
@@ -88,17 +90,8 @@ class BasePolicyGradient:
             assert isinstance(
                 self.env.action_space, Box
             ), "Log standard deviation only used in environments with continuous action spaces. Your current environment uses a discrete action space."
+            logstds = utils.calc_logstd_anneal(n_anneal_cycles, logstd_anneal[0], logstd_anneal[1], epochs)
 
-            if n_anneal_cycles > 0:
-                logstds = np.linspace(
-                    logstd_anneal[0], logstd_anneal[1], num=epochs // n_anneal_cycles
-                )
-                for _ in range(n_anneal_cycles):
-                    logstds = np.hstack((logstds, logstds))
-            else:
-                logstds = np.linspace(logstd_anneal[0], logstd_anneal[1], num=epochs)
-
-        infos_tracker = {}
         last_time = time.time()
         state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
 
@@ -113,15 +106,12 @@ class BasePolicyGradient:
 
             self.ac.eval()
             for _ in range(self.steps_per_epoch):
-                if save_states:
-                    self.state_saver.append(state)
-
-                if save_screen:
+                if self.save_states: self.saver.store(state_saver=state)
+                if self.save_screen:
                     screen = self.env.render(mode="rgb_array")
-                    self.screen_saver.append(screen)
+                    self.saver.store(screen_saver=screen)
 
-                if self.state_preproc is not None:
-                    state = self.state_preproc(state)
+                state = self.state_preproc(state)
 
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
                 self.logger.store(Values=np.array(value.detach().numpy()))
@@ -137,11 +127,6 @@ class BasePolicyGradient:
                     logp.detach().numpy(),
                 )
                 state, reward, done, _ = self.env.step(action.detach().numpy()[0])
-                if len(_) > 0:
-                    if len(infos_tracker) == 0:
-                        infos_tracker = {k: [] for k in _}
-                    for k in _:
-                        infos_tracker[k].append(_[k])
                 episode_reward += reward
                 episode_length += 1
 
@@ -168,20 +153,7 @@ class BasePolicyGradient:
                     done = False
                     reward = 0
 
-            if save_screen:
-                with open(
-                    self.env.unwrapped.spec.id + "_Screen_" + str(last_time) + ".pkl",
-                    "wb",
-                ) as f:
-                    pkl.dump(self.screen_saver, f)
-
-            if save_states:
-                with open(
-                    self.env.unwrapped.spec.id + "_States_" + str(last_time) + ".pkl",
-                    "wb",
-                ) as f:
-                    pkl.dump(self.state_saver, f)
-
+            self.saver.save()
             self.update()
 
             ep_dict = self.logger.epoch_dict_copy

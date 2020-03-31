@@ -25,6 +25,8 @@ class PPO(BasePolicyGradient):
         state_sze=None,
         logger_dir=None,
         tensorboard=True,
+        save_screen=False,
+        save_states=False
     ):
         super().__init__(
             env,
@@ -37,7 +39,10 @@ class PPO(BasePolicyGradient):
             state_sze=state_sze,
             logger_dir=logger_dir,
             tensorboard=tensorboard,
+            save_screen=save_screen,
+            save_states=save_states
         )
+
         self.eps = epsilon
         self.maxkl = maxkl
         self.train_steps = train_steps

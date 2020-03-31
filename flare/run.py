@@ -37,10 +37,12 @@ if __name__ == '__main__':
     logstds_anneal = [float(i) for i in args.logstd_anneal] if args.logstd_anneal is not None else None
     env = gym.make(args.env)
     if args.alg == 'PPO':
-        trainer = pg.PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
+        trainer = pg.PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder,
+                 save_screen=args.save_screen, save_states=args.save_states)
     elif args.alg == 'A2C':
-        trainer = pg.A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder)
-    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, save_screen=args.save_screen, n_anneal_cycles=args.n_anneal_cycles, save_states=args.save_states)
+        trainer = pg.A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder,
+                 save_screen=args.save_screen, save_states=args.save_states)
+    rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, n_anneal_cycles=args.n_anneal_cycles)
 
     # watch agent interact with environment
     if args.watch:
