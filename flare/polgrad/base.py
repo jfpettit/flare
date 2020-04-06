@@ -4,16 +4,15 @@ import numpy as np
 import time
 import torch
 import flare.kindling as fk
-import flare.kindling.neural_nets as nets
 from flare.kindling import utils
-from flare.kindling.buffers import PGBuffer
+from flare.kindling import PGBuffer
 import abc
 from termcolor import cprint
 import gym
 from gym.spaces import Box
 import torch.nn as nn
-from flare.kindling.logging import EpochLogger
-from flare.kindling.tblog import TensorBoardWriter
+from flare.kindling import EpochLogger
+from flare.kindling import TensorBoardWriter
 import pickle as pkl
 from typing import Optional, Any, Union, Callable
 
@@ -22,7 +21,7 @@ class BasePolicyGradient:
     def __init__(
         self,
         env: gym.Env,
-        actorcritic: Optional[nn.Module] = nets.FireActorCritic,
+        actorcritic: Optional[nn.Module] = fk.FireActorCritic,
         gamma: Optional[float] = 0.99,
         lam: Optional[float] = 0.97,
         steps_per_epoch: Optional[int] = 4000,

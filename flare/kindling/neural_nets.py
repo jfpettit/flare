@@ -138,7 +138,7 @@ class FireActorCritic(nn.Module):
         )
 
     def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
-        pi, logp, logp_pi = self.policy(x)
+        pi, logp, logp_pi = self.policy(x, a)
         value = self.value_f(x)
 
         return pi, logp, logp_pi, value

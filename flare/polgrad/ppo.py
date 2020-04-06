@@ -1,8 +1,8 @@
 from flare.polgrad import BasePolicyGradient
+import flare.kindling as fk
 import numpy as np
 import torch
 import gym
-import flare.kindling.neural_nets as nets
 import torch.nn.functional as F
 from termcolor import cprint
 
@@ -11,8 +11,8 @@ class PPO(BasePolicyGradient):
     def __init__(
         self,
         env,
-        hidden_sizes=(32, 32),
-        actorcritic=nets.FireActorCritic,
+        hidden_sizes=(64, 32),
+        actorcritic=fk.FireActorCritic,
         gamma=0.99,
         lam=0.97,
         steps_per_epoch=4000,

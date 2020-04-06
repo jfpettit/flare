@@ -2,9 +2,9 @@
 import numpy as np
 import gym
 import torch
-import flare.kindling.neural_nets as nets
 from flare.kindling import utils
 from flare.polgrad import BasePolicyGradient
+import flare.kindling as fk
 import torch.nn.functional as F
 
 
@@ -12,8 +12,8 @@ class A2C(BasePolicyGradient):
     def __init__(
         self,
         env,
-        hidden_sizes=(32, 32),
-        actorcritic=nets.FireActorCritic,
+        hidden_sizes=(64, 32),
+        actorcritic=fk.FireActorCritic,
         gamma=0.99,
         lam=0.97,
         steps_per_epoch=4000,
@@ -34,7 +34,6 @@ class A2C(BasePolicyGradient):
             lam=lam,
             steps_per_epoch=steps_per_epoch,
             hid_sizes=hidden_sizes,
-            logstd_anneal=logstd_anneal,
             state_sze=state_sze,
             state_preproc=state_preproc,
             logger_dir=logger_dir,
@@ -53,7 +52,7 @@ class A2C(BasePolicyGradient):
         ]
 
         _, logp, _ = self.ac.policy(states, acts)
-        approx_ent = torch.mean(-logp)
+        approx_ent = (-logp).mean()
 
         pol_loss = -(logp * advs).mean()
 
@@ -64,23 +63,23 @@ class A2C(BasePolicyGradient):
         values = self.ac.value_f(states)
         val_loss_old = F.mse_loss(values, rets)
         for _ in range(80):
+
             values = self.ac.value_f(states)
             val_loss = F.mse_loss(values, rets)
-
             self.value_optimizer.zero_grad()
             val_loss.backward()
             self.value_optimizer.step()
 
-        _, _, logp, vals = self.ac(states, acts)
+        _, logp, _, vals = self.ac(states, a=acts)
         pol_loss_new = -(logp * advs).mean()
         val_loss_new = F.mse_loss(vals, rets)
         approx_kl = (logprobs_old - logp).mean()
         self.logger.store(
-            PolicyLoss=pol_loss_old.detach().numpy(),
+            PolicyLoss=pol_loss.detach().numpy(),
             ValueLoss=val_loss_old.detach().numpy(),
             KL=approx_kl.detach().numpy(),
             Entropy=approx_ent.detach().numpy(),
-            DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(),
-            DeltaValLoss=(val_loss - val_loss_old).detach().numpy(),
+            DeltaPolLoss=(pol_loss_new - pol_loss).detach().numpy(),
+            DeltaValLoss=(val_loss_new - val_loss_old).detach().numpy(),
         )
-        return pol_loss, val_loss_old, approx_ent, approx_kl
+        return pol_loss, val_loss, approx_ent, approx_kl
