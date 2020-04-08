@@ -78,7 +78,6 @@ Flare now automatically logs run metrics to [TensorBoard](https://www.tensorflow
 - [Pytorch RL examples](https://github.com/pytorch/examples/tree/master/reinforcement_learning)
 
 ## More to come!
-- Improve features (i.e. automatic result plotting/saving, etc.)
 - Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
 - Test algorithm performance
