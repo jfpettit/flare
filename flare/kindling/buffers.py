@@ -1,6 +1,7 @@
 import numpy as np
 import scipy
 from typing import Optional, Any, Union
+from flare.kindling.mpi_tools import mpi_statistics_scalar
 
 class PGBuffer:
     """
@@ -69,8 +70,8 @@ class PGBuffer:
         assert self.ptr == self.max_size  # buffer has to be full before you can get
         self.ptr, self.path_start_idx = 0, 0
         # the next two lines implement the advantage normalization trick
-        # adv_mean, adv_std = mpi_statistics_scalar(self.adv_buf)
-        adv_mean, adv_std = np.mean(self.adv_buf), np.std(self.adv_buf)
+        adv_mean, adv_std = mpi_statistics_scalar(self.adv_buf)
+        #adv_mean, adv_std = np.mean(self.adv_buf), np.std(self.adv_buf)
         self.adv_buf = (self.adv_buf - adv_mean) / adv_std
         return [self.obs_buf, self.act_buf, self.adv_buf, self.ret_buf, self.logp_buf]
 

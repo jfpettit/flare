@@ -5,6 +5,8 @@ import torch
 import gym
 import torch.nn.functional as F
 from termcolor import cprint
+from flare.kindling.mpi_tools import mpi_fork, mpi_avg, proc_id, mpi_statistics_scalar, num_procs
+from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
 
 
 class PPO(BasePolicyGradient):
@@ -21,6 +23,7 @@ class PPO(BasePolicyGradient):
         train_steps=80,
         pol_lr=3e-4,
         val_lr=1e-3,
+        seed=0,
         state_preproc=None,
         state_sze=None,
         logger_dir=None,
@@ -35,6 +38,7 @@ class PPO(BasePolicyGradient):
             lam=lam,
             steps_per_epoch=steps_per_epoch,
             hid_sizes=hidden_sizes,
+            seed=seed,
             state_preproc=state_preproc,
             state_sze=state_sze,
             logger_dir=logger_dir,
@@ -62,6 +66,7 @@ class PPO(BasePolicyGradient):
         approx_ent = (-logp).mean()
 
         for i in range(self.train_steps):
+            self.policy_optimizer.zero_grad()
             _, logp, _ = self.ac.policy(states, acts)
             pol_ratio = (logp - logprobs_old).exp()
             min_adv = torch.where(
@@ -69,32 +74,31 @@ class PPO(BasePolicyGradient):
             )
             pol_loss = -(torch.min(pol_ratio * advs, min_adv)).mean()
 
-            self.policy_optimizer.zero_grad()
-            pol_loss.backward()
-            self.policy_optimizer.step()
 
             _, logp, _ = self.ac.policy(states, acts)
-            kl = (logprobs_old - logp).mean()
+            kl = mpi_avg((logprobs_old - logp).mean().item())
             if kl > 1.5 * self.maxkl:
                 cprint(f"Early stopping at step {i} due to reaching max kl.", "yellow")
                 break
+            pol_loss.backward()
+            mpi_avg_grads(self.ac.policy)
+            self.policy_optimizer.step()
 
         vals = self.ac.value_f(states)
         val_loss_old = F.mse_loss(vals, rets)
 
         for _ in range(self.train_steps):
-
+            self.value_optimizer.zero_grad()
             vals = self.ac.value_f(states)
             val_loss = F.mse_loss(vals, rets)
-            self.value_optimizer.zero_grad()
             val_loss.backward()
+            mpi_avg_grads(self.ac.value_f)
             self.value_optimizer.step()
 
-        approx_kl = kl
         self.logger.store(
             PolicyLoss=pol_loss_old.detach().numpy(),
             ValueLoss=val_loss_old.detach().numpy(),
-            KL=approx_kl.detach().numpy(),
+            KL=kl,
             Entropy=approx_ent.detach().numpy(),
             DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(),
             DeltaValLoss=(val_loss - val_loss_old).detach().numpy(),
@@ -103,5 +107,5 @@ class PPO(BasePolicyGradient):
             pol_loss_old.detach().numpy(),
             val_loss_old.detach().numpy(),
             approx_ent.detach().numpy(),
-            approx_kl.detach().numpy(),
+            kl
         )

@@ -9,6 +9,7 @@ import numpy as np
 import torch
 from gym import wrappers
 import pybullet_envs
+from flare.kindling.mpi_tools import mpi_fork
 
 # set up argparser.
 parser = argparse.ArgumentParser()
@@ -28,6 +29,7 @@ parser.add_argument('-sst', '--save_states', type=bool, help='Whether or not to 
 parser.add_argument('-ssc', '--save_screen', type=bool, help='Whether to save the screens over training. Saves as pickled list of NumPy arrays.', default=False)
 parser.add_argument('-nac', '--n_anneal_cycles', type=int, help='If using std annealing, how many cycles to anneal over. Default: 0', default=0)
 parser.add_argument('-f', '--folder', help='Folder to log training output to.', default=None)
+parser.add_argument('-nc', '--ncpu', type=int, help='Number of CPUs to parallelize over', default=1)
 # get args from argparser
 args = parser.parse_args()
 
@@ -35,7 +37,8 @@ if __name__ == '__main__':
     # initialize training object. defined in flare/algorithms.py
     hids = [int(i) for i in args.layers]
     logstds_anneal = [float(i) for i in args.logstd_anneal] if args.logstd_anneal is not None else None
-    env = gym.make(args.env)
+    mpi_fork(args.ncpu)
+    env = lambda: gym.make(args.env)
     if args.alg == 'PPO':
         trainer = pg.PPO(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder,
                  save_screen=args.save_screen, save_states=args.save_states)

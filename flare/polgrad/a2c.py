@@ -52,9 +52,8 @@ class A2C(BasePolicyGradient):
         ]
 
         _, logp, _ = self.ac.policy(states, acts)
-        approx_ent = (-logp).mean()
-
         pol_loss = -(logp * advs).mean()
+        approx_ent = (-logp).mean()
 
         self.policy_optimizer.zero_grad()
         pol_loss.backward()

@@ -13,6 +13,8 @@ from gym.spaces import Box
 import torch.nn as nn
 from flare.kindling import EpochLogger
 from flare.kindling import TensorBoardWriter
+from flare.kindling.mpi_tools import mpi_fork, mpi_avg, proc_id, mpi_statistics_scalar, num_procs
+from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
 import pickle as pkl
 from typing import Optional, Any, Union, Callable
 
@@ -20,12 +22,13 @@ from typing import Optional, Any, Union, Callable
 class BasePolicyGradient:
     def __init__(
         self,
-        env: gym.Env,
+        env_fn: callable,
         actorcritic: Optional[nn.Module] = fk.FireActorCritic,
         gamma: Optional[float] = 0.99,
         lam: Optional[float] = 0.97,
         steps_per_epoch: Optional[int] = 4000,
         hid_sizes: Optional[tuple] = (32, 32),
+        seed: Optional[int] = 0,
         state_preproc: Optional[Callable] = None,
         state_sze: Optional[Union[int, tuple]] = None,
         logger_dir: Optional[str] = None,
@@ -33,16 +36,24 @@ class BasePolicyGradient:
         save_states: Optional[bool] = False,
         save_screen: Optional[bool] = False
     ):
-        self.env = env
+        setup_pytorch_for_mpi()
+
+        seed += 10000 * proc_id()
+        torch.manual_seed(seed)
+        np.random.seed(seed)
+
+        self.env = env_fn()
         self.state_preproc = state_preproc
+
+        steps_per_epoch = int(steps_per_epoch / num_procs())
 
         if state_preproc is None:
             self.ac = actorcritic(
-                env.observation_space.shape[0], env.action_space, hidden_sizes=hid_sizes
+                self.env.observation_space.shape[0], self.env.action_space, hidden_sizes=hid_sizes
             )
             self.buffer = PGBuffer(
-                env.observation_space.shape,
-                env.action_space.shape,
+                self.env.observation_space.shape,
+                self.env.action_space.shape,
                 steps_per_epoch,
                 gamma,
                 lam,
@@ -53,10 +64,12 @@ class BasePolicyGradient:
             assert (
                 state_sze is not None
             ), "If using some state preprocessing, must specify state size after preprocessing."
-            self.ac = actorcritic(state_sze, env.action_space, hidden_sizes=hid_sizes)
+            self.ac = actorcritic(state_sze, self.env.action_space, hidden_sizes=hid_sizes)
             self.buffer = PGBuffer(
-                state_sze, env.action_space.shape, steps_per_epoch, gamma, lam
+                state_sze, self.env.action_space.shape, steps_per_epoch, gamma, lam
             )
+
+        sync_params(self.ac)
 
         self.steps_per_epoch = steps_per_epoch
 
@@ -68,6 +81,7 @@ class BasePolicyGradient:
         self.save_states = save_states; self.save_screen = save_screen
         self.logger = EpochLogger(output_dir=self.tb_logger.full_logdir)
         self.saver = fk.saver.Saver(out_dir=self.tb_logger.full_logdir)
+        self.logger.setup_pytorch_saver(self.ac)
 
     @abc.abstractmethod
     def update(self):

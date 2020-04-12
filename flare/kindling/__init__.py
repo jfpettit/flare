@@ -4,3 +4,4 @@ from . import utils
 from .buffers import ReplayBuffer, PGBuffer 
 from .saver import Saver
 from .logging import Logger, EpochLogger
+from . import mpi_tools, mpi_pytorch
