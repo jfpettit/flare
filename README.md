@@ -9,7 +9,29 @@
 
 ## Installation
 
-Clone the repository, cd into it: 
+**Flare supports parallelization via MPI!** So, you'll need to install [OpenMPI](https://www.open-mpi.org/) to run this code. [SpinningUp](https://spinningup.openai.com/en/latest/user/installation.html#installing-openmpi) provides the following installation instructions:
+
+### On Ubuntu:
+
+```
+sudo apt-get update && sudo apt-get install libopenmpi-dev
+```
+
+### On Mac OS X 
+
+```
+brew install openmpi
+```
+
+### On Windows
+
+If you're on Windows, [here is a link to some instructions](https://nyu-cds.github.io/python-mpi/setup/).
+
+If the Mac instructions don't work for you, consider these [instructions](http://www.science.smith.edu/dftwiki/index.php/Install_MPI_on_a_MacBook).  
+
+It is recommended to use a virtual env before installing this, to avoid conflicting with other installed packages. Anaconda and Python offer virtual environment systems.
+
+Finally, clone the repository, cd into it: 
 
 ```
 git clone https://github.com/jfpettit/flare.git
@@ -81,4 +103,3 @@ Flare now automatically logs run metrics to [TensorBoard](https://www.tensorflow
 - Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
 - Test algorithm performance
-- Parallelize (maybe)

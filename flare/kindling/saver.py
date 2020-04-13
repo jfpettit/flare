@@ -3,6 +3,7 @@ import time
 import pickle as pkl
 from typing import Optional
 import os
+from flare.kindling.mpi_tools import proc_id
 
 class Saver:
     def __init__(self, out_dir, keys: Optional[list] = []):
@@ -18,7 +19,8 @@ class Saver:
                 self.saver_dict[k].append(v)
 
     def save(self):
-        ct = time.time()
-        if len(self.saver_dict) > 0:
-            pkl.dump(self.saver_dict, open(self.out_path / f'env_states_and_screens_saved_on{ct}.pkl', 'wb'))
+        if proc_id() == 0:
+            ct = time.time()
+            if len(self.saver_dict) > 0:
+                pkl.dump(self.saver_dict, open(self.out_path / f'env_states_and_screens_saved_on{ct}.pkl', 'wb'))
         

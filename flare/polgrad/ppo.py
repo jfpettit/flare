@@ -54,6 +54,9 @@ class PPO(BasePolicyGradient):
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
 
+    def get_name(self):
+        return self.__class__.__name__
+
     def update(self):
         self.ac.train()
         states, acts, advs, rets, logprobs_old = [
@@ -78,7 +81,7 @@ class PPO(BasePolicyGradient):
             _, logp, _ = self.ac.policy(states, acts)
             kl = mpi_avg((logprobs_old - logp).mean().item())
             if kl > 1.5 * self.maxkl:
-                cprint(f"Early stopping at step {i} due to reaching max kl.", "yellow")
+                self.logger.log(f"Early stopping at step {i} due to reaching max kl.", "yellow")
                 break
             pol_loss.backward()
             mpi_avg_grads(self.ac.policy)

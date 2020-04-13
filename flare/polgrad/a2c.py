@@ -6,6 +6,7 @@ from flare.kindling import utils
 from flare.polgrad import BasePolicyGradient
 import flare.kindling as fk
 import torch.nn.functional as F
+from flare.kindling.mpi_pytorch import mpi_avg_grads, mpi_avg
 
 
 class A2C(BasePolicyGradient):
@@ -19,6 +20,7 @@ class A2C(BasePolicyGradient):
         steps_per_epoch=4000,
         pol_lr=3e-4,
         val_lr=1e-3,
+        seed=0,
         logstd_anneal=None,
         state_preproc=None,
         state_sze=None,
@@ -34,6 +36,7 @@ class A2C(BasePolicyGradient):
             lam=lam,
             steps_per_epoch=steps_per_epoch,
             hid_sizes=hidden_sizes,
+            seed=seed,
             state_sze=state_sze,
             state_preproc=state_preproc,
             logger_dir=logger_dir,
@@ -45,40 +48,44 @@ class A2C(BasePolicyGradient):
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
 
+    def get_name(self):
+        return self.__class__.__name__
+
     def update(self):
         self.ac.train()
         states, acts, advs, rets, logprobs_old = [
             torch.Tensor(x) for x in self.buffer.get()
         ]
-
+        
         _, logp, _ = self.ac.policy(states, acts)
-        pol_loss = -(logp * advs).mean()
         approx_ent = (-logp).mean()
-
-        self.policy_optimizer.zero_grad()
-        pol_loss.backward()
-        self.policy_optimizer.step()
-
+        pol_loss_old = -(logp * advs).mean()
+        
         values = self.ac.value_f(states)
         val_loss_old = F.mse_loss(values, rets)
-        for _ in range(80):
 
+        self.policy_optimizer.zero_grad()
+        _, logp, _ = self.ac.policy(states, acts)
+        kl = mpi_avg((logprobs_old - logp).mean().item())
+        pol_loss = -(logp * advs).mean()
+        pol_loss.backward()
+        mpi_avg_grads(self.ac.policy) 
+        self.policy_optimizer.step()
+
+        for _ in range(80):
+            self.value_optimizer.zero_grad()
             values = self.ac.value_f(states)
             val_loss = F.mse_loss(values, rets)
-            self.value_optimizer.zero_grad()
             val_loss.backward()
+            mpi_avg_grads(self.ac.value_f)
             self.value_optimizer.step()
 
-        _, logp, _, vals = self.ac(states, a=acts)
-        pol_loss_new = -(logp * advs).mean()
-        val_loss_new = F.mse_loss(vals, rets)
-        approx_kl = (logprobs_old - logp).mean()
         self.logger.store(
-            PolicyLoss=pol_loss.detach().numpy(),
+            PolicyLoss=pol_loss_old.detach().numpy(),
             ValueLoss=val_loss_old.detach().numpy(),
-            KL=approx_kl.detach().numpy(),
+            KL=kl,
             Entropy=approx_ent.detach().numpy(),
-            DeltaPolLoss=(pol_loss_new - pol_loss).detach().numpy(),
-            DeltaValLoss=(val_loss_new - val_loss_old).detach().numpy(),
+            DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(),
+            DeltaValLoss=(val_loss - val_loss_old).detach().numpy(),
         )
-        return pol_loss, val_loss, approx_ent, approx_kl
+        return pol_loss, val_loss, approx_ent, kl

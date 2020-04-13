@@ -88,9 +88,7 @@ class Logger:
         """
         if proc_id()==0:
             self.output_dir = output_dir or "/tmp/experiments/%i"%int(time.time())
-            if osp.exists(self.output_dir):
-                print("Warning: Log dir %s already exists! Storing info there anyway."%self.output_dir)
-            else:
+            if not osp.exists(self.output_dir):
                 os.makedirs(self.output_dir)
             self.output_file = open(osp.join(self.output_dir, output_fname), 'w')
             atexit.register(self.output_file.close)
