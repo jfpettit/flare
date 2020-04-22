@@ -144,6 +144,137 @@ class FireActorCritic(nn.Module):
         return pi, logp, logp_pi, value
 
 
+class MLPQActor(nn.Module):
+    def __init__(self, obs_dim, act_dim, hidden_sizes, activation, act_limit):
+        super().__init__()
+        policy_layer_sizes = [obs_dim] + list(hidden_sizes) + [act_dim]
+        self.policy = MLP(policy_layer_sizes, activation, torch.tanh)
+        self.act_limit = act_limit
+
+    def forward(self, obs):
+        # Return output from network scaled to action space limits.
+        return self.act_limit * self.policy(obs)
+
+
+class MLPQFunction(nn.Module):
+    def __init__(self, obs_dim, act_dim, hidden_sizes, activation):
+        super().__init__()
+        self.qfunc = MLP([obs_dim + act_dim] + list(hidden_sizes) + [1], activation)
+
+    def forward(self, obs, act):
+        q = self.qfunc(torch.cat([obs, act], dim=-1))
+        return torch.squeeze(q, -1) # Critical to ensure q has right shape.
+
+
+class FireDDPGActorCritic(nn.Module):
+    def __init__(self, observation_space, action_space, hidden_sizes=(256,256),
+                 activation=torch.relu):
+        super().__init__()
+
+        obs_dim = observation_space
+        act_dim = action_space.shape[0]
+        act_limit = action_space.high[0]
+
+        # build policy and value functions
+        self.policy = MLPQActor(obs_dim, act_dim, hidden_sizes, activation, act_limit)
+        self.qfunc = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
+
+    def act(self, obs):
+        with torch.no_grad():
+            return self.policy(obs).numpy()
+
+
+class FireTD3ActorCritic(nn.Module):
+    def __init__(self, observation_space, action_space, hidden_sizes=(256,256),
+                 activation=torch.relu):
+        super().__init__()
+
+        obs_dim = observation_space
+        act_dim = action_space.shape[0]
+        act_limit = action_space.high[0]
+
+        # build policy and value functions
+        self.policy = MLPQActor(obs_dim, act_dim, hidden_sizes, activation, act_limit)
+        self.qfunc1 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
+        self.qfunc2 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
+
+    def act(self, obs):
+        with torch.no_grad():
+            return self.policy(obs).numpy()
+
+
+"""
+From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
+"""
+
+LOG_STD_MAX = 2
+LOG_STD_MIN = -20
+
+
+class SquashedGaussianMLPActor(nn.Module):
+
+    def __init__(self, obs_dim, act_dim, hidden_sizes, activation, act_limit):
+        super().__init__()
+        self.net = MLP([obs_dim] + list(hidden_sizes), activation, activation)
+        self.mu_layer = nn.Linear(hidden_sizes[-1], act_dim)
+        self.log_std_layer = nn.Linear(hidden_sizes[-1], act_dim)
+        self.act_limit = act_limit
+
+    def forward(self, obs, deterministic=False, with_logprob=True):
+        net_out = self.net(obs)
+        mu = self.mu_layer(net_out)
+        log_std = self.log_std_layer(net_out)
+        log_std = torch.clamp(log_std, LOG_STD_MIN, LOG_STD_MAX)
+        std = torch.exp(log_std)
+
+        # Pre-squash distribution and sample
+        pi_distribution = torch.distributions.Normal(mu, std)
+        if deterministic:
+            # Only used for evaluating policy at test time.
+            pi_action = mu
+        else:
+            pi_action = pi_distribution.rsample()
+
+        if with_logprob:
+            # Compute logprob from Gaussian, and then apply correction for Tanh squashing.
+            # NOTE: The correction formula is a little bit magic. To get an understanding 
+            # of where it comes from, check out the original SAC paper (arXiv 1801.01290) 
+            # and look in appendix C. This is a more numerically-stable equivalent to Eq 21.
+            # Try deriving it yourself as a (very difficult) exercise. :)
+            logp_pi = pi_distribution.log_prob(pi_action).sum(axis=-1)
+            logp_pi -= (2*(np.log(2) - pi_action - F.softplus(-2*pi_action))).sum(axis=1)
+        else:
+            logp_pi = None
+
+        pi_action = torch.tanh(pi_action)
+        pi_action = self.act_limit * pi_action
+
+        return pi_action, logp_pi
+
+
+class FireSACActorCritic(nn.Module):
+    """
+    From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
+    """
+    def __init__(self, observation_space, action_space, hidden_sizes=(256,256),
+                 activation=torch.relu):
+        super().__init__()
+
+        obs_dim = observation_space
+        act_dim = action_space.shape[0]
+        act_limit = action_space.high[0]
+
+        # build policy and value functions
+        self.policy = SquashedGaussianMLPActor(obs_dim, act_dim, hidden_sizes, activation, act_limit)
+        self.qfunc1 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
+        self.qfunc2 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
+
+    def act(self, obs, deterministic=False):
+        with torch.no_grad():
+            a, _ = self.policy(obs, deterministic, False)
+            return a.numpy()
+
+
 class FireQActorCritic(nn.Module):
     def __init__(
         self,
@@ -175,105 +306,6 @@ class FireQActorCritic(nn.Module):
         q_act = self.qfunc(torch.cat(x, act, dim=1))
 
         return act, q, q_act
-
-
-class ActorCritic(nn.Module):
-    def __init__(self, in_size, out_size):
-        super(ActorCritic, self).__init__()
-        self.layer1 = nn.Linear(in_size, 64)
-        self.layer2 = nn.Linear(64, 32)
-        self.layer3 = nn.Linear(32, out_size)
-        self.val = nn.Linear(32, 1)
-
-    def forward(self, x):
-        x = torch.tanh(self.layer1(x))
-        x = torch.tanh(self.layer2(x))
-        value = self.val(x)
-        action = self.layer3(x)
-        return action, value
-
-    def evaluate_acts(self, states):
-        return self.forward(states)
-
-    def buffer_init(self, epoch_interaction_size, gamma=0.99, lam=0.95):
-        self.size = epoch_interaction_size
-        self.save_log_probs = []
-        self.save_states = []
-        self.save_rewards = np.zeros(self.size, dtype=np.float32)
-        self.save_values = np.zeros(self.size, dtype=np.float32)
-        self.old_log_probs = np.zeros(self.size, dtype=np.float32)
-        self.save_value_tensors = []
-        self.save_actions = []
-
-        self.gamma = gamma
-        self.lam = lam
-
-        self.adv_record = np.zeros(self.size, dtype=np.float32)
-        self.ret_record = np.zeros(self.size, dtype=np.float32)
-
-        self.ptr, self.strt = 0, 0
-
-    def store(self, state, action, reward, value, logprob):
-        assert self.ptr < self.size
-        self.save_states.append(state)
-        self.save_log_probs.append(logprob)
-        self.save_rewards[self.ptr] = reward
-        self.save_values[self.ptr] = value
-        self.save_actions.append(action)
-        self.save_value_tensors.append(value.clone().detach().requires_grad_(True))
-
-        self.ptr += 1
-
-    def discount_cumulative_sum(self, x, discount):
-        return lfilter([1], [1, float(-discount)], x[::-1], axis=0)[::-1]
-
-    def end_traj(self, last_val=0):
-        traj_slice = slice(self.strt, self.ptr)
-
-        rews = np.append(self.save_rewards[traj_slice], last_val)
-        vals = np.append(self.save_values[traj_slice], last_val)
-
-        deltas = rews[:-1] + self.gamma * vals[1:] - vals[:-1]
-
-        self.adv_record[traj_slice] = self.discount_cumulative_sum(
-            deltas, self.gamma * self.lam
-        )
-        self.ret_record[traj_slice] = self.discount_cumulative_sum(
-            rews, self.gamma * self.lam
-        )[:-1]
-        # self.adv_record[traj_slice] = self.discount_cumulative_sum(rews[:-1] - vals[:-1], self.gamma*self.lam)
-
-        self.strt = self.ptr
-
-    def gather(self):
-        assert self.ptr == self.size, "Buffer must be full before you gather."
-
-        self.ptr, self.strt = 0, 0
-
-        self.adv_record = (self.adv_record - self.adv_record.mean()) / (
-            self.adv_record.std() + 1e-8
-        )
-
-        return [
-            self.save_states,
-            self.save_actions,
-            torch.tensor(self.adv_record),
-            torch.tensor(self.ret_record),
-            self.save_log_probs,
-            self.save_value_tensors,
-        ]
-
-    def clear_mem(self):
-        self.save_log_probs = []
-        self.save_states = []
-        self.save_actions = []
-        self.save_value_tensors = []
-
-        self.save_rewards = np.zeros(self.size, dtype=np.float32)
-        self.save_values = np.zeros(self.size, dtype=np.float32)
-
-        self.adv_record = np.zeros(self.size, dtype=np.float32)
-        self.ret_record = np.zeros(self.size, dtype=np.float32)
 
 
 class NatureDQN(nn.Module):

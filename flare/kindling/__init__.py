@@ -1,4 +1,4 @@
-from .neural_nets import FireActorCritic, FireQActorCritic
+from .neural_nets import FireActorCritic, FireQActorCritic, FireDDPGActorCritic, FireTD3ActorCritic, FireSACActorCritic
 from .tblog import TensorBoardWriter
 from . import utils
 from .buffers import ReplayBuffer, PGBuffer 

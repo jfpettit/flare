@@ -2,6 +2,7 @@ import numpy as np
 import scipy
 from typing import Optional, Any, Union
 from flare.kindling.mpi_tools import mpi_statistics_scalar
+import torch
 
 class PGBuffer:
     """
@@ -114,23 +115,22 @@ class ReplayBuffer(PGBuffer):
         """
         Append one timestep of agent-environment interaction to the buffer.
         """
-        assert self.ptr < self.max_size  # buffer has to have room so you can store
         self.obs1_buf[self.ptr] = obs
+        self.obs2_buf[self.ptr] = next_obs
         self.act_buf[self.ptr] = act
         self.rew_buf[self.ptr] = rew
-        self.obs2_buf[self.ptr] = next_obs
         self.done_buf[self.ptr] = done
-        self.ptr += 1
+        self.ptr = (self.ptr+1) % self.max_size
+        self.size = min(self.size+1, self.max_size)
 
-    def get_batch(self, n_sample: Optional[int] = 32):
-        sample_inds = np.random.randint(0, self.size, size=n_sample)
-        return dict(
-            obs1=self.obs1_buf[sample_inds],
-            obs2=self.obs2_buf[sample_inds],
-            acts=self.act_buf[sample_inds],
-            rews=self.rew_buf[sample_inds],
-            done=self.done_buf[sample_inds],
-        )
+    def sample_batch(self, batch_size=32):
+        idxs = np.random.randint(0, self.size, size=batch_size)
+        batch = dict(obs=self.obs1_buf[idxs],
+                     obs2=self.obs2_buf[idxs],
+                     act=self.act_buf[idxs],
+                     rew=self.rew_buf[idxs],
+                     done=self.done_buf[idxs])
+        return {k: torch.as_tensor(v, dtype=torch.float32) for k,v in batch.items()}
 
 
 

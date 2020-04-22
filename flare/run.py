@@ -2,7 +2,7 @@
 import argparse
 
 import flare.polgrad as pg
-from flare.kindling.neural_nets import ActorCritic
+import flare.qpolgrad as qpg
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
@@ -46,6 +46,15 @@ if __name__ == '__main__':
     elif args.alg == 'A2C':
         trainer = pg.A2C(env, gamma=args.gamma, lam=args.lam, hidden_sizes=hids, logger_dir=args.folder,
                  save_screen=args.save_screen, save_states=args.save_states, steps_per_epoch=args.steps_per_epoch)
+    elif args.alg == 'DDPG':
+       trainer = qpg.DDPG(env, gamma=args.gamma, hidden_sizes=hids, logger_dir=args.folder,
+                 save_screen=args.save_screen, save_states=args.save_states, steps_per_epoch=args.steps_per_epoch) 
+    elif args.alg == 'TD3':
+       trainer = qpg.TD3(env, gamma=args.gamma, hidden_sizes=hids, logger_dir=args.folder,
+                 save_screen=args.save_screen, save_states=args.save_states, steps_per_epoch=args.steps_per_epoch)  
+    elif args.alg == 'SAC':
+       trainer = qpg.SAC(env, gamma=args.gamma, hidden_sizes=hids, logger_dir=args.folder,
+                 save_screen=args.save_screen, save_states=args.save_states, steps_per_epoch=args.steps_per_epoch)   
     rew, leng = trainer.learn(args.epochs, horizon=args.horizon, render=args.render, logstd_anneal=logstds_anneal, n_anneal_cycles=args.n_anneal_cycles)
 
     # watch agent interact with environment

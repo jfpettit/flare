@@ -1,9 +1,10 @@
 # flare
+
 ![**PPO agent on LunarLanderContinuous-v2**](/src/lunarlandercontinuous.gif)
 
 *PPO agent trained to play [LunarLanderContinuous-v2](https://gym.openai.com/envs/LunarLanderContinuous-v2/). Reward per episode at this point was ~230.*
 
-```flare``` is a small reinforcement learning library. Currently, the use case for this library is small-scale RL experimentation/research. 
+```flare``` is a small reinforcement learning library. Currently, the use case for this library is small-scale RL experimentation/research. Much of the code is refactored from and built off of [SpinningUp](https://spinningup.openai.com/en/latest/), so massive thanks to them for writing quality, understandable, and performant code.
 
 (old) Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
 
@@ -69,12 +70,13 @@ This repository is intended to be a lightweight and simple to use RL framework, 
 
 Algorithms will be listed here as they are implemented: 
 
-- A2C
-	- This is an implementation of the Advantage Actor Critic algorithm. It works with any Gym environment.
-- PPO
-	- This is an implementation of the Proximal Policy Optimization algorithm, it also works with any Gym environment.
+- [Advantage Actor Critic (A2C)](https://arxiv.org/abs/1602.01783)
+- [Proximal Policy Optimization (PPO)](https://arxiv.org/abs/1707.06347)
+- [Deep Deterministic Policy Gradients (DDPG)](https://arxiv.org/abs/1509.02971)
+- [Twin Delayed Deep Deterministic Policy Gradients (TD3)](https://arxiv.org/abs/1802.09477)
+- [Soft Actor Critic (SAC)](https://arxiv.org/abs/1801.01290)
 
-DDPG is under development and isn't yet usable.
+The policy gradient algorithms (A2C, PPO), support running on multiple CPUs via MPI. The Q Policy Gradient algorithms (SAC, DDPG, TD3) do not yet support MPI parallelization.
 
 ## Usage
 
@@ -100,6 +102,5 @@ Flare now automatically logs run metrics to [TensorBoard](https://www.tensorflow
 - [Pytorch RL examples](https://github.com/pytorch/examples/tree/master/reinforcement_learning)
 
 ## More to come!
-- Implement DQN, DDPG and SAC (maybe?)
 - Comment code to make it clearer
 - Test algorithm performance
