@@ -14,10 +14,11 @@ import flare.kindling as fk
 from flare.kindling import ReplayBuffer
 from typing import Optional, Union, Callable
 
+
 class BaseQPolicyGradient:
     def __init__(
-        self, 
-        env_fn: Callable, 
+        self,
+        env_fn: Callable,
         actorcritic: Callable,
         seed: Optional[int] = 0,
         steps_per_epoch: Optional[int] = 4000,
@@ -26,7 +27,7 @@ class BaseQPolicyGradient:
         polyak: Optional[float] = 0.95,
         pol_lr: Optional[float] = 1e-3,
         q_lr: Optional[float] = 1e-3,
-        hidden_sizes: Optional[Union[tuple, list]]=(256, 128),
+        hidden_sizes: Optional[Union[tuple, list]] = (256, 128),
         bs: Optional[int] = 100,
         warmup_steps: Optional[int] = 10000,
         update_after: Optional[int] = 1000,
@@ -64,9 +65,7 @@ class BaseQPolicyGradient:
             self.ac = actorcritic(
                 state_sze, self.env.action_space, hidden_sizes=hidden_sizes
             )
-            self.buffer = buffer(
-                state_sze, self.env.action_space.shape, replay_size, 
-            )
+            self.buffer = buffer(state_sze, self.env.action_space.shape, replay_size,)
 
         torch.manual_seed(seed)
         np.random.seed(seed)
@@ -93,7 +92,6 @@ class BaseQPolicyGradient:
         for param in self.ac_targ.parameters():
             param.requires_grad = False
 
-
         self.tensorboard = tensorboard
         if self.tensorboard:
             if logger_dir is None:
@@ -102,19 +100,18 @@ class BaseQPolicyGradient:
                 self.tb_logger = fk.TensorBoardWriter(fpath=logger_dir)
             else:
                 self.tb_logger = fk.TensorBoardWriter(fpath=logger_dir)
-    
+
             self.saver = fk.Saver(out_dir=self.tb_logger.full_logdir)
 
             self.logger = fk.EpochLogger(output_dir=self.tb_logger.full_logdir)
-            
+
         elif not self.tensorboard:
             self.logger = fk.EpochLogger(logger_dir)
             self.saver = fk.Saver(out_dir=self.logger.output_dir)
-            
+
         self.logger.setup_pytorch_saver(self.ac)
 
         self.setup_optimizers(pol_lr=pol_lr, q_lr=q_lr)
-
 
     def get_name(self):
         return self.__class__.__name__
@@ -123,7 +120,7 @@ class BaseQPolicyGradient:
     def setup_optimizers(self, pol_lr, q_lr):
         """Function to initialize optimizers"""
         return
-    
+
     @abc.abstractmethod
     def calc_policy_loss(self, data):
         """Function to compute policy loss"""
@@ -147,7 +144,7 @@ class BaseQPolicyGradient:
     def test_agent(self, num_test_episodes, max_ep_len):
         for j in range(num_test_episodes):
             o, d, ep_ret, ep_len = self.test_env.reset(), False, 0, 0
-            while not(d or (ep_len == max_ep_len)):
+            while not (d or (ep_len == max_ep_len)):
                 # Take deterministic actions at test time (noise_scale=0)
                 o, r, d, _ = self.test_env.step(self.get_action(o, 0))
                 ep_ret += r
@@ -162,10 +159,10 @@ class BaseQPolicyGradient:
 
         # Main loop: collect experience in env and update/log each epoch
         for t in range(total_steps):
-            
+
             # Until start_steps have elapsed, randomly sample actions
-            # from a uniform distribution for better exploration. Afterwards, 
-            # use the learned policy (with some noise, via act_noise). 
+            # from a uniform distribution for better exploration. Afterwards,
+            # use the learned policy (with some noise, via act_noise).
             if t > self.warmup_steps:
                 a = self.get_action(o, self.act_noise)
             else:
@@ -179,12 +176,12 @@ class BaseQPolicyGradient:
             # Ignore the "done" signal if it comes from hitting the time
             # horizon (that is, when it's an artificial terminal signal
             # that isn't based on the agent's state)
-            d = False if ep_len==max_ep_len else d
+            d = False if ep_len == max_ep_len else d
 
             # Store experience to replay buffer
             self.buffer.store(o, a, r, o2, d)
 
-            # Super critical, easy to overlook step: make sure to update 
+            # Super critical, easy to overlook step: make sure to update
             # most recent observation!
             o = o2
 
@@ -200,29 +197,31 @@ class BaseQPolicyGradient:
                     self.update(data=batch, timer=j)
 
             # End of epoch handling
-            if (t+1) % self.steps_per_epoch == 0:
-                epoch = (t+1) // self.steps_per_epoch
+            if (t + 1) % self.steps_per_epoch == 0:
+                epoch = (t + 1) // self.steps_per_epoch
 
                 # Save model
                 if (epoch % self.save_freq == 0) or (epoch == epochs):
-                    self.logger.save_state({'env': self.env}, None)
+                    self.logger.save_state({"env": self.env}, None)
 
                 # Test the performance of the deterministic version of the agent.
-                self.test_agent(num_test_episodes=num_test_episodes, max_ep_len=max_ep_len)
+                self.test_agent(
+                    num_test_episodes=num_test_episodes, max_ep_len=max_ep_len
+                )
 
                 ep_dict = self.logger.epoch_dict_copy
                 if self.tensorboard:
                     self.tb_logger.add_vals(ep_dict, step=epoch)
                 # Log info about epoch
                 new_time = time.time()
-                self.logger.log_tabular('Iteration', epoch)
-                self.logger.log_tabular('EpReturn', with_min_and_max=True)
-                self.logger.log_tabular('TestEpReturn', with_min_and_max=True)
-                self.logger.log_tabular('EpLength', average_only=True)
-                self.logger.log_tabular('TestEpLength', average_only=True)
-                self.logger.log_tabular('TotalEnvInteracts', t)
+                self.logger.log_tabular("Iteration", epoch)
+                self.logger.log_tabular("EpReturn", with_min_and_max=True)
+                self.logger.log_tabular("TestEpReturn", with_min_and_max=True)
+                self.logger.log_tabular("EpLength", average_only=True)
+                self.logger.log_tabular("TestEpLength", average_only=True)
+                self.logger.log_tabular("TotalEnvInteracts", t)
                 self.logger_tabular_to_dump()
-                self.logger.log_tabular('IterationTime', new_time - last_time)
+                self.logger.log_tabular("IterationTime", new_time - last_time)
                 last_time = new_time
                 self.logger.dump_tabular()
 

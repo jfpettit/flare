@@ -94,7 +94,7 @@ class BasePolicyGradient:
                 self.tb_logger = TensorBoardWriter(fpath=logger_dir)
             else:
                 self.tb_logger = TensorBoardWriter(fpath=logger_dir)
-    
+
         self.saver = fk.saver.Saver(out_dir=self.tb_logger.full_logdir)
 
         self.logger = EpochLogger(output_dir=self.tb_logger.full_logdir)

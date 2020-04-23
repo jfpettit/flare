@@ -16,7 +16,12 @@ class TensorBoardWriter:
             self.fpath = fpath
 
         if os.path.exists(self.fpath):
-           print(utils.colorize(f"Warning path at {self.fpath} already exists, storing info there anyway.", "yellow"))
+            print(
+                utils.colorize(
+                    f"Warning path at {self.fpath} already exists, storing info there anyway.",
+                    "yellow",
+                )
+            )
 
         self.full_logdir = self.fpath
 
@@ -24,7 +29,6 @@ class TensorBoardWriter:
             os.makedirs(self.fpath, exist_ok=True)
             self.writer = SummaryWriter(log_dir=self.fpath, flush_secs=30)
             print(utils.colorize(f"TensorBoard Logdir: {self.full_logdir}", "green"))
-
 
     def add_plot(
         self, key: str, val: Union[torch.Tensor, np.array, list, float, int], step: int

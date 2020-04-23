@@ -27,7 +27,7 @@ class A2C(BasePolicyGradient):
         logger_dir=None,
         tensorboard=True,
         save_screen=False,
-        save_states=False
+        save_states=False,
     ):
         super().__init__(
             env,
@@ -42,7 +42,7 @@ class A2C(BasePolicyGradient):
             logger_dir=logger_dir,
             tensorboard=tensorboard,
             save_screen=save_screen,
-            save_states=save_states
+            save_states=save_states,
         )
 
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
@@ -56,11 +56,11 @@ class A2C(BasePolicyGradient):
         states, acts, advs, rets, logprobs_old = [
             torch.Tensor(x) for x in self.buffer.get()
         ]
-        
+
         _, logp, _ = self.ac.policy(states, acts)
         approx_ent = (-logp).mean()
         pol_loss_old = -(logp * advs).mean()
-        
+
         values = self.ac.value_f(states)
         val_loss_old = F.mse_loss(values, rets)
 
@@ -69,7 +69,7 @@ class A2C(BasePolicyGradient):
         kl = mpi_avg((logprobs_old - logp).mean().item())
         pol_loss = -(logp * advs).mean()
         pol_loss.backward()
-        mpi_avg_grads(self.ac.policy) 
+        mpi_avg_grads(self.ac.policy)
         self.policy_optimizer.step()
 
         for _ in range(80):

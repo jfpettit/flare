@@ -44,6 +44,7 @@ def colorize(
         attr.append("1")
     return "\x1b[%sm%s\x1b[0m" % (";".join(attr), string)
 
+
 def calc_logstd_anneal(n_anneal_cycles, anneal_start, anneal_end, epochs):
     if n_anneal_cycles > 0:
         logstds = np.linspace(anneal_start, anneal_end, num=epochs // n_anneal_cycles)
@@ -51,8 +52,9 @@ def calc_logstd_anneal(n_anneal_cycles, anneal_start, anneal_end, epochs):
             logstds = np.hstack((logstds, logstds))
     else:
         logstds = np.linspace(anneal_start, anneal_end, num=epochs)
-    
+
     return logstds
+
 
 def gaussian_likelihood(x, mu, log_std):
     vals = (

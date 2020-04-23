@@ -9,10 +9,11 @@ from flare.kindling import ReplayBuffer
 from typing import Optional, Union, Callable
 from itertools import chain
 
+
 class TD3(BaseQPolicyGradient):
     def __init__(
-        self, 
-        env_fn: Callable, 
+        self,
+        env_fn: Callable,
         actorcritic: Callable = fk.FireTD3ActorCritic,
         seed: Optional[int] = 0,
         steps_per_epoch: Optional[int] = 4000,
@@ -21,7 +22,7 @@ class TD3(BaseQPolicyGradient):
         polyak: Optional[float] = 0.95,
         pol_lr: Optional[float] = 1e-3,
         q_lr: Optional[float] = 1e-3,
-        hidden_sizes: Optional[Union[tuple, list]]=(256, 128),
+        hidden_sizes: Optional[Union[tuple, list]] = (256, 128),
         bs: Optional[int] = 100,
         warmup_steps: Optional[int] = 10000,
         update_after: Optional[int] = 1000,
@@ -76,15 +77,21 @@ class TD3(BaseQPolicyGradient):
         self.q_optimizer = torch.optim.Adam(self.q_params, lr=q_lr)
 
     def calc_policy_loss(self, data):
-        o = data['obs']
+        o = data["obs"]
         q1_pi = self.ac.qfunc1(o, self.ac.policy(o))
         return -q1_pi.mean()
 
     def calc_qfunc_loss(self, data):
-        o, a, r, o2, d = data['obs'], data['act'], data['rew'], data['obs2'], data['done']
+        o, a, r, o2, d = (
+            data["obs"],
+            data["act"],
+            data["rew"],
+            data["obs2"],
+            data["done"],
+        )
 
-        q1 = self.ac.qfunc1(o,a)
-        q2 = self.ac.qfunc2(o,a)
+        q1 = self.ac.qfunc1(o, a)
+        q2 = self.ac.qfunc2(o, a)
 
         # Bellman backup for Q functions
         with torch.no_grad():
@@ -103,16 +110,14 @@ class TD3(BaseQPolicyGradient):
             backup = r + self.gamma * (1 - d) * q_pi_targ
 
         # MSE loss against Bellman backup
-        loss_q1 = ((q1 - backup)**2).mean()
-        loss_q2 = ((q2 - backup)**2).mean()
+        loss_q1 = ((q1 - backup) ** 2).mean()
+        loss_q2 = ((q2 - backup) ** 2).mean()
         loss_q = loss_q1 + loss_q2
 
         # Useful info for logging
-        loss_info = dict(Q1Values=q1.detach().numpy(),
-                         Q2Values=q2.detach().numpy())
+        loss_info = dict(Q1Values=q1.detach().numpy(), Q2Values=q2.detach().numpy())
 
         return loss_q, loss_info
-
 
     def update(self, data, timer):
         # First run one gradient descent step for Q1 and Q2
@@ -127,7 +132,7 @@ class TD3(BaseQPolicyGradient):
         # Possibly update pi and target networks
         if timer % self.policy_delay == 0:
 
-            # Freeze Q-networks so you don't waste computational effort 
+            # Freeze Q-networks so you don't waste computational effort
             # computing gradients for them during the policy learning step.
             for p in self.q_params:
                 p.requires_grad = False
@@ -154,7 +159,7 @@ class TD3(BaseQPolicyGradient):
                     p_targ.data.add_((1 - self.polyak) * p.data)
 
     def logger_tabular_to_dump(self):
-        self.logger.log_tabular('Q1Values', with_min_and_max=True)
-        self.logger.log_tabular('Q2Values', with_min_and_max=True)
-        self.logger.log_tabular('PolicyLoss', average_only=True)
-        self.logger.log_tabular('QLoss', average_only=True)
+        self.logger.log_tabular("Q1Values", with_min_and_max=True)
+        self.logger.log_tabular("Q2Values", with_min_and_max=True)
+        self.logger.log_tabular("PolicyLoss", average_only=True)
+        self.logger.log_tabular("QLoss", average_only=True)

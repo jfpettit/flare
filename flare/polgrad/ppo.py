@@ -5,7 +5,13 @@ import torch
 import gym
 import torch.nn.functional as F
 from termcolor import cprint
-from flare.kindling.mpi_tools import mpi_fork, mpi_avg, proc_id, mpi_statistics_scalar, num_procs
+from flare.kindling.mpi_tools import (
+    mpi_fork,
+    mpi_avg,
+    proc_id,
+    mpi_statistics_scalar,
+    num_procs,
+)
 from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
 
 
@@ -29,7 +35,7 @@ class PPO(BasePolicyGradient):
         logger_dir=None,
         tensorboard=True,
         save_screen=False,
-        save_states=False
+        save_states=False,
     ):
         super().__init__(
             env,
@@ -44,7 +50,7 @@ class PPO(BasePolicyGradient):
             logger_dir=logger_dir,
             tensorboard=tensorboard,
             save_screen=save_screen,
-            save_states=save_states
+            save_states=save_states,
         )
 
         self.eps = epsilon
@@ -64,7 +70,7 @@ class PPO(BasePolicyGradient):
         ]
         _, logp, _ = self.ac.policy(states, acts)
         pol_ratio = (logp - logprobs_old).exp()
-        min_adv = torch.where(advs > 0, (1 + self.eps) * advs, (1 - self.eps) * advs)
+        min_adv = torch.clamp(pol_ratio, 1 - self.eps, 1 + self.eps) * advs
         pol_loss_old = -(torch.min(pol_ratio * advs, min_adv)).mean()
         approx_ent = (-logp).mean()
 
@@ -72,16 +78,15 @@ class PPO(BasePolicyGradient):
             self.policy_optimizer.zero_grad()
             _, logp, _ = self.ac.policy(states, acts)
             pol_ratio = (logp - logprobs_old).exp()
-            min_adv = torch.where(
-                advs > 0, (1 + self.eps) * advs, (1 - self.eps) * advs
-            )
+            min_adv = torch.clamp(pol_ratio, 1 - self.eps, 1 + self.eps) * advs
             pol_loss = -(torch.min(pol_ratio * advs, min_adv)).mean()
-
 
             _, logp, _ = self.ac.policy(states, acts)
             kl = mpi_avg((logprobs_old - logp).mean().item())
             if kl > 1.5 * self.maxkl:
-                self.logger.log(f"Early stopping at step {i} due to reaching max kl.", "yellow")
+                self.logger.log(
+                    f"Early stopping at step {i} due to reaching max kl.", "yellow"
+                )
                 break
             pol_loss.backward()
             mpi_avg_grads(self.ac.policy)
@@ -110,5 +115,5 @@ class PPO(BasePolicyGradient):
             pol_loss_old.detach().numpy(),
             val_loss_old.detach().numpy(),
             approx_ent.detach().numpy(),
-            kl
+            kl,
         )

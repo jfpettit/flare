@@ -4,6 +4,15 @@
 
 *PPO agent trained to play [LunarLanderContinuous-v2](https://gym.openai.com/envs/LunarLanderContinuous-v2/). Reward per episode at this point was ~230.*
 
+
+## Table of Contents
+- [Installation](#installation)
+- [Usage](#usage)
+- [Details](#details)
+- [Contributing](./CONTRIBUTING.md)
+- [References](#references)
+- [More to come](#more-to-come)
+
 ```flare``` is a small reinforcement learning library. Currently, the use case for this library is small-scale RL experimentation/research. Much of the code is refactored from and built off of [SpinningUp](https://spinningup.openai.com/en/latest/), so massive thanks to them for writing quality, understandable, and performant code.
 
 (old) Blog post about this repository [here](https://jfpettit.svbtle.com/rlpack).
@@ -40,7 +49,9 @@ cd flare
 pip install -e .
 ```
 
-## Running from command line
+## Usage
+
+### Running from command line
 
 Presently, A2C and PPO are implemented and working. Run from the command line with:
 ```
@@ -49,7 +60,7 @@ python -m flare.run
 
 This will run [PPO](https://arxiv.org/abs/1707.06347) on [LunarLander-v2](https://gym.openai.com/envs/LunarLander-v2/) with default arguments. If you want to change the algorithm to A2C, run on a different env, or otherwise change some defaults with this command line interface, then do ```python -m flare.run -h``` to see the available optional arguments.
 
-## Running in a Python file
+### Running in a Python file
 
 Import required packages:
 
@@ -63,6 +74,17 @@ rew, leng = agent.learn(100)
 ```
 
 The above snippet will train an agent on the [CartPole environment](http://gym.openai.com/envs/CartPole-v1/) for 100 epochs. 
+
+You may alter the architecture of your actor-critic network by passing in a tuple of hidden layer sizes to your agent initialization. i.e.:
+
+```python
+from flare.polgrad import PPO
+agent = PPO(env, hidden_sizes=(64, 32))
+rew, leng = agent.learn(100)
+```
+
+For a more detailed example using PPO, see the example file at: [examples/ppo_example.py](https://github.com/jfpettit/flare/blob/master/examples/ppo_example.py).
+
 
 ## Details
 
@@ -78,21 +100,14 @@ Algorithms will be listed here as they are implemented:
 
 The policy gradient algorithms (A2C, PPO), support running on multiple CPUs via MPI. The Q Policy Gradient algorithms (SAC, DDPG, TD3) do not yet support MPI parallelization.
 
-## Usage
-
-You may alter the architecture of your actor-critic network by passing in a tuple of hidden layer sizes to your agent initialization. i.e.:
-
-```python
-from flare.polgrad import PPO
-agent = PPO(env, hidden_sizes=(64, 32))
-rew, leng = agent.learn(100)
-```
-
-For a more detailed example using PPO, see the example file at: [examples/ppo_example.py](https://github.com/jfpettit/flare/blob/master/examples/ppo_example.py).
 
 If you wish to build your own actor-critic from scratch, then it is recommended to use the [FireActorCritic](https://github.com/jfpettit/flare/blob/master/flare/neural_nets.py#L72) as a template.
 
 Flare now automatically logs run metrics to [TensorBoard](https://www.tensorflow.org/tensorboard). View these by running ```tensorboard --logdir flare_runs``` in a terminal.
+
+## Contributing
+
+We'd love for you to contribute! Any help is welcome. See [CONTRIBUTING.md](./CONTRIBUTING.md) for contributor guidelines and info.
 
 ## References
 - [OpenAI SpinningUp](https://spinningup.openai.com/en/latest/)

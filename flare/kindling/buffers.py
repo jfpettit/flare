@@ -4,6 +4,7 @@ from typing import Optional, Any, Union
 from flare.kindling.mpi_tools import mpi_statistics_scalar
 import torch
 
+
 class PGBuffer:
     """
     A buffer for storing trajectories experienced by an agent interacting
@@ -11,7 +12,14 @@ class PGBuffer:
     for calculating the advantages of state-action pairs.
     """
 
-    def __init__(self, obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int, gamma: Optional[float] = 0.99, lam: Optional [float] = 0.95):
+    def __init__(
+        self,
+        obs_dim: Union[tuple, int],
+        act_dim: Union[tuple, int],
+        size: int,
+        gamma: Optional[float] = 0.99,
+        lam: Optional[float] = 0.95,
+    ):
         self.obs_buf = np.zeros(self._combined_shape(size, obs_dim), dtype=np.float32)
         self.act_buf = np.zeros(self._combined_shape(size, act_dim), dtype=np.float32)
         self.adv_buf = np.zeros(size, dtype=np.float32)
@@ -22,7 +30,14 @@ class PGBuffer:
         self.gamma, self.lam = gamma, lam
         self.ptr, self.path_start_idx, self.max_size = 0, 0, size
 
-    def store(self, obs: np.array, act: np.array, rew: Union[int, float, np.array], val: Union[int, float, np.array], logp: Union[float, np.array]):
+    def store(
+        self,
+        obs: np.array,
+        act: np.array,
+        rew: Union[int, float, np.array],
+        val: Union[int, float, np.array],
+        logp: Union[float, np.array],
+    ):
         """
         Append one timestep of agent-environment interaction to the buffer.
         """
@@ -72,11 +87,13 @@ class PGBuffer:
         self.ptr, self.path_start_idx = 0, 0
         # the next two lines implement the advantage normalization trick
         adv_mean, adv_std = mpi_statistics_scalar(self.adv_buf)
-        #adv_mean, adv_std = np.mean(self.adv_buf), np.std(self.adv_buf)
+        # adv_mean, adv_std = np.mean(self.adv_buf), np.std(self.adv_buf)
         self.adv_buf = (self.adv_buf - adv_mean) / adv_std
         return [self.obs_buf, self.act_buf, self.adv_buf, self.ret_buf, self.logp_buf]
 
-    def _combined_shape(self, length: Union[int, np.array], shape: Optional[Union[int, tuple]] = None):
+    def _combined_shape(
+        self, length: Union[int, np.array], shape: Optional[Union[int, tuple]] = None
+    ):
         if shape is None:
             return (length,)
         return (length, shape) if np.isscalar(shape) else (length, *shape)
@@ -97,13 +114,14 @@ class PGBuffer:
         return scipy.signal.lfilter([1], [1, float(-discount)], x[::-1], axis=0)[::-1]
 
 
-
 class ReplayBuffer(PGBuffer):
     """
     A replay buffer for off-policy RL agents.
     """
 
-    def __init__(self, obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int):
+    def __init__(
+        self, obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int
+    ):
         self.obs1_buf = np.zeros(self._combined_shape(size, obs_dim), dtype=np.float32)
         self.obs2_buf = np.zeros(self._combined_shape(size, obs_dim), dtype=np.float32)
         self.act_buf = np.zeros(self._combined_shape(size, act_dim), dtype=np.float32)
@@ -111,7 +129,14 @@ class ReplayBuffer(PGBuffer):
         self.done_buf = np.zeros(size, dtype=np.float32)
         self.ptr, self.size, self.max_size = 0, 0, size
 
-    def store(self, obs: np.array, act: Union[float, int, np.array], rew: Union[float, int], next_obs: np.array, done: bool):
+    def store(
+        self,
+        obs: np.array,
+        act: Union[float, int, np.array],
+        rew: Union[float, int],
+        next_obs: np.array,
+        done: bool,
+    ):
         """
         Append one timestep of agent-environment interaction to the buffer.
         """
@@ -120,18 +145,16 @@ class ReplayBuffer(PGBuffer):
         self.act_buf[self.ptr] = act
         self.rew_buf[self.ptr] = rew
         self.done_buf[self.ptr] = done
-        self.ptr = (self.ptr+1) % self.max_size
-        self.size = min(self.size+1, self.max_size)
+        self.ptr = (self.ptr + 1) % self.max_size
+        self.size = min(self.size + 1, self.max_size)
 
     def sample_batch(self, batch_size=32):
         idxs = np.random.randint(0, self.size, size=batch_size)
-        batch = dict(obs=self.obs1_buf[idxs],
-                     obs2=self.obs2_buf[idxs],
-                     act=self.act_buf[idxs],
-                     rew=self.rew_buf[idxs],
-                     done=self.done_buf[idxs])
-        return {k: torch.as_tensor(v, dtype=torch.float32) for k,v in batch.items()}
-
-
-
-
+        batch = dict(
+            obs=self.obs1_buf[idxs],
+            obs2=self.obs2_buf[idxs],
+            act=self.act_buf[idxs],
+            rew=self.rew_buf[idxs],
+            done=self.done_buf[idxs],
+        )
+        return {k: torch.as_tensor(v, dtype=torch.float32) for k, v in batch.items()}

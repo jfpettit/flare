@@ -8,13 +8,15 @@ import flare.kindling as fk
 from flare.kindling import ReplayBuffer
 from typing import Optional, Union, Callable
 
+
 class DDPG(BaseQPolicyGradient):
     """
     Implementation of the Deep Deterministic Policy Gradient (DDPG) algorithm.
     """
+
     def __init__(
-        self, 
-        env_fn: Callable, 
+        self,
+        env_fn: Callable,
         actorcritic: Callable = fk.FireDDPGActorCritic,
         seed: Optional[int] = 0,
         steps_per_epoch: Optional[int] = 4000,
@@ -23,7 +25,7 @@ class DDPG(BaseQPolicyGradient):
         polyak: Optional[float] = 0.95,
         pol_lr: Optional[float] = 1e-3,
         q_lr: Optional[float] = 1e-3,
-        hidden_sizes: Optional[Union[tuple, list]]=(256, 128),
+        hidden_sizes: Optional[Union[tuple, list]] = (256, 128),
         bs: Optional[int] = 100,
         warmup_steps: Optional[int] = 10000,
         update_after: Optional[int] = 1000,
@@ -38,7 +40,7 @@ class DDPG(BaseQPolicyGradient):
         save_states: Optional[bool] = False,
         save_screen: Optional[bool] = False,
     ):
-        
+
         super().__init__(
             env_fn,
             actorcritic,
@@ -70,14 +72,20 @@ class DDPG(BaseQPolicyGradient):
         self.q_optimizer = torch.optim.Adam(self.ac.qfunc.parameters(), lr=q_lr)
 
     def calc_policy_loss(self, data):
-        o = data['obs']
+        o = data["obs"]
         q_pi = self.ac.qfunc(o, self.ac.policy(o))
         return -q_pi.mean()
 
     def calc_qfunc_loss(self, data):
-        o, a, r, o2, d = data['obs'], data['act'], data['rew'], data['obs2'], data['done']
+        o, a, r, o2, d = (
+            data["obs"],
+            data["act"],
+            data["rew"],
+            data["obs2"],
+            data["done"],
+        )
 
-        q = self.ac.qfunc(o,a)
+        q = self.ac.qfunc(o, a)
 
         # Bellman backup for Q function
         with torch.no_grad():
@@ -85,7 +93,7 @@ class DDPG(BaseQPolicyGradient):
             backup = r + self.gamma * (1 - d) * q_pi_targ
 
         # MSE loss against Bellman backup
-        loss_q = ((q - backup)**2).mean()
+        loss_q = ((q - backup) ** 2).mean()
 
         # Useful info for logging
         loss_info = dict(QValues=q.detach().numpy())
@@ -99,7 +107,7 @@ class DDPG(BaseQPolicyGradient):
         loss_q.backward()
         self.q_optimizer.step()
 
-        # Freeze Q-network so you don't waste computational effort 
+        # Freeze Q-network so you don't waste computational effort
         # computing gradients for it during the policy learning step.
         for p in self.ac.qfunc.parameters():
             p.requires_grad = False
@@ -126,6 +134,6 @@ class DDPG(BaseQPolicyGradient):
                 p_targ.data.add_((1 - self.polyak) * p.data)
 
     def logger_tabular_to_dump(self):
-        self.logger.log_tabular('QValues', with_min_and_max=True)
-        self.logger.log_tabular('PolicyLoss', average_only=True)
-        self.logger.log_tabular('QLoss', average_only=True)
+        self.logger.log_tabular("QValues", with_min_and_max=True)
+        self.logger.log_tabular("PolicyLoss", average_only=True)
+        self.logger.log_tabular("QLoss", average_only=True)
