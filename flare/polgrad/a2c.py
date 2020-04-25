@@ -10,6 +10,37 @@ from flare.kindling.mpi_pytorch import mpi_avg_grads, mpi_avg
 
 
 class A2C(BasePolicyGradient):
+    r"""
+    An implementation of the Advantage Actor Critic (A2C) reinforcement learning algorithm.
+
+    Args:
+        env_fn: lambda function making the desired gym environment.
+            Example::
+
+                import gym
+                env_fn = lambda: gym.make("CartPole-v1")
+                agent = PPO(env_fn)
+        hidden_sizes: Tuple of integers representing hidden layer sizes for the MLP policy.
+        actorcritic: Class for policy and value networks.
+        gamma: Discount factor for GAE-lambda estimation.
+        lam: Lambda for GAE-lambda estimation.
+        steps_per_epoch: Number of state, action, reward, done tuples to train on per epoch.
+        pol_lr: Learning rate for the policy optimizer.
+        val_lr: Learning rate for the value optimizer.
+        seed: random seeding for NumPy and PyTorch.
+        state_preproc: An optional state preprocessing function. Any desired manipulations to the state before it is passed to the agent can be performed here. The state_preproc function must take in and return a NumPy array.
+            Example::
+
+                def state_square(state):
+                    state = state**2
+                    return state
+                agent = PPO(env_fn, state_preproc=state_square, state_sze=shape_of_state_after_preprocessing)
+        state_sze: If a state preprocessing function is included, the size of the state after preprocessing must be passed in as well.
+        logger_dir: Directory to log results to.
+        tensorboard: Whether or not to use tensorboard logging.
+        save_screen: Whether to save rendered screen images to a pickled file. Saves within logger_dir.
+        save_states: Whether to save environment states to a pickled file. Saves within logger_dir.
+    """
     def __init__(
         self,
         env,
@@ -21,7 +52,6 @@ class A2C(BasePolicyGradient):
         pol_lr=3e-4,
         val_lr=1e-3,
         seed=0,
-        logstd_anneal=None,
         state_preproc=None,
         state_sze=None,
         logger_dir=None,

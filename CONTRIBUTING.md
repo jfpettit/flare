@@ -28,6 +28,8 @@ We want to accelerate the rate of progress for RL researchers and reduce the tim
 - Composability:
     - The components in ```flare.kindling``` must be easily composed into full algorithms.
 
+These values are by no means things that have already been achieved, but are rather goals to work towards and strive for, moving forward.
+
 ## Contribution types
 
 Presently, we are looking for people to help with: 

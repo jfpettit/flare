@@ -26,6 +26,35 @@ from typing import Optional, Any, Union, Callable
 
 
 class BasePolicyGradient:
+    r"""
+    A base class for policy gradient algorithms (A2C, PPO).
+
+    Args:
+        env_fn: lambda function making the desired gym environment.
+            Example::
+
+                import gym
+                env_fn = lambda: gym.make("CartPole-v1")
+                agent = PPO(env_fn)
+        hidden_sizes: Tuple of integers representing hidden layer sizes for the MLP policy.
+        actorcritic: Class for policy and value networks.
+        gamma: Discount factor for GAE-lambda estimation.
+        lam: Lambda for GAE-lambda estimation.
+        steps_per_epoch: Number of state, action, reward, done tuples to train on per epoch.
+        seed: random seeding for NumPy and PyTorch.
+        state_preproc: An optional state preprocessing function. Any desired manipulations to the state before it is passed to the agent can be performed here. The state_preproc function must take in and return a NumPy array.
+            Example::
+
+                def state_square(state):
+                    state = state**2
+                    return state
+                agent = PPO(env_fn, state_preproc=state_square, state_sze=shape_of_state_after_preprocessing)
+        state_sze: If a state preprocessing function is included, the size of the state after preprocessing must be passed in as well.
+        logger_dir: Directory to log results to.
+        tensorboard: Whether or not to use tensorboard logging.
+        save_screen: Whether to save rendered screen images to a pickled file. Saves within logger_dir.
+        save_states: Whether to save environment states to a pickled file. Saves within logger_dir.
+    """
     def __init__(
         self,
         env_fn: callable,
@@ -33,7 +62,7 @@ class BasePolicyGradient:
         gamma: Optional[float] = 0.99,
         lam: Optional[float] = 0.97,
         steps_per_epoch: Optional[int] = 4000,
-        hid_sizes: Optional[tuple] = (32, 32),
+        hidden_sizes: Optional[tuple] = (32, 32),
         seed: Optional[int] = 0,
         state_preproc: Optional[Callable] = None,
         state_sze: Optional[Union[int, tuple]] = None,
@@ -57,7 +86,7 @@ class BasePolicyGradient:
             self.ac = actorcritic(
                 self.env.observation_space.shape[0],
                 self.env.action_space,
-                hidden_sizes=hid_sizes,
+                hidden_sizes=hidden_sizes,
             )
             self.buffer = PGBuffer(
                 self.env.observation_space.shape,
@@ -73,7 +102,7 @@ class BasePolicyGradient:
                 state_sze is not None
             ), "If using some state preprocessing, must specify state size after preprocessing."
             self.ac = actorcritic(
-                state_sze, self.env.action_space, hidden_sizes=hid_sizes
+                state_sze, self.env.action_space, hidden_sizes=hidden_sizes
             )
             self.buffer = PGBuffer(
                 state_sze, self.env.action_space.shape, steps_per_epoch, gamma, lam
@@ -100,19 +129,33 @@ class BasePolicyGradient:
         self.logger = EpochLogger(output_dir=self.tb_logger.full_logdir)
         self.logger.setup_pytorch_saver(self.ac)
 
-    @abc.abstractmethod
     def get_name(self):
         """Return name of subclass"""
-        pass
+        return self.__class__.__name__
 
     @abc.abstractmethod
     def update(self):
-        """Update rule for policy gradient algo."""
+        """Placeholder function for update rule for policy gradient algo."""
         return
 
     def learn(
         self, epochs, render=False, horizon=1000, logstd_anneal=None, n_anneal_cycles=0,
     ):
+        """
+        Training loop for policy gradient algorithm.
+
+        Args:
+            epochs: Number of epochs to train for in the environment.
+            render: Whether to render the agent during training
+            horizon: Maximum allowed episode length
+            logstd_anneal: None or two values. Anneals log standard deviation of action distribution from the first value to the second if it is not None.
+                Example::
+                    logstd_anneal = np.array([-1.6, -0.7])
+                    agent.learn(100, logstd_anneal=logstd_anneal)
+            n_anneal_cycles: Integer greater than or equal to zero. If logstd_anneal is specified, this variable allows the algorithm to cycle through the anneal schedule n times.
+                Example::
+                    agent.learn(100, logstd_anneal=np.array([-1.6, -0.7]), n_anneal_cycles=2)
+        """
         if render and "Bullet" in self.env.unwrapped.spec.id and proc_id() == 0:
             self.env.render()
 
@@ -149,6 +192,8 @@ class BasePolicyGradient:
                 action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
                 self.logger.store(Values=np.array(value.detach().numpy()))
 
+                next_state, reward, done, _ = self.env.step(action.detach().numpy()[0])
+
                 if (
                     render
                     and "Bullet" not in self.env.unwrapped.spec.id
@@ -163,7 +208,8 @@ class BasePolicyGradient:
                     value.item(),
                     logp.detach().numpy(),
                 )
-                state, reward, done, _ = self.env.step(action.detach().numpy()[0])
+
+                state = next_state
                 episode_reward += reward
                 episode_length += 1
 
