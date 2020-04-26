@@ -1,0 +1,1255 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>flare.kindling package &mdash; flare 0.1.6 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="flare.polgrad package" href="flare.polgrad.html" />
+    <link rel="prev" title="flare package contents" href="flare.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: linear-gradient(to bottom right, rgba(121,4,199,1) 0%, rgba(251,26,26,1) 100%);" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> flare
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Flare documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-openmpi">Installing OpenMPI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#on-ubuntu">On Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#on-mac-os-x">On Mac OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#on-windows">On Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#installing-the-flare-package">Installing the flare package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#set-up-virtual-env">Set up virtual env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../installation.html#install-from-github">Install from GitHub</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#running-from-command-line">Running from command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#running-in-a-python-file">Running in a Python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usage.html#details">Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package contents</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.kindling package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.mpi_pytorch">flare.kindling.mpi_pytorch module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.mpi_tools">flare.kindling.mpi_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.neuralnets">flare.kindling.neuralnets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.saver">flare.kindling.saver module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.tblog">flare.kindling.tblog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.utils">flare.kindling.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flare.polgrad.html">flare.polgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="flare.qpolgrad.html">flare.qpolgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to flare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#main-design-values-clarity-performance-and-composability">Main Design values: Clarity, Performance, and Composability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#contribution-types">Contribution types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#coding-guidelines">Coding guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CONTRIBUTING.html#other-questions">Other questions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">flare</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="flare.html">flare package contents</a> &raquo;</li>
+        
+      <li>flare.kindling package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/source/flare.kindling.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="flare-kindling-package">
+<h1>flare.kindling package<a class="headerlink" href="#flare-kindling-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-flare.kindling.buffers">
+<span id="flare-kindling-buffers-module"></span><h2>flare.kindling.buffers module<a class="headerlink" href="#module-flare.kindling.buffers" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.buffers.PGBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.buffers.</code><code class="sig-name descname">PGBuffer</code><span class="sig-paren">(</span><em class="sig-param">obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int, gamma: Optional[float] = 0.99, lam: Optional[float] = 0.95</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.PGBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A buffer for storing trajectories experienced by an agent interacting
+with the environment, and using Generalized Advantage Estimation (GAE-Lambda)
+for calculating the advantages of state-action pairs.</p>
+<dl class="method">
+<dt id="flare.kindling.buffers.PGBuffer.finish_path">
+<code class="sig-name descname">finish_path</code><span class="sig-paren">(</span><em class="sig-param">last_val: Union[int</em>, <em class="sig-param">float</em>, <em class="sig-param">numpy.array</em>, <em class="sig-param">None] = 0</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.PGBuffer.finish_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this at the end of a trajectory, or when one gets cut off
+by an epoch ending. This looks back in the buffer to where the
+trajectory started, and uses rewards and value estimates from
+the whole trajectory to compute advantage estimates with GAE-Lambda,
+as well as compute the rewards-to-go for each state, to use as
+the targets for the value function.
+The “last_val” argument should be 0 if the trajectory ended
+because the agent reached a terminal state (died), and otherwise
+should be V(s_T), the value function estimated for the last state.
+This allows us to bootstrap the reward-to-go calculation to account
+for timesteps beyond the arbitrary episode horizon (or epoch cutoff).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.buffers.PGBuffer.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.PGBuffer.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this at the end of an epoch to get all of the data from
+the buffer, with advantages appropriately normalized (shifted to have
+mean zero and std one). Also, resets some pointers in the buffer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.buffers.PGBuffer.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">obs: numpy.array, act: numpy.array, rew: Union[int, float, numpy.array], val: Union[int, float, numpy.array], logp: Union[float, numpy.array]</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.PGBuffer.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append one timestep of agent-environment interaction to the buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.buffers.ReplayBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.buffers.</code><code class="sig-name descname">ReplayBuffer</code><span class="sig-paren">(</span><em class="sig-param">obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.ReplayBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flare.kindling.buffers.PGBuffer" title="flare.kindling.buffers.PGBuffer"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.kindling.buffers.PGBuffer</span></code></a></p>
+<p>A replay buffer for off-policy RL agents.</p>
+<dl class="method">
+<dt id="flare.kindling.buffers.ReplayBuffer.sample_batch">
+<code class="sig-name descname">sample_batch</code><span class="sig-paren">(</span><em class="sig-param">batch_size=32</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.ReplayBuffer.sample_batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.buffers.ReplayBuffer.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">obs: numpy.array, act: Union[float, int, numpy.array], rew: Union[float, int], next_obs: numpy.array, done: bool</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.buffers.ReplayBuffer.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append one timestep of agent-environment interaction to the buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.loggingfuncs">
+<span id="flare-kindling-loggingfuncs-module"></span><h2>flare.kindling.loggingfuncs module<a class="headerlink" href="#module-flare.kindling.loggingfuncs" title="Permalink to this headline">¶</a></h2>
+<p>This file from:</p>
+<p><a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/utils/logx.py">https://github.com/openai/spinningup/blob/master/spinup/utils/logx.py</a></p>
+<p>Some simple logging functionality, inspired by rllab’s logging.
+Logs to a tab-separated-values file (path/to/output_directory/progress.txt)</p>
+<dl class="class">
+<dt id="flare.kindling.loggingfuncs.EpochLogger">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.loggingfuncs.</code><code class="sig-name descname">EpochLogger</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.EpochLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flare.kindling.loggingfuncs.Logger" title="flare.kindling.loggingfuncs.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.kindling.loggingfuncs.Logger</span></code></a></p>
+<p>A variant of Logger tailored for tracking average values over epochs.
+Typical use case: there is some quantity which is calculated many times
+throughout an epoch, and at the end of the epoch, you would like to
+report the average / std / min / max value of that quantity.
+With an EpochLogger, each time the quantity is calculated, you would
+use
+.. code-block:: python</p>
+<blockquote>
+<div><p>epoch_logger.store(NameOfQuantity=quantity_value)</p>
+</div></blockquote>
+<p>to load it into the EpochLogger’s state. Then at the end of the epoch, you
+would use
+.. code-block:: python</p>
+<blockquote>
+<div><p>epoch_logger.log_tabular(NameOfQuantity, <a href="#id1"><span class="problematic" id="id2">**</span></a>options)</p>
+</div></blockquote>
+<p>to record the desired values.</p>
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.EpochLogger.get_stats">
+<code class="sig-name descname">get_stats</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.EpochLogger.get_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lets an algorithm ask the logger for mean/std/min/max of a diagnostic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.EpochLogger.log_tabular">
+<code class="sig-name descname">log_tabular</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">val=None</em>, <em class="sig-param">with_min_and_max=False</em>, <em class="sig-param">average_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.EpochLogger.log_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a value or possibly the mean/std/min/max values of a diagnostic.
+:param key: The name of the diagnostic. If you are logging a</p>
+<blockquote>
+<div><p>diagnostic whose state has previously been saved with
+<code class="docutils literal notranslate"><span class="pre">store</span></code>, the key here has to match the key you used there.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> – A value for the diagnostic. If you have previously saved
+values for this key via <code class="docutils literal notranslate"><span class="pre">store</span></code>, do <em>not</em> provide a <code class="docutils literal notranslate"><span class="pre">val</span></code>
+here.</p></li>
+<li><p><strong>with_min_and_max</strong> (<em>bool</em>) – If true, log min and max values of the
+diagnostic over the epoch.</p></li>
+<li><p><strong>average_only</strong> (<em>bool</em>) – If true, do not log the standard deviation
+of the diagnostic over the epoch.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.EpochLogger.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.EpochLogger.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save something into the epoch_logger’s current state.
+Provide an arbitrary number of keyword arguments with numerical
+values.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.loggingfuncs.Logger">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.loggingfuncs.</code><code class="sig-name descname">Logger</code><span class="sig-paren">(</span><em class="sig-param">output_dir=None</em>, <em class="sig-param">output_fname='progress.txt'</em>, <em class="sig-param">exp_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A general-purpose logger.
+Makes it easy to save diagnostics, hyperparameter configurations, the
+state of a training run, and the trained model.</p>
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.dump_tabular">
+<code class="sig-name descname">dump_tabular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.dump_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all of the diagnostics from the current iteration.
+Writes both to stdout, and to the output file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.log">
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">color='green'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a colorized message to stdout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.log_tabular">
+<code class="sig-name descname">log_tabular</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.log_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a value of some diagnostic.
+Call this only once for each diagnostic quantity, each iteration.
+After using <code class="docutils literal notranslate"><span class="pre">log_tabular</span></code> to store values for each diagnostic,
+make sure to call <code class="docutils literal notranslate"><span class="pre">dump_tabular</span></code> to write them out to file and
+stdout (otherwise they will not get saved anywhere).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.save_config">
+<code class="sig-name descname">save_config</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.save_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log an experiment configuration.
+Call this once at the top of your experiment, passing in all important
+config vars as a dict. This will serialize the config to JSON, while
+handling anything which can’t be serialized in a graceful way (writing
+as informative a string as possible).
+Example use:
+.. code-block:: python</p>
+<blockquote>
+<div><p>logger = EpochLogger(<a href="#id3"><span class="problematic" id="id4">**</span></a>logger_kwargs)
+logger.save_config(locals())</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.save_state">
+<code class="sig-name descname">save_state</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">itr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the state of an experiment.
+To be clear: this is about saving <em>state</em>, not logging diagnostics.
+All diagnostic logging is separate from this function. This function
+will save whatever is in <code class="docutils literal notranslate"><span class="pre">state_dict</span></code>—usually just a copy of the
+environment—and the most recent parameters for the model you
+previously set up saving for with <code class="docutils literal notranslate"><span class="pre">setup_tf_saver</span></code>.
+Call with any frequency you prefer. If you only want to maintain a
+single state and overwrite it at each call with the most recent
+version, leave <code class="docutils literal notranslate"><span class="pre">itr=None</span></code>. If you want to keep all of the states you
+save, provide unique (increasing) values for ‘itr’.
+:param state_dict: Dictionary containing essential elements to</p>
+<blockquote>
+<div><p>describe the current state of training.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>itr</strong> – An int, or None. Current iteration of training.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.setup_pytorch_saver">
+<code class="sig-name descname">setup_pytorch_saver</code><span class="sig-paren">(</span><em class="sig-param">what_to_save</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.setup_pytorch_saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up easy model saving for a single PyTorch model.
+Because PyTorch saving and loading is especially painless, this is
+very minimal; we just need references to whatever we would like to
+pickle. This is integrated into the logger because the logger
+knows where the user would like to save information about this
+training run.
+:param what_to_save: Any PyTorch model or serializable object containing</p>
+<blockquote>
+<div><p>PyTorch models.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.loggingfuncs.Logger.setup_tf_saver">
+<code class="sig-name descname">setup_tf_saver</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">inputs</em>, <em class="sig-param">outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.Logger.setup_tf_saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up easy model saving for tensorflow.
+Call once, after defining your computation graph but before training.
+:param sess: The Tensorflow session in which you train your computation</p>
+<blockquote>
+<div><p>graph.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<em>dict</em>) – A dictionary that maps from keys of your choice
+to the tensorflow placeholders that serve as inputs to the
+computation graph. Make sure that <em>all</em> of the placeholders
+needed for your outputs are included!</p></li>
+<li><p><strong>outputs</strong> (<em>dict</em>) – A dictionary that maps from keys of your choice
+to the outputs from your computation graph.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.loggingfuncs.colorize">
+<code class="sig-prename descclassname">flare.kindling.loggingfuncs.</code><code class="sig-name descname">colorize</code><span class="sig-paren">(</span><em class="sig-param">string</em>, <em class="sig-param">color</em>, <em class="sig-param">bold=False</em>, <em class="sig-param">highlight=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.colorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize a string.
+This function was originally written by John Schulman.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.loggingfuncs.restore_tf_graph">
+<code class="sig-prename descclassname">flare.kindling.loggingfuncs.</code><code class="sig-name descname">restore_tf_graph</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">fpath</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.loggingfuncs.restore_tf_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads graphs saved by Logger.
+Will output a dictionary whose keys and values are from the ‘inputs’
+and ‘outputs’ dict you specified with logger.setup_tf_saver().
+:param sess: A Tensorflow session.
+:param fpath: Filepath to save directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary mapping from keys to tensors in the computation graph
+loaded from <code class="docutils literal notranslate"><span class="pre">fpath</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.mpi_pytorch">
+<span id="flare-kindling-mpi-pytorch-module"></span><h2>flare.kindling.mpi_pytorch module<a class="headerlink" href="#module-flare.kindling.mpi_pytorch" title="Permalink to this headline">¶</a></h2>
+<p>This file from:</p>
+<p><a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/utils/mpi_pytorch.py">https://github.com/openai/spinningup/blob/master/spinup/utils/mpi_pytorch.py</a></p>
+<dl class="function">
+<dt id="flare.kindling.mpi_pytorch.mpi_avg_grads">
+<code class="sig-prename descclassname">flare.kindling.mpi_pytorch.</code><code class="sig-name descname">mpi_avg_grads</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_pytorch.mpi_avg_grads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average contents of gradient buffers across MPI processes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_pytorch.setup_pytorch_for_mpi">
+<code class="sig-prename descclassname">flare.kindling.mpi_pytorch.</code><code class="sig-name descname">setup_pytorch_for_mpi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_pytorch.setup_pytorch_for_mpi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Avoid slowdowns caused by each separate process’s PyTorch using
+more than its fair share of CPU resources.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_pytorch.sync_params">
+<code class="sig-prename descclassname">flare.kindling.mpi_pytorch.</code><code class="sig-name descname">sync_params</code><span class="sig-paren">(</span><em class="sig-param">module</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_pytorch.sync_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sync all parameters of module across all MPI processes.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.mpi_tools">
+<span id="flare-kindling-mpi-tools-module"></span><h2>flare.kindling.mpi_tools module<a class="headerlink" href="#module-flare.kindling.mpi_tools" title="Permalink to this headline">¶</a></h2>
+<p>This file from:</p>
+<p><a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/utils/mpi_tools.py">https://github.com/openai/spinningup/blob/master/spinup/utils/mpi_tools.py</a></p>
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.allreduce">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">allreduce</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.allreduce" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.broadcast">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">broadcast</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">root=0</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.broadcast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.mpi_avg">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">mpi_avg</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.mpi_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average a scalar or vector over MPI processes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.mpi_fork">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">mpi_fork</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">bind_to_core=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.mpi_fork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-launches the current script with workers linked by MPI.
+Also, terminates the original process that launched it.
+Taken almost without modification from the Baselines function of the
+<a class="reference internal" href="#same-name">same name</a>.
+.. <span class="target" id="same-name">same name</span>: <a class="reference external" href="https://github.com/openai/baselines/blob/master/baselines/common/mpi_fork.py">https://github.com/openai/baselines/blob/master/baselines/common/mpi_fork.py</a>
+:param n: Number of process to split into.
+:type n: int
+:param bind_to_core: Bind each MPI process to a core.
+:type bind_to_core: bool</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.mpi_op">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">mpi_op</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">op</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.mpi_op" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.mpi_statistics_scalar">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">mpi_statistics_scalar</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">with_min_and_max=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.mpi_statistics_scalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get mean/std and optional min/max of scalar x across MPI processes.
+:param x: An array containing samples of the scalar to produce statistics</p>
+<blockquote>
+<div><p>for.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>with_min_and_max</strong> (<em>bool</em>) – If true, return min and max of x in
+addition to mean and std.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.mpi_sum">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">mpi_sum</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.mpi_sum" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.msg">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">msg</code><span class="sig-paren">(</span><em class="sig-param">m</em>, <em class="sig-param">string=''</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.msg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.num_procs">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">num_procs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.num_procs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count active MPI processes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.mpi_tools.proc_id">
+<code class="sig-prename descclassname">flare.kindling.mpi_tools.</code><code class="sig-name descname">proc_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.mpi_tools.proc_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get rank of calling process.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.neuralnets">
+<span id="flare-kindling-neuralnets-module"></span><h2>flare.kindling.neuralnets module<a class="headerlink" href="#module-flare.kindling.neuralnets" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.neuralnets.CategoricalPolicy">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">CategoricalPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable, action_dim: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.CategoricalPolicy.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FireActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (32</em>, <em class="sig-param">32)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method tanh of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = None</em>, <em class="sig-param">policy: Optional[torch.nn.modules.module.Module] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FireActorCritic.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FireDDPGActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FireDDPGActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FireQActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FireQActorCritic.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FireSACActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FireSACActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">deterministic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FireTD3ActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FireTD3ActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.FullyConnectedDQN">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FullyConnectedDQN</code><span class="sig-paren">(</span><em class="sig-param">in_channels</em>, <em class="sig-param">out_channels</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FullyConnectedDQN.evaluate">
+<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">states</em>, <em class="sig-param">actions</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.neuralnets.FullyConnectedDQN.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.GaussianPolicy">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">GaussianPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable, action_dim: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.GaussianPolicy.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.MLP">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLP</code><span class="sig-paren">(</span><em class="sig-param">layer_szs: Union[List, Tuple], activations: Optional[Callable] = &lt;built-in method tanh of type object&gt;, out_act: Optional[bool] = None, out_squeeze: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.MLP.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLP.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.MLPQActor">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQActor</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em>, <em class="sig-param">act_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.MLPQActor.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.MLPQFunction">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQFunction</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.MLPQFunction.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">act</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.NatureDQN">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">NatureDQN</code><span class="sig-paren">(</span><em class="sig-param">in_channels</em>, <em class="sig-param">out_channels</em>, <em class="sig-param">h</em>, <em class="sig-param">w</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.NatureDQN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.NatureDQN.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.NatureDQN.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.neuralnets.SquashedGaussianMLPActor">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">SquashedGaussianMLPActor</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em>, <em class="sig-param">act_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.neuralnets.SquashedGaussianMLPActor.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">deterministic=False</em>, <em class="sig-param">with_logprob=True</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.saver">
+<span id="flare-kindling-saver-module"></span><h2>flare.kindling.saver module<a class="headerlink" href="#module-flare.kindling.saver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.saver.Saver">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.saver.</code><code class="sig-name descname">Saver</code><span class="sig-paren">(</span><em class="sig-param">out_dir</em>, <em class="sig-param">keys: Optional[list] = []</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.saver.Saver.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver.save" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.saver.Saver.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver.store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.tblog">
+<span id="flare-kindling-tblog-module"></span><h2>flare.kindling.tblog module<a class="headerlink" href="#module-flare.kindling.tblog" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.tblog.TensorBoardWriter">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.tblog.</code><code class="sig-name descname">TensorBoardWriter</code><span class="sig-paren">(</span><em class="sig-param">fpath: Optional[str] = 'flare_runs'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.tblog.TensorBoardWriter.add_hist">
+<code class="sig-name descname">add_hist</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, list, numpy.array, tuple], step: int, bins: Optional[str] = 'tensorflow'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_hist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.tblog.TensorBoardWriter.add_plot">
+<code class="sig-name descname">add_plot</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, numpy.array, list, float, int], step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_plot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.tblog.TensorBoardWriter.add_vals">
+<code class="sig-name descname">add_vals</code><span class="sig-paren">(</span><em class="sig-param">val_dict: dict</em>, <em class="sig-param">step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_vals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.tblog.TensorBoardWriter.end">
+<code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling.utils">
+<span id="flare-kindling-utils-module"></span><h2>flare.kindling.utils module<a class="headerlink" href="#module-flare.kindling.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.utils.NetworkUtils">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">NetworkUtils</code><a class="headerlink" href="#flare.kindling.utils.NetworkUtils" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.utils.NetworkUtils.conv2d_output_size">
+<code class="sig-name descname">conv2d_output_size</code><span class="sig-paren">(</span><em class="sig-param">kernel_size</em>, <em class="sig-param">stride</em>, <em class="sig-param">sidesize</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.NetworkUtils.conv2d_output_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.utils.NetworkUtils.squared_error_loss">
+<code class="sig-name descname">squared_error_loss</code><span class="sig-paren">(</span><em class="sig-param">target</em>, <em class="sig-param">actual</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.NetworkUtils.squared_error_loss" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.utils.NormalizedActions">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">NormalizedActions</code><span class="sig-paren">(</span><em class="sig-param">env</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.NormalizedActions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gym.core.ActionWrapper</span></code></p>
+<p>Normalize actions for continuous policy</p>
+<p>From here: <a class="reference external" href="https://github.com/JamesChuanggg/pytorch-REINFORCE/blob/master/normalized_actions.py">https://github.com/JamesChuanggg/pytorch-REINFORCE/blob/master/normalized_actions.py</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.utils.calc_logstd_anneal">
+<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">calc_logstd_anneal</code><span class="sig-paren">(</span><em class="sig-param">n_anneal_cycles</em>, <em class="sig-param">anneal_start</em>, <em class="sig-param">anneal_end</em>, <em class="sig-param">epochs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.calc_logstd_anneal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.utils.colorize">
+<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">colorize</code><span class="sig-paren">(</span><em class="sig-param">string: str</em>, <em class="sig-param">color: int</em>, <em class="sig-param">bold: Optional[bool] = False</em>, <em class="sig-param">highlight: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.colorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colorize a string.
+This function was originally written by John Schulman.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.utils.gaussian_likelihood">
+<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">gaussian_likelihood</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">mu</em>, <em class="sig-param">log_std</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.gaussian_likelihood" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="flare.kindling.utils.save_frames_as_gif">
+<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">save_frames_as_gif</code><span class="sig-paren">(</span><em class="sig-param">frames</em>, <em class="sig-param">filename=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.save_frames_as_gif" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a list of frames as a gif</p>
+<p>This code from this floydhub blog post: <a class="reference external" href="https://blog.floydhub.com/spinning-up-with-deep-reinforcement-learning/">https://blog.floydhub.com/spinning-up-with-deep-reinforcement-learning/</a></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-flare.kindling">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-flare.kindling" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="flare.kindling.FireActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (32</em>, <em class="sig-param">32)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method tanh of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = None</em>, <em class="sig-param">policy: Optional[torch.nn.modules.module.Module] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.FireActorCritic.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.FireQActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="method">
+<dt id="flare.kindling.FireQActorCritic.forward">
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.FireDDPGActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.FireTD3ActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.FireSACActorCritic">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.ReplayBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">ReplayBuffer</code><span class="sig-paren">(</span><em class="sig-param">obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.ReplayBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flare.kindling.buffers.PGBuffer" title="flare.kindling.buffers.PGBuffer"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.kindling.buffers.PGBuffer</span></code></a></p>
+<p>A replay buffer for off-policy RL agents.</p>
+<dl class="method">
+<dt id="flare.kindling.ReplayBuffer.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">obs: numpy.array, act: Union[float, int, numpy.array], rew: Union[float, int], next_obs: numpy.array, done: bool</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.ReplayBuffer.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append one timestep of agent-environment interaction to the buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.PGBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">PGBuffer</code><span class="sig-paren">(</span><em class="sig-param">obs_dim: Union[tuple, int], act_dim: Union[tuple, int], size: int, gamma: Optional[float] = 0.99, lam: Optional[float] = 0.95</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.PGBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A buffer for storing trajectories experienced by an agent interacting
+with the environment, and using Generalized Advantage Estimation (GAE-Lambda)
+for calculating the advantages of state-action pairs.</p>
+<dl class="method">
+<dt id="flare.kindling.PGBuffer.finish_path">
+<code class="sig-name descname">finish_path</code><span class="sig-paren">(</span><em class="sig-param">last_val: Union[int</em>, <em class="sig-param">float</em>, <em class="sig-param">numpy.array</em>, <em class="sig-param">None] = 0</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.PGBuffer.finish_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this at the end of a trajectory, or when one gets cut off
+by an epoch ending. This looks back in the buffer to where the
+trajectory started, and uses rewards and value estimates from
+the whole trajectory to compute advantage estimates with GAE-Lambda,
+as well as compute the rewards-to-go for each state, to use as
+the targets for the value function.
+The “last_val” argument should be 0 if the trajectory ended
+because the agent reached a terminal state (died), and otherwise
+should be V(s_T), the value function estimated for the last state.
+This allows us to bootstrap the reward-to-go calculation to account
+for timesteps beyond the arbitrary episode horizon (or epoch cutoff).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.PGBuffer.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.PGBuffer.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call this at the end of an epoch to get all of the data from
+the buffer, with advantages appropriately normalized (shifted to have
+mean zero and std one). Also, resets some pointers in the buffer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.PGBuffer.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">obs: numpy.array, act: numpy.array, rew: Union[int, float, numpy.array], val: Union[int, float, numpy.array], logp: Union[float, numpy.array]</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.PGBuffer.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append one timestep of agent-environment interaction to the buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.Logger">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">Logger</code><span class="sig-paren">(</span><em class="sig-param">output_dir=None</em>, <em class="sig-param">output_fname='progress.txt'</em>, <em class="sig-param">exp_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A general-purpose logger.
+Makes it easy to save diagnostics, hyperparameter configurations, the
+state of a training run, and the trained model.</p>
+<dl class="method">
+<dt id="flare.kindling.Logger.dump_tabular">
+<code class="sig-name descname">dump_tabular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.dump_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write all of the diagnostics from the current iteration.
+Writes both to stdout, and to the output file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.log">
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">color='green'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a colorized message to stdout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.log_tabular">
+<code class="sig-name descname">log_tabular</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">val</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.log_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a value of some diagnostic.
+Call this only once for each diagnostic quantity, each iteration.
+After using <code class="docutils literal notranslate"><span class="pre">log_tabular</span></code> to store values for each diagnostic,
+make sure to call <code class="docutils literal notranslate"><span class="pre">dump_tabular</span></code> to write them out to file and
+stdout (otherwise they will not get saved anywhere).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.save_config">
+<code class="sig-name descname">save_config</code><span class="sig-paren">(</span><em class="sig-param">config</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.save_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log an experiment configuration.
+Call this once at the top of your experiment, passing in all important
+config vars as a dict. This will serialize the config to JSON, while
+handling anything which can’t be serialized in a graceful way (writing
+as informative a string as possible).
+Example use:
+.. code-block:: python</p>
+<blockquote>
+<div><p>logger = EpochLogger(<a href="#id5"><span class="problematic" id="id6">**</span></a>logger_kwargs)
+logger.save_config(locals())</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.save_state">
+<code class="sig-name descname">save_state</code><span class="sig-paren">(</span><em class="sig-param">state_dict</em>, <em class="sig-param">itr=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.save_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the state of an experiment.
+To be clear: this is about saving <em>state</em>, not logging diagnostics.
+All diagnostic logging is separate from this function. This function
+will save whatever is in <code class="docutils literal notranslate"><span class="pre">state_dict</span></code>—usually just a copy of the
+environment—and the most recent parameters for the model you
+previously set up saving for with <code class="docutils literal notranslate"><span class="pre">setup_tf_saver</span></code>.
+Call with any frequency you prefer. If you only want to maintain a
+single state and overwrite it at each call with the most recent
+version, leave <code class="docutils literal notranslate"><span class="pre">itr=None</span></code>. If you want to keep all of the states you
+save, provide unique (increasing) values for ‘itr’.
+:param state_dict: Dictionary containing essential elements to</p>
+<blockquote>
+<div><p>describe the current state of training.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>itr</strong> – An int, or None. Current iteration of training.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.setup_pytorch_saver">
+<code class="sig-name descname">setup_pytorch_saver</code><span class="sig-paren">(</span><em class="sig-param">what_to_save</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.setup_pytorch_saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up easy model saving for a single PyTorch model.
+Because PyTorch saving and loading is especially painless, this is
+very minimal; we just need references to whatever we would like to
+pickle. This is integrated into the logger because the logger
+knows where the user would like to save information about this
+training run.
+:param what_to_save: Any PyTorch model or serializable object containing</p>
+<blockquote>
+<div><p>PyTorch models.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Logger.setup_tf_saver">
+<code class="sig-name descname">setup_tf_saver</code><span class="sig-paren">(</span><em class="sig-param">sess</em>, <em class="sig-param">inputs</em>, <em class="sig-param">outputs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Logger.setup_tf_saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up easy model saving for tensorflow.
+Call once, after defining your computation graph but before training.
+:param sess: The Tensorflow session in which you train your computation</p>
+<blockquote>
+<div><p>graph.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputs</strong> (<em>dict</em>) – A dictionary that maps from keys of your choice
+to the tensorflow placeholders that serve as inputs to the
+computation graph. Make sure that <em>all</em> of the placeholders
+needed for your outputs are included!</p></li>
+<li><p><strong>outputs</strong> (<em>dict</em>) – A dictionary that maps from keys of your choice
+to the outputs from your computation graph.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.EpochLogger">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">EpochLogger</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.EpochLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#flare.kindling.loggingfuncs.Logger" title="flare.kindling.loggingfuncs.Logger"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.kindling.loggingfuncs.Logger</span></code></a></p>
+<p>A variant of Logger tailored for tracking average values over epochs.
+Typical use case: there is some quantity which is calculated many times
+throughout an epoch, and at the end of the epoch, you would like to
+report the average / std / min / max value of that quantity.
+With an EpochLogger, each time the quantity is calculated, you would
+use
+.. code-block:: python</p>
+<blockquote>
+<div><p>epoch_logger.store(NameOfQuantity=quantity_value)</p>
+</div></blockquote>
+<p>to load it into the EpochLogger’s state. Then at the end of the epoch, you
+would use
+.. code-block:: python</p>
+<blockquote>
+<div><p>epoch_logger.log_tabular(NameOfQuantity, <a href="#id7"><span class="problematic" id="id8">**</span></a>options)</p>
+</div></blockquote>
+<p>to record the desired values.</p>
+<dl class="method">
+<dt id="flare.kindling.EpochLogger.get_stats">
+<code class="sig-name descname">get_stats</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.EpochLogger.get_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lets an algorithm ask the logger for mean/std/min/max of a diagnostic.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.EpochLogger.log_tabular">
+<code class="sig-name descname">log_tabular</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">val=None</em>, <em class="sig-param">with_min_and_max=False</em>, <em class="sig-param">average_only=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.EpochLogger.log_tabular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log a value or possibly the mean/std/min/max values of a diagnostic.
+:param key: The name of the diagnostic. If you are logging a</p>
+<blockquote>
+<div><p>diagnostic whose state has previously been saved with
+<code class="docutils literal notranslate"><span class="pre">store</span></code>, the key here has to match the key you used there.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> – A value for the diagnostic. If you have previously saved
+values for this key via <code class="docutils literal notranslate"><span class="pre">store</span></code>, do <em>not</em> provide a <code class="docutils literal notranslate"><span class="pre">val</span></code>
+here.</p></li>
+<li><p><strong>with_min_and_max</strong> (<em>bool</em>) – If true, log min and max values of the
+diagnostic over the epoch.</p></li>
+<li><p><strong>average_only</strong> (<em>bool</em>) – If true, do not log the standard deviation
+of the diagnostic over the epoch.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.EpochLogger.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.EpochLogger.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save something into the epoch_logger’s current state.
+Provide an arbitrary number of keyword arguments with numerical
+values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="flare.polgrad.html" class="btn btn-neutral float-right" title="flare.polgrad package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="flare.html" class="btn btn-neutral float-left" title="flare package contents" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Jacob Pettit
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

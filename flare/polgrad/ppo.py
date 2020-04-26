@@ -79,7 +79,7 @@ class PPO(BasePolicyGradient):
             gamma=gamma,
             lam=lam,
             steps_per_epoch=steps_per_epoch,
-            hid_sizes=hidden_sizes,
+            hidden_sizes=hidden_sizes,
             seed=seed,
             state_preproc=state_preproc,
             state_sze=state_sze,

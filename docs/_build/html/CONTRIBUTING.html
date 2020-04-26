@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Contributing to flare &mdash; flare 0.1.6 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="flare.qpolgrad package" href="source/flare.qpolgrad.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: linear-gradient(to bottom right, rgba(121,4,199,1) 0%, rgba(251,26,26,1) 100%);" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> flare
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Flare documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-openmpi">Installing OpenMPI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#on-ubuntu">On Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#on-mac-os-x">On Mac OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#on-windows">On Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#installing-the-flare-package">Installing the flare package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#set-up-virtual-env">Set up virtual env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#install-from-github">Install from GitHub</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#running-from-command-line">Running from command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#running-in-a-python-file">Running in a Python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#details">Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/flare.html">flare package contents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.kindling.html">flare.kindling package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.mpi_pytorch">flare.kindling.mpi_pytorch module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.mpi_tools">flare.kindling.mpi_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.neuralnets">flare.kindling.neuralnets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.saver">flare.kindling.saver module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.tblog">flare.kindling.tblog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.utils">flare.kindling.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.polgrad.html">flare.polgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.qpolgrad.html">flare.qpolgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing to flare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#main-design-values-clarity-performance-and-composability">Main Design values: Clarity, Performance, and Composability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contribution-types">Contribution types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-guidelines">Coding guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-questions">Other questions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flare</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Contributing to flare</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/CONTRIBUTING.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="contributing-to-flare">
+<h1>Contributing to flare<a class="headerlink" href="#contributing-to-flare" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="#main-design-values-clarity-performance-and-composability">Main Design
+Values</a></p></li>
+<li><p><a class="reference external" href="#contribution-types">Contribution types</a></p></li>
+<li><p><a class="reference external" href="#documentation">Documentation</a></p></li>
+<li><p><a class="reference external" href="#coding-guidelines">Coding guidelines</a></p></li>
+<li><p><a class="reference external" href="#testing">Testing</a></p></li>
+<li><p><a class="reference external" href="#other-questions">Other questions</a></p></li>
+</ul>
+<p>Thank you for taking the time to contribute!</p>
+<p>The aim of flare is to provide a reliable implementation of many common
+reinforcement learning algorithms (and eventually some not so common
+ones) and to unify those algorithms under a common API as much as
+possible. There are two efforts to do this. The first is a very “plug
+and play” style set-up, where a user can plug whatever environment they
+want to train on into an algorithm and get decent results. The second,
+the <code class="docutils literal notranslate"><span class="pre">flare.kindling</span></code> submodule, aims to expose building blocks of RL
+algorithms so that when a user wants to work on a custom algorithm, they
+can use the pre-built bits provided and only have to worry about
+creating their custom/new algorithm from scratch.</p>
+</div>
+<div class="section" id="main-design-values-clarity-performance-and-composability">
+<h2>Main Design values: Clarity, Performance, and Composability<a class="headerlink" href="#main-design-values-clarity-performance-and-composability" title="Permalink to this headline">¶</a></h2>
+<p>We want to accelerate the rate of progress for RL researchers and reduce
+the time from idea to experimentation. This means that everything
+written needs to be understandable, must work well, and must be highly
+composable.</p>
+<p><a class="reference external" href="https://github.com/PyTorchLightning/pytorch-lightning">PytorchLightning</a>
+has excellent values and <a class="reference external" href="https://github.com/PytorchLightning/pytorch-lightning/blob/master/.github/CONTRIBUTING.md">contributor
+guidelines</a>.
+We take much inspiration from them, and any overlap between their
+guidelines and ours is probably intentional on our part.</p>
+<ul class="simple">
+<li><p>Clarity:</p>
+<ul>
+<li><p>Things like clear, concise variable names, thorough commenting and
+documentation, and consistency in code structure.</p></li>
+<li><p>As PytorchLightning says, many users won’t be engineers. Clear
+code is much more important than fanciness and slick moves.</p></li>
+<li><p>We want to keep the API as simple as possible. The external API
+should allow a user to import an algorithm, set up their RL
+environment, and train that algorithm simply by calling a
+<code class="docutils literal notranslate"><span class="pre">learn()</span></code> function. In <code class="docutils literal notranslate"><span class="pre">flare.kindling</span></code>, the API should be
+consistent and flat, without obfuscating division between
+functional groups.</p></li>
+</ul>
+</li>
+<li><p>Performance:</p>
+<ul>
+<li><p>High quality performance without compromising clarity, and
+faithful implementations of algorithms.</p></li>
+<li><p>Established best-practice hyperparameters so that a user can get
+good results without worrying about their hyperparameter setup.</p></li>
+</ul>
+</li>
+<li><p>Composability:</p>
+<ul>
+<li><p>The components in <code class="docutils literal notranslate"><span class="pre">flare.kindling</span></code> must be easily composed into
+full algorithms.</p></li>
+</ul>
+</li>
+</ul>
+<p>These values are by no means things that have already been achieved, but
+are rather goals to work towards and strive for, moving forward.</p>
+</div>
+<div class="section" id="contribution-types">
+<h2>Contribution types<a class="headerlink" href="#contribution-types" title="Permalink to this headline">¶</a></h2>
+<p>Presently, we are looking for people to help with:</p>
+<ul class="simple">
+<li><p>Implementing new algorithms</p></li>
+<li><p>Bug fixes</p></li>
+<li><p>Unifying the codebase API</p></li>
+<li><p>Writing unit tests and continuous integration</p></li>
+<li><p>Writing documentation</p></li>
+<li><p>General mechanics of the project</p></li>
+</ul>
+<p>For most things:</p>
+<ol class="arabic simple">
+<li><p>Submit an issue on GitHub and we can discuss the bug fix/new feature/new algorithm/contribution.</p></li>
+<li><p>For bugs, try fixing it yourself or recommend a fix!</p></li>
+<li><p>After discussion, submit a pull request! Of course please update the docs and tests.</p></li>
+</ol>
+<p>Use your best judgment to add relevant tags to your issues/PRs.</p>
+</div>
+<div class="section" id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<p>We are using Sphinx to automatically generate documentation. For docstring formatting, we are using the Napoleon extension with Google style.</p>
+</div>
+<div class="section" id="coding-guidelines">
+<h2>Coding guidelines<a class="headerlink" href="#coding-guidelines" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Use f-strings for output formatting.</p></li>
+<li><p>Use <a class="reference external" href="https://pypi.org/project/black/">black</a> or
+<a class="reference external" href="http://flake8.pycqa.org/en/latest/index.html#quickstart">flake8</a>
+to format the code. The code so far has just been formatted with
+black on default settings, so it is OK to do the same.</p></li>
+</ul>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>We need to (and need help with!) build unit tests and implement
+continuous integration for the code.</p>
+</div>
+<div class="section" id="other-questions">
+<h2>Other questions<a class="headerlink" href="#other-questions" title="Permalink to this headline">¶</a></h2>
+<p>Feel free to open an issue with your question! Maybe use a tag like
+<code class="docutils literal notranslate"><span class="pre">general-question</span></code> or something similar.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="source/flare.qpolgrad.html" class="btn btn-neutral float-left" title="flare.qpolgrad package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Jacob Pettit
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

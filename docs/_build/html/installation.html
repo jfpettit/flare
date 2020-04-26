@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; flare 0.1.6 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Welcome to flare’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: linear-gradient(to bottom right, rgba(121,4,199,1) 0%, rgba(251,26,26,1) 100%);" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> flare
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Flare documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installing-openmpi">Installing OpenMPI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#on-ubuntu">On Ubuntu</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on-mac-os-x">On Mac OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#on-windows">On Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-the-flare-package">Installing the flare package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#set-up-virtual-env">Set up virtual env</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-from-github">Install from GitHub</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#running-from-command-line">Running from command line</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#running-in-a-python-file">Running in a Python file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#details">Details</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="source/flare.html">flare package contents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.kindling.html">flare.kindling package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.mpi_pytorch">flare.kindling.mpi_pytorch module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.mpi_tools">flare.kindling.mpi_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.neuralnets">flare.kindling.neuralnets module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.saver">flare.kindling.saver module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.tblog">flare.kindling.tblog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.utils">flare.kindling.utils module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.polgrad.html">flare.polgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.qpolgrad.html">flare.qpolgrad package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to flare</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#main-design-values-clarity-performance-and-composability">Main Design values: Clarity, Performance, and Composability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#contribution-types">Contribution types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#coding-guidelines">Coding guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CONTRIBUTING.html#other-questions">Other questions</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">flare</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/installation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p><strong>Flare supports parallelization via MPI!</strong> So, you’ll need to install
+<a class="reference external" href="https://www.open-mpi.org/">OpenMPI</a> to run this code.
+<a class="reference external" href="https://spinningup.openai.com/en/latest/user/installation.html#installing-openmpi">SpinningUp</a>
+provides the following installation instructions:</p>
+<div class="section" id="installing-openmpi">
+<h2>Installing OpenMPI<a class="headerlink" href="#installing-openmpi" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="on-ubuntu">
+<h3>On Ubuntu<a class="headerlink" href="#on-ubuntu" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span> <span class="o">&amp;&amp;</span> <span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libopenmpi</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="on-mac-os-x">
+<h3>On Mac OS X<a class="headerlink" href="#on-mac-os-x" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">brew</span> <span class="n">install</span> <span class="n">openmpi</span>
+</pre></div>
+</div>
+<p>If the Mac instructions don’t work for you, consider these
+<a class="reference external" href="http://www.science.smith.edu/dftwiki/index.php/Install_MPI_on_a_MacBook">instructions</a>.</p>
+</div>
+<div class="section" id="on-windows">
+<h3>On Windows<a class="headerlink" href="#on-windows" title="Permalink to this headline">¶</a></h3>
+<p>If you’re on Windows, <a class="reference external" href="https://nyu-cds.github.io/python-mpi/setup/">here is a link to some
+instructions</a>.</p>
+</div>
+</div>
+<div class="section" id="installing-the-flare-package">
+<h2>Installing the flare package<a class="headerlink" href="#installing-the-flare-package" title="Permalink to this headline">¶</a></h2>
+<p>It is recommended to use a virtual env before installing this, to avoid
+conflicting with other installed packages. Anaconda and Python offer
+virtual environment systems.</p>
+<div class="section" id="set-up-virtual-env">
+<h3>Set up virtual env<a class="headerlink" href="#set-up-virtual-env" title="Permalink to this headline">¶</a></h3>
+<p>With Anaconda:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">flare_env_name</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.6</span>
+</pre></div>
+</div>
+<p>With python virtual envs:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">venv</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">new</span><span class="o">/</span><span class="n">virtual</span><span class="o">/</span><span class="n">environment</span>
+</pre></div>
+</div>
+<p><cite>More info on Anaconda: &lt;https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html&gt;</cite> and <cite>more info on python venvs &lt;https://docs.python.org/3/library/venv.html&gt;</cite>.</p>
+</div>
+<div class="section" id="install-from-github">
+<h3>Install from GitHub<a class="headerlink" href="#install-from-github" title="Permalink to this headline">¶</a></h3>
+<p>Finally, clone the repository, cd into it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">jfpettit</span><span class="o">/</span><span class="n">flare</span><span class="o">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">flare</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="usage.html" class="btn btn-neutral float-right" title="Usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to flare’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Jacob Pettit
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

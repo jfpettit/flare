@@ -1,0 +1,7 @@
+flare
+=====
+
+.. toctree::
+   :maxdepth: 4
+
+   flare

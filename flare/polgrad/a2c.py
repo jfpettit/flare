@@ -65,7 +65,7 @@ class A2C(BasePolicyGradient):
             gamma=gamma,
             lam=lam,
             steps_per_epoch=steps_per_epoch,
-            hid_sizes=hidden_sizes,
+            hidden_sizes=hidden_sizes,
             seed=seed,
             state_sze=state_sze,
             state_preproc=state_preproc,
@@ -82,6 +82,7 @@ class A2C(BasePolicyGradient):
         return self.__class__.__name__
 
     def update(self):
+        """Update rule for Advantage Actor Critic algorithm."""
         self.ac.train()
         states, acts, advs, rets, logprobs_old = [
             torch.Tensor(x) for x in self.buffer.get()
