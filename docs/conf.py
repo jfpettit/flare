@@ -56,6 +56,13 @@ html_theme_options = {
 'style_nav_header_background' : 'linear-gradient(to bottom right, rgba(121,4,199,1) 0%, rgba(251,26,26,1) 100%);',
 'collapse_navigation': False,
 }
+html_context = {
+    "display_github": True,
+    "github_user" : "jfpettit",
+    "github_repo" : "flare",
+    "github_version" : "master",
+    "conf_py_path": "/docs/"
+}
 
 
 # Add any paths that contain custom static files (such as style sheets) here,
