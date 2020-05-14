@@ -14,3 +14,4 @@ testing.py
 **/.idea
 **/.mypy_cache
 **/pa2c.py
+**/lightning_logs
