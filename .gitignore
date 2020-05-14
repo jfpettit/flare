@@ -13,3 +13,4 @@ testing.py
 **/flare_runs
 **/.idea
 **/.mypy_cache
+**/pa2c.py

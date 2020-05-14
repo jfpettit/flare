@@ -1,266 +1,258 @@
-# pylint: disable=import-error
-# pylint: disable=no-member
-import numpy as np
-import time
 import torch
+import torch.nn as nn
+import torch.nn.functional as f
+import numpy as np
+import gym
+import time
 import flare.kindling as fk
 from flare.kindling import utils
-from flare.kindling import PGBuffer
+from typing import Optional, Any, Union, Callable, Tuple, List
+import pytorch_lightning as pl
+from torch.utils.data import DataLoader, Dataset
+from flare.kindling.datasets import PolicyGradientRLDataset
+import sys
 import abc
-from termcolor import cprint
-import gym
-from gym.spaces import Box
-import torch.nn as nn
-from flare.kindling import EpochLogger
-from flare.kindling import TensorBoardWriter
-from flare.kindling.mpi_tools import (
-    mpi_fork,
-    mpi_avg,
-    proc_id,
-    mpi_statistics_scalar,
-    num_procs,
-)
-from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
-import pickle as pkl
-from typing import Optional, Any, Union, Callable
+from argparse import Namespace
 
-
-class BasePolicyGradient:
+class LitBasePolicyGradient(pl.LightningModule):
     r"""
-    A base class for policy gradient algorithms (A2C, PPO).
+    Base Policy Gradient Class, written using PyTorch + PyTorch Lightning
 
     Args:
-        env_fn: lambda function making the desired gym environment.
-            Example::
-
-                import gym
-                env_fn = lambda: gym.make("CartPole-v1")
-                agent = PPO(env_fn)
-        hidden_sizes: Tuple of integers representing hidden layer sizes for the MLP policy.
-        actorcritic: Class for policy and value networks.
-        gamma: Discount factor for GAE-lambda estimation.
-        lam: Lambda for GAE-lambda estimation.
-        steps_per_epoch: Number of state, action, reward, done tuples to train on per epoch.
-        seed: random seeding for NumPy and PyTorch.
-        state_preproc: An optional state preprocessing function. Any desired manipulations to the state before it is passed to the agent can be performed here. The state_preproc function must take in and return a NumPy array.
-            Example::
-
-                def state_square(state):
-                    state = state**2
-                    return state
-                agent = PPO(env_fn, state_preproc=state_square, state_sze=shape_of_state_after_preprocessing)
-        state_sze: If a state preprocessing function is included, the size of the state after preprocessing must be passed in as well.
-        logger_dir: Directory to log results to.
-        tensorboard: Whether or not to use tensorboard logging.
-        save_screen: Whether to save rendered screen images to a pickled file. Saves within logger_dir.
-        save_states: Whether to save environment states to a pickled file. Saves within logger_dir.
+        env (function): environment to train in
+        ac (nn.Module): actor-critic class to use
+        hidden_sizes (list or tuple): hidden layer sizes for MLP actor
+        steps_per_epoch (int): Number of environment interactions to collect per epoch
+        minibatch_size (int or None): size of minibatches of interactions to train on
+        gamma (float): gamma discount factor for reward discounting
+        lam (float): Used in advantage estimation, not used here. REINFORCE does not learn a value function so can't calculate advantage.
+        pol_lr (float): policy optimizer learning rate
+        val_lr (float): value function optimizer learning rate
+        train_iters (int): number of training steps on each batch of data
+        seed (int): random seed
+        hparams (argparse.Namespace): any hyperparameters to log to experiment logger
     """
+
     def __init__(
         self,
-        env_fn: callable,
-        actorcritic: Optional[nn.Module] = fk.FireActorCritic,
+        env: Callable,
+        ac: nn.Module,
+        hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+        steps_per_epoch: Optional[int] = 4000,
+        minibatch_size: Optional[Union[None, int]] = None,
         gamma: Optional[float] = 0.99,
         lam: Optional[float] = 0.97,
-        steps_per_epoch: Optional[int] = 4000,
-        hidden_sizes: Optional[tuple] = (32, 32),
-        seed: Optional[int] = 0,
-        state_preproc: Optional[Callable] = None,
-        state_sze: Optional[Union[int, tuple]] = None,
-        logger_dir: Optional[str] = None,
-        tensorboard: Optional[bool] = True,
-        save_states: Optional[bool] = False,
-        save_screen: Optional[bool] = False,
+        pol_lr: Optional[float] = 3e-4,
+        val_lr: Optional[float] = 1e-3,
+        train_iters = 80,
+        seed = 0,
+        hparams: Namespace = None
     ):
-        setup_pytorch_for_mpi()
+        super().__init__()
 
-        seed += 10000 * proc_id()
+        if hparams is None:
+            pass
+        else:
+            self.hparams = hparams
+
+
+        seed += 10000
         torch.manual_seed(seed)
         np.random.seed(seed)
 
-        self.env = env_fn()
-        self.state_preproc = state_preproc
+        self.env = env()
+        self.env.seed(seed)
+        self.env.action_space.seed(seed)
+        self.env.observation_space.seed(seed)
 
-        steps_per_epoch = int(steps_per_epoch / num_procs())
+        self.ac = ac(
+            self.env.observation_space.shape[0],
+            self.env.action_space,
+            hidden_sizes
+        )
 
-        if state_preproc is None:
-            self.ac = actorcritic(
-                self.env.observation_space.shape[0],
-                self.env.action_space,
-                hidden_sizes=hidden_sizes,
-            )
-            self.buffer = PGBuffer(
-                self.env.observation_space.shape,
-                self.env.action_space.shape,
-                steps_per_epoch,
-                gamma,
-                lam,
-            )
-            self.state_preproc = lambda x: x
-
-        elif state_preproc is not None:
-            assert (
-                state_sze is not None
-            ), "If using some state preprocessing, must specify state size after preprocessing."
-            self.ac = actorcritic(
-                state_sze, self.env.action_space, hidden_sizes=hidden_sizes
-            )
-            self.buffer = PGBuffer(
-                state_sze, self.env.action_space.shape, steps_per_epoch, gamma, lam
-            )
-
-        sync_params(self.ac)
+        self.buffer = fk.PGBuffer(
+            self.env.observation_space.shape[0],
+            self.env.action_space.shape,
+            steps_per_epoch,
+            gamma=gamma,
+            lam=lam
+        )
 
         self.steps_per_epoch = steps_per_epoch
+        self.pol_lr = pol_lr
+        self.val_lr = val_lr
+        self.train_iters = train_iters
 
-        self.save_states = save_states
-        self.save_screen = save_screen
+        self.tracker_dict = {}
 
-        self.tensorboard = tensorboard
-        if self.tensorboard:
-            if logger_dir is None:
-                name = self.get_name()
-                logger_dir = f"flare_runs/run_at_time_{int(time.time())}_{name}_on_{self.env.unwrapped.spec.id}"
-                self.tb_logger = TensorBoardWriter(fpath=logger_dir)
-            else:
-                self.tb_logger = TensorBoardWriter(fpath=logger_dir)
+        self.inner_loop()
 
-        self.saver = fk.saver.Saver(out_dir=self.tb_logger.full_logdir)
+        self.minibatch_size = steps_per_epoch // 10
+        if minibatch_size is not None:
+            self.minibatch_size = minibatch_size
 
-        self.logger = EpochLogger(output_dir=self.tb_logger.full_logdir)
-        self.logger.setup_pytorch_saver(self.ac)
-
-    def get_name(self):
-        """Return name of subclass"""
-        return self.__class__.__name__
-
-    @abc.abstractmethod
-    def update(self):
-        """Placeholder function for update rule for policy gradient algo."""
-        return
-
-    def learn(
-        self, epochs, render=False, horizon=1000, logstd_anneal=None, n_anneal_cycles=0,
-    ):
+    def forward(self, x: torch.Tensor, a: torch.Tensor = None) -> torch.Tensor:
+        r"""
+        Forward pass for the agent.
         """
-        Training loop for policy gradient algorithm.
+        return self.ac(x, a) 
 
-        Args:
-            epochs: Number of epochs to train for in the environment.
-            render: Whether to render the agent during training
-            horizon: Maximum allowed episode length
-            logstd_anneal: None or two values. Anneals log standard deviation of action distribution from the first value to the second if it is not None.
-                Example::
-                    logstd_anneal = np.array([-1.6, -0.7])
-                    agent.learn(100, logstd_anneal=logstd_anneal)
-            n_anneal_cycles: Integer greater than or equal to zero. If logstd_anneal is specified, this variable allows the algorithm to cycle through the anneal schedule n times.
-                Example::
-                    agent.learn(100, logstd_anneal=np.array([-1.6, -0.7]), n_anneal_cycles=2)
+    def configure_optimizers(self) -> tuple:
+        r"""
+        Set up optimizers for agent.
         """
-        if render and "Bullet" in self.env.unwrapped.spec.id and proc_id() == 0:
-            self.env.render()
+        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=self.pol_lr)
+        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=self.val_lr) 
+        return self.policy_optimizer, self.value_optimizer
 
-        if logstd_anneal is not None:
-            assert isinstance(
-                self.env.action_space, Box
-            ), "Log standard deviation only used in environments with continuous action spaces. Your current environment uses a discrete action space."
-            logstds = utils.calc_logstd_anneal(
-                n_anneal_cycles, logstd_anneal[0], logstd_anneal[1], epochs
+    def inner_loop(self) -> None:
+        r"""
+        Run agent-env interaction loop. 
+
+        Stores agent environment interaction tuples to the buffer. Logs reward mean/std/min/max to tracker dict. Collects data at loop end.
+
+        """
+        state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
+        rewlst = []
+        lenlst = []
+
+        for i in range(self.steps_per_epoch):
+            action, logp, value = self.ac.step(torch.as_tensor(state, dtype=torch.float32))
+
+            next_state, reward, done, _ = self.env.step(action)
+
+            self.buffer.store(
+                state,
+                action,
+                reward,
+                value,
+                logp
             )
 
-        last_time = time.time()
-        state, reward, episode_reward, episode_length = self.env.reset(), 0, 0, 0
+            state = next_state
+            episode_length += 1
+            episode_reward += reward
 
-        for i in range(epochs):
-            self.ep_length = []
-            self.ep_reward = []
+            
+            timeup = episode_length == 1000
+            over = done or timeup
+            epoch_ended = i == self.steps_per_epoch - 1
+            if over or epoch_ended:
+                if timeup or epoch_ended:
+                    last_val = self.ac.value_f(torch.as_tensor(state, dtype=torch.float32)).detach().numpy()
+                else:
+                    last_val = 0
+                self.buffer.finish_path(last_val)
 
-            if logstd_anneal is not None:
-                self.ac.logstds = nn.Parameter(
-                    logstds[i] * torch.ones(self.env.action_space.shape[0])
-                )
+                if over:
+                    rewlst.append(episode_reward)
+                    lenlst.append(episode_length)
+                state, episode_reward, episode_length = self.env.reset(), 0, 0
 
-            self.ac.eval()
-            for _ in range(self.steps_per_epoch):
-                if self.save_states:
-                    self.saver.store(state_saver=state)
-                if self.save_screen:
-                    screen = self.env.render(mode="rgb_array")
-                    self.saver.store(screen_saver=screen)
+        trackit = {
+            "MeanEpReturn": np.mean(rewlst),
+            "StdEpReturn": np.std(rewlst),
+            "MaxEpReturn": np.max(rewlst),
+            "MinEpReturn": np.min(rewlst),
+            "MeanEpLength": np.mean(lenlst)
+        }
+        self.tracker_dict.update(trackit)
 
-                state = self.state_preproc(state)
+        self.data = self.buffer.get()
 
-                action, _, logp, value = self.ac(torch.Tensor(state.reshape(1, -1)))
-                self.logger.store(Values=np.array(value.detach().numpy()))
+    @abc.abstractmethod
+    def calc_pol_loss(self, *args) -> torch.Tensor:
+        r"""
+        Loss for policy gradient agent.
+        """
+        pass
 
-                next_state, reward, done, _ = self.env.step(action.detach().numpy()[0])
+    def calc_val_loss(self, values: torch.Tensor, rets: torch.Tensor) -> torch.Tensor:
+        return ((values - rets)**2).mean()
 
-                if (
-                    render
-                    and "Bullet" not in self.env.unwrapped.spec.id
-                    and proc_id() == 0
-                ):
-                    self.env.render()
+    @abc.abstractmethod
+    def training_step(self, batch: Tuple, batch_idx: int, optimizer_idx: int) -> dict:
+        r"""
+        Policy gradient agent training step.
 
-                self.buffer.store(
-                    state,
-                    action.detach().numpy(),
-                    reward,
-                    value.item(),
-                    logp.detach().numpy(),
-                )
+        Args:
+            batch (Tuple of PyTorch tensors): Batch to train on.
+            batch_idx: batch index.
+            optimizer_idx: Index of optimizer to use
+        """
+        pass
 
-                state = next_state
-                episode_reward += reward
-                episode_length += 1
+    def training_step_end(
+        self,
+        step_dict
+    ):
+        step_dict['log'] = self.add_to_log_dict(step_dict['log'])
+        return step_dict
 
-                over = done or (episode_length == horizon)
-                if over or (_ == self.steps_per_epoch - 1):
-                    if self.state_preproc is not None:
-                        state = self.state_preproc(state)
+    def add_to_log_dict(self, log_dict):
+        add_to_dict = {
+            "MeanEpReturn": self.tracker_dict["MeanEpReturn"],
+            "MaxEpReturn": self.tracker_dict["MaxEpReturn"],
+            "MinEpReturn": self.tracker_dict["MinEpReturn"],
+            "MeanEpLength": self.tracker_dict["MeanEpLength"]}
+        log_dict.update(add_to_dict)
+        return log_dict
 
-                    last_val = (
-                        reward
-                        if done
-                        else self.ac.value_f(torch.Tensor(state.reshape(1, -1))).item()
-                    )
-                    self.buffer.finish_path(last_val)
 
-                    if over:
-                        self.logger.store(
-                            EpReturn=episode_reward, EpLength=episode_length
-                        )
+    def train_dataloader(self) -> DataLoader:
+        r"""
+        Define a PyTorch dataset with the data from the last :func:`~inner_loop` run and return a dataloader.
+        """
+        dataset = PolicyGradientRLDataset(self.data)
+        dataloader = DataLoader(dataset, batch_size=self.minibatch_size, sampler=None)
+        return dataloader
 
-                    state = self.env.reset()
-                    episode_reward = 0
-                    episode_length = 0
-                    done = False
-                    reward = 0
+    def printdict(self, out_file: Optional[str] = sys.stdout) -> None:
+        r"""
+        Print the contents of the epoch tracking dict to stdout or to a file.
+        """
+        self.print("\n", file=out_file)
+        for k, v in self.tracker_dict.items():
+            self.print(f"{k}: {v}", file=out_file)
+        self.print("\n", file=out_file)
+    
+    def on_epoch_end(self):
+        r"""
+        Print tracker_dict, reset tracker_dict, and generate new data with inner loop.
+        """
+        self.printdict()
+        self.tracker_dict = {}
+        self.inner_loop()
 
-            self.saver.save()
-            self.update()
 
-            ep_dict = self.logger.epoch_dict_copy
-            if self.tensorboard:
-                self.tb_logger.add_vals(ep_dict, step=i)
+def learn(
+    env_name: str, 
+    algo: LitBasePolicyGradient,
+    epochs: Optional[int] = 100, 
+    minibatch_size: Optional[Union[int, None]] = None, 
+    steps_per_epoch: Optional[int] = 4000,
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+    gamma: Optional[float] = 0.99,
+    lam: Optional[float] = 0.97
+    ):
 
-            self.logger.log_tabular("Iteration", i)
-            self.logger.log_tabular("EpReturn", with_min_and_max=True)
-            self.logger.log_tabular("EpLength", average_only=True)
-            self.logger.log_tabular("Values", with_min_and_max=True)
-            self.logger.log_tabular("TotalEnvInteracts", (i + 1) * self.steps_per_epoch)
-            self.logger.log_tabular("PolicyLoss", average_only=True)
-            self.logger.log_tabular("ValueLoss", average_only=True)
-            self.logger.log_tabular("DeltaPolLoss", average_only=True)
-            self.logger.log_tabular("DeltaValLoss", average_only=True)
-            self.logger.log_tabular("Entropy", average_only=True)
-            self.logger.log_tabular("KL", average_only=True)
-            self.logger.log_tabular("IterationTime", time.time() - last_time)
-            last_time = time.time()
+    env = lambda: gym.make(env_name)
+    
+    agent = algo(
+        env,
+        fk.FireActorCritic,
+        hidden_sizes=hidden_sizes,
+        steps_per_epoch=steps_per_epoch, 
+        minibatch_size=minibatch_size,
+        gamma=gamma,
+        lam=lam
+        )
 
-            if logstd_anneal is not None:
-                self.logger.log_tabular("CurrentLogStd", logstds[i])
+    trainer = pl.Trainer(
+        reload_dataloaders_every_epoch=True,
+        early_stop_callback=False,
+        max_epochs=epochs
+    )
 
-            self.logger.log_tabular("Env", self.env.unwrapped.spec.id)
-            self.logger.dump_tabular()
-
-        return self.ep_reward, self.ep_length
+    trainer.fit(agent)

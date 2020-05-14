@@ -221,6 +221,7 @@ class BaseQPolicyGradient:
                 self.logger.log_tabular("TestEpLength", average_only=True)
                 self.logger.log_tabular("TotalEnvInteracts", t)
                 self.logger_tabular_to_dump()
+                self.logger.log_tabular("Env", self.env.unwrapped.spec.id)
                 self.logger.log_tabular("IterationTime", new_time - last_time)
                 last_time = new_time
                 self.logger.dump_tabular()

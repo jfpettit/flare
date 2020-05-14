@@ -1,5 +1,5 @@
-flare.kindling package
-======================
+flare.kindling 
+==============
 
 Submodules
 ----------

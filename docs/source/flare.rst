@@ -1,7 +1,7 @@
 .. _flare-package-contents:
 
-flare package contents
-======================
+flare package 
+=============
 
 .. toctree::
 

@@ -1,159 +1,160 @@
-from flare.polgrad import BasePolicyGradient
-import flare.kindling as fk
-import numpy as np
 import torch
+import torch.nn as nn
+import torch.nn.functional as f
+import numpy as np
 import gym
-import torch.nn.functional as F
-from termcolor import cprint
-from flare.kindling.mpi_tools import (
-    mpi_fork,
-    mpi_avg,
-    proc_id,
-    mpi_statistics_scalar,
-    num_procs,
-)
-from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
-from typing import Callable, Optional, Union
-from pathlib import Path
+import pybullet_envs
+import time
+import flare.kindling as fk
+from flare.kindling import utils
+from flare.kindling.mpi_tools import mpi_avg
+from typing import Optional, Any, Union, Callable, Tuple, List
+import pytorch_lightning as pl
+from torch.utils.data import DataLoader, Dataset
+import sys
+from flare.polgrad import BasePolicyGradient
 
 
-class PPO(BasePolicyGradient):
-    r"""
-    Implementation of the Proximal Policy Optimization (PPO) reinforcement learning algorithm.
-
-    Args:
-        env_fn: lambda function making the desired gym environment.
-            Example::
-
-                import gym
-                env_fn = lambda: gym.make("CartPole-v1")
-                agent = PPO(env_fn)
-        hidden_sizes: Tuple of integers representing hidden layer sizes for the MLP policy.
-        actorcritic: Class for policy and value networks.
-        gamma: Discount factor for GAE-lambda estimation.
-        lam: Lambda for GAE-lambda estimation.
-        steps_per_epoch: Number of state, action, reward, done tuples to train on per epoch.
-        epsilon: Clipping ratio for policy loss term in PPO.
-        maxkl: Maximum allowed KL-divergence between new and old policies during update. Breaks update loop if the KL is estimated to be greater than this.
-        train_steps: Number of training steps to do over the collected data.
-        pol_lr: Learning rate for the policy optimizer.
-        val_lr: Learning rate for the value optimizer.
-        seed: random seeding for NumPy and PyTorch.
-        state_preproc: An optional state preprocessing function. Any desired manipulations to the state before it is passed to the agent can be performed here. The state_preproc function must take in and return a NumPy array.
-            Example::
-
-                def state_square(state):
-                    state = state**2
-                    return state
-                agent = PPO(env_fn, state_preproc=state_square, state_sze=shape_of_state_after_preprocessing)
-        state_sze: If a state preprocessing function is included, the size of the state after preprocessing must be passed in as well.
-        logger_dir: Directory to log results to.
-        tensorboard: Whether or not to use tensorboard logging.
-        save_screen: Whether to save rendered screen images to a pickled file. Saves within logger_dir.
-        save_states: Whether to save environment states to a pickled file. Saves within logger_dir.
-    """
+class LitPPO(BasePolicyGradient):
     def __init__(
         self,
-        env_fn: Callable,
-        hidden_sizes: Optional[tuple] = (64, 32),
-        actorcritic: Optional[torch.nn.Module] = fk.FireActorCritic,
-        gamma: Optional[float] = 0.99,
-        lam: Optional[float] = 0.97,
-        steps_per_epoch: Optional[int] = 4000,
-        epsilon: Optional[float] = 0.2,
-        maxkl: Optional[float] = 0.01,
-        train_steps: Optional[int] = 80,
-        pol_lr: Optional[float] = 3e-4,
-        val_lr: Optional[float] = 1e-3,
-        seed: Optional[int] = 0,
-        state_preproc: Optional[Callable] = None,
-        state_sze: Optional[int] = None,
-        logger_dir: Optional[Union[str, Path]]=None,
-        tensorboard: Optional[bool] = True,
-        save_screen: Optional[bool] = False,
-        save_states: Optional[bool] = False,
+        env,
+        ac = fk.FireActorCritic,
+        hidden_sizes = (64, 64),
+        steps_per_epoch = 4000,
+        minibatch_size = None,
+        gamma = 0.99,
+        lam = 0.97,
+        pol_lr = 3e-4,
+        val_lr = 1e-3,
+        train_iters = 80,
+        clipratio = 0.2,
+        maxkl = 0.01,
+        seed = 0,
+        hparams = None
     ):
         super().__init__(
-            env_fn,
-            actorcritic=actorcritic,
+            env,
+            ac,
+            hidden_sizes=hidden_sizes,
+            steps_per_epoch=steps_per_epoch,
+            minibatch_size=minibatch_size,
             gamma=gamma,
             lam=lam,
-            steps_per_epoch=steps_per_epoch,
-            hidden_sizes=hidden_sizes,
-            seed=seed,
-            state_preproc=state_preproc,
-            state_sze=state_sze,
-            logger_dir=logger_dir,
-            tensorboard=tensorboard,
-            save_screen=save_screen,
-            save_states=save_states,
+            pol_lr=pol_lr,
+            val_lr=val_lr,
+            train_iters=train_iters,
+            seed = seed,
+            hparams= hparams
         )
 
-        self.eps = epsilon
+        self.clipratio = clipratio 
         self.maxkl = maxkl
-        self.train_steps = train_steps
 
-        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
-        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
+    def calc_pol_loss(self, logps, logps_old, advs):
+        ratio = torch.exp(logps - logps_old)
+        clipped_adv = torch.clamp(ratio, 1 - self.clipratio, 1 + self.clipratio) * advs
+        pol_loss = -(torch.min(ratio * advs, clipped_adv)).mean()
 
-    def get_name(self):
-        """Function to return class name. Used in logging to directory"""
-        return self.__class__.__name__
+        kl = (logps_old - logps).mean().item()
+        return pol_loss, kl
 
-    def update(self):
-        """
-        Update rule for PPO
-        """
-        self.ac.train()
-        states, acts, advs, rets, logprobs_old = [
-            torch.Tensor(x) for x in self.buffer.get()
-        ]
-        _, logp, _ = self.ac.policy(states, acts)
-        pol_ratio = (logp - logprobs_old).exp()
-        min_adv = torch.clamp(pol_ratio, 1 - self.eps, 1 + self.eps) * advs
-        pol_loss_old = -(torch.min(pol_ratio * advs, min_adv)).mean()
-        approx_ent = (-logp).mean()
+    def backward(self, trainer, loss, optimizer, optimizer_idx):
+        pass
 
-        for i in range(self.train_steps):
-            self.policy_optimizer.zero_grad()
-            _, logp, _ = self.ac.policy(states, acts)
-            pol_ratio = (logp - logprobs_old).exp()
-            min_adv = torch.clamp(pol_ratio, 1 - self.eps, 1 + self.eps) * advs
-            pol_loss = -(torch.min(pol_ratio * advs, min_adv)).mean()
+    def optimizer_step(
+        self,
+        epoch,
+        batch_idx,
+        optimizer,
+        optimizer_idx,
+        second_order_closure = None
+    ):
+        optimizer.zero_grad()
 
-            _, logp, _ = self.ac.policy(states, acts)
-            kl = mpi_avg((logprobs_old - logp).mean().item())
-            if kl > 1.5 * self.maxkl:
-                self.logger.log(
-                    f"Early stopping at step {i} due to reaching max kl.", "yellow"
-                )
-                break
-            pol_loss.backward()
-            mpi_avg_grads(self.ac.policy)
-            self.policy_optimizer.step()
+    def training_step(self, batch, batch_idx, optimizer_idx):
+        states, actions, advs, rets, logps_old = batch
 
-        vals = self.ac.value_f(states)
-        val_loss_old = F.mse_loss(vals, rets)
+        if optimizer_idx == 0:
+            stops = 0
+            stopslst = []
+            policy, logps = self.ac.policy(states, actions)
+            pol_loss_old, kl = self.calc_pol_loss(logps, logps_old, advs)
 
-        for _ in range(self.train_steps):
-            self.value_optimizer.zero_grad()
-            vals = self.ac.value_f(states)
-            val_loss = F.mse_loss(vals, rets)
-            val_loss.backward()
-            mpi_avg_grads(self.ac.value_f)
-            self.value_optimizer.step()
+            for i in range(self.train_iters):
+                self.policy_optimizer.zero_grad()
+                policy, logps = self.ac.policy(states, actions)
+                pol_loss, kl = self.calc_pol_loss(logps, logps_old, advs)
+                approx_kl = fk.mpi_tools.mpi_avg(kl)
+                if approx_kl > 1.5 * self.maxkl:
+                    stops += 1
+                    stopslst.append(i)
+                    break
+                pol_loss.backward()
+                self.policy_optimizer.step()
 
-        self.logger.store(
-            PolicyLoss=pol_loss_old.detach().numpy(),
-            ValueLoss=val_loss_old.detach().numpy(),
-            KL=kl,
-            Entropy=approx_ent.detach().numpy(),
-            DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(),
-            DeltaValLoss=(val_loss - val_loss_old).detach().numpy(),
+            log = {
+                "PolicyLoss": pol_loss_old.item(),
+                "DeltaPolLoss": (pol_loss - pol_loss_old).item(),
+                "KL": approx_kl,
+                "Entropy": policy.entropy().mean().item(),
+                "TimesEarlyStopped": stops,
+                "AvgEarlyStopStep": np.mean(stopslst) if len(stopslst) > 0 else 0
+            }
+            loss = pol_loss_old
+
+        elif optimizer_idx == 1:
+            values_old = self.ac.value_f(states)
+            val_loss_old = self.calc_val_loss(values_old, rets)
+            for i in range(self.train_iters):
+                self.value_optimizer.zero_grad()
+                values = self.ac.value_f(states)
+                val_loss = self.calc_val_loss(values, rets)
+                val_loss.backward()
+                self.value_optimizer.step()
+
+            delta_val_loss = (val_loss - val_loss_old).item()
+            log = {"ValueLoss": val_loss_old.item(), "DeltaValLoss": delta_val_loss}
+            loss = val_loss
+
+        self.tracker_dict.update(log)
+        return {"loss": loss, "log": log, "progress_bar": log}
+
+"""
+def learn(
+    env_name: str, 
+    epochs: Optional[int] = 100, 
+    minibatch_size: Optional[Union[int, None]] = None, 
+    steps_per_epoch: Optional[int] = 4000,
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+    gamma: Optional[float] = 0.99,
+    lam: Optional[float] = 0.97
+    ):
+    
+    env = lambda: gym.make(env_name)
+    
+    agent = LitPPO(
+        env,
+        fk.FireActorCritic,
+        hidden_sizes=hidden_sizes,
+        steps_per_epoch=steps_per_epoch, 
+        minibatch_size=steps_per_epoch,
+        gamma=gamma,
+        lam=lam
         )
-        return (
-            pol_loss_old.detach().numpy(),
-            val_loss_old.detach().numpy(),
-            approx_ent.detach().numpy(),
-            kl,
-        )
+
+    trainer = pl.Trainer(
+        reload_dataloaders_every_epoch=True,
+        early_stop_callback=False,
+        max_epochs=epochs
+    )
+
+    trainer.fit(agent)
+"""
+
+if __name__ == '__main__':
+    env_name = "HalfCheetahBulletEnv-v0"
+    epochs = 100
+
+    from flare.polgrad.base import learn
+    learn(env_name, LitPPO, epochs=epochs, minibatch_size=4000)

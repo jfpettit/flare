@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flare.kindling package &mdash; flare 0.1.6 documentation</title>
+  <title>flare.kindling &mdash; flare 0.1.6 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="flare.polgrad package" href="flare.polgrad.html" />
+    <link rel="next" title="flare.polgrad" href="flare.polgrad.html" />
     <link rel="prev" title="flare package contents" href="flare.html" /> 
 </head>
 
@@ -103,7 +103,7 @@
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package contents</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.kindling package</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.kindling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
@@ -116,16 +116,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-flare.kindling">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="flare.polgrad.html">flare.polgrad package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="flare.polgrad.html">flare.polgrad</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="flare.qpolgrad.html">flare.qpolgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.qpolgrad.html">flare.qpolgrad</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
 </ul>
 </li>
@@ -188,7 +183,7 @@
         
           <li><a href="flare.html">flare package contents</a> &raquo;</li>
         
-      <li>flare.kindling package</li>
+      <li>flare.kindling</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -209,8 +204,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="flare-kindling-package">
-<h1>flare.kindling package<a class="headerlink" href="#flare-kindling-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="flare-kindling">
+<h1>flare.kindling<a class="headerlink" href="#flare-kindling" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -581,11 +576,23 @@ addition to mean and std.</p>
 <span id="flare-kindling-neuralnets-module"></span><h2>flare.kindling.neuralnets module<a class="headerlink" href="#module-flare.kindling.neuralnets" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="flare.kindling.neuralnets.CategoricalPolicy">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">CategoricalPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable, action_dim: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">CategoricalPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, action_dim: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>A class for a Categorical Policy network. Used in discrete action space environments. The policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em>) – Dimensionality of the action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.CategoricalPolicy.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy.forward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.neuralnets.CategoricalPolicy.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -603,9 +610,23 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="flare.kindling.neuralnets.FireActorCritic">
 <em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (32</em>, <em class="sig-param">32)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method tanh of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = None</em>, <em class="sig-param">policy: Optional[torch.nn.modules.module.Module] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>An Actor Critic class for Policy Gradient algorithms.</p>
+<p>Has built-in capability to work with continuous (gym.spaces.Box) and discrete (gym.spaces.Discrete) action spaces. The policy and value function are both <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>. If working with a different action space, the user can pass in a custom policy class for that action space as an argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Space</em>) – Action space of the environment.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation function for the network.</p></li>
+<li><p><strong>policy</strong> (<em>nn.Module</em>) – Custom policy class for an environment where the action space is not gym.spaces.Box or gym.spaces.Discrete</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.FireActorCritic.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.neuralnets.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -621,90 +642,146 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.FireDDPGActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>An Actor Critic for the DDPG algorithm.</p>
+<p>The policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLPQActor" title="flare.kindling.neuralnets.MLPQActor"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQActor()</span></code></a> and the q-value function is an <a class="reference internal" href="#flare.kindling.neuralnets.MLPQFunction" title="flare.kindling.neuralnets.MLPQFunction"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunction()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.FireDDPGActorCritic.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic.act" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.neuralnets.FireDDPGActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an action from the policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Observations from the environment.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.FireQActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Generic Q Actor Critic class.</p>
+<p>Policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>. Q function is a <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a> as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>tuple</em><em> or </em><em>list</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the networks.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation for the networks.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.FireQActorCritic.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.neuralnets.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get action, q value estimates for action taken, and q value estimates for previous actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – State from the environment.</p></li>
+<li><p><strong>a</strong> (<em>torch.Tensor</em>) – Action taken in the environment.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.FireSACActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<p>From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<p>An SAC Actor Critic class. From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<p>The policy is a <a class="reference internal" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor" title="flare.kindling.neuralnets.SquashedGaussianMLPActor"><code class="xref py py-func docutils literal notranslate"><span class="pre">SquashedGaussianMLPActor()</span></code></a> and the q-functions are both <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunctions()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the networks.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.FireSACActorCritic.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">deterministic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic.act" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">deterministic: bool = False</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#flare.kindling.neuralnets.FireSACActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get action from policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – State from the environment.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – Whether to act deterministically.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.FireTD3ActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Actor Critic for the TD3 algorithm.</p>
+<p>The policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLPQActor" title="flare.kindling.neuralnets.MLPQActor"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQActor()</span></code></a> and the q-function is an <a class="reference internal" href="#flare.kindling.neuralnets.MLPQFunction" title="flare.kindling.neuralnets.MLPQFunction"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunction()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.FireTD3ActorCritic.act">
-<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic.act" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="flare.kindling.neuralnets.FullyConnectedDQN">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">FullyConnectedDQN</code><span class="sig-paren">(</span><em class="sig-param">in_channels</em>, <em class="sig-param">out_channels</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<dl class="method">
-<dt id="flare.kindling.neuralnets.FullyConnectedDQN.evaluate">
-<code class="sig-name descname">evaluate</code><span class="sig-paren">(</span><em class="sig-param">states</em>, <em class="sig-param">actions</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN.evaluate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="flare.kindling.neuralnets.FullyConnectedDQN.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.FullyConnectedDQN.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.neuralnets.FireTD3ActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an action from the policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Observations from the environment.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.GaussianPolicy">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">GaussianPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable, action_dim: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">GaussianPolicy</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, action_dim: int, hidden_sizes: Union[List, Tuple], activation: Callable, out_activation: Callable</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>A class for a Gaussian Policy network. Used in continuous action space environments. The policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em>) – Dimensionality of the action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.GaussianPolicy.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy.forward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.neuralnets.GaussianPolicy.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -720,11 +797,28 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.MLP">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLP</code><span class="sig-paren">(</span><em class="sig-param">layer_szs: Union[List, Tuple], activations: Optional[Callable] = &lt;built-in method tanh of type object&gt;, out_act: Optional[bool] = None, out_squeeze: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLP" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLP</code><span class="sig-paren">(</span><em class="sig-param">layer_sizes: Union[List, Tuple], activations: Optional[Callable] = &lt;built-in method tanh of type object&gt;, out_act: Optional[bool] = None, out_squeeze: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLP" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>A class for building a simple MLP network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – <p>Layer sizes for the network.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sizes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>activations</strong> (<em>Function</em>) – Activation function for MLP net.</p></li>
+<li><p><strong>out_act</strong> (<em>Function</em>) – Output activation function</p></li>
+<li><p><strong>out_squeeze</strong> (<em>bool</em>) – Whether to squeeze the output of the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.MLP.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLP.forward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.neuralnets.MLP.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -740,80 +834,91 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.MLPQActor">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQActor</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em>, <em class="sig-param">act_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQActor</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, action_dim: int, hidden_sizes: Union[list, tuple], activation: Callable, action_limit: Union[float, int]</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>An actor for Q policy gradient algorithms.</p>
+<p>The policy is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>. This differs from the <a class="reference internal" href="#flare.kindling.neuralnets.FireActorCritic" title="flare.kindling.neuralnets.FireActorCritic"><code class="xref py py-func docutils literal notranslate"><span class="pre">FireActorCritic()</span></code></a> class because the output from the policy network is scaled to action space limits on the forward pass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em>) – Dimensionality of the action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>action_limit</strong> (<em>float</em><em> or </em><em>int</em>) – Limits of the action space.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.MLPQActor.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.neuralnets.MLPQActor.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return output from the policy network scaled to the limits of the env action space.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.MLPQFunction">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQFunction</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">MLPQFunction</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, action_dim: int, hidden_sizes: Union[tuple, list], activation: Callable</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>A Q function network for Q policy gradient methods.</p>
+<p>The Q function is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a>. It always takes in a (state, action) pair and returns a Q-value estimate for that pair.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em>) – Dimensionality of the action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.MLPQFunction.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">act</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="flare.kindling.neuralnets.NatureDQN">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">NatureDQN</code><span class="sig-paren">(</span><em class="sig-param">in_channels</em>, <em class="sig-param">out_channels</em>, <em class="sig-param">h</em>, <em class="sig-param">w</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.NatureDQN" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<dl class="method">
-<dt id="flare.kindling.neuralnets.NatureDQN.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.NatureDQN.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.neuralnets.MLPQFunction.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return Q-value estimate for state, action pair (x, a).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Environment state.</p></li>
+<li><p><strong>a</strong> (<em>torch.Tensor</em>) – Action taken by the policy.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.neuralnets.SquashedGaussianMLPActor">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">SquashedGaussianMLPActor</code><span class="sig-paren">(</span><em class="sig-param">obs_dim</em>, <em class="sig-param">act_dim</em>, <em class="sig-param">hidden_sizes</em>, <em class="sig-param">activation</em>, <em class="sig-param">act_limit</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.neuralnets.</code><code class="sig-name descname">SquashedGaussianMLPActor</code><span class="sig-paren">(</span><em class="sig-param">state_features: int, action_dim: int, hidden_sizes: Union[list, tuple], activation: Callable, action_limit: Union[float, int]</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>GaussianMLP Actor for SAC. From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<p>Policy network is an <a class="reference internal" href="#flare.kindling.neuralnets.MLP" title="flare.kindling.neuralnets.MLP"><code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code></a> with heads for mean and log standard deviation of the action distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em>) – Dimensionality of the action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>action_limit</strong> (<em>float</em><em> or </em><em>int</em>) – Limit of the action space.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.neuralnets.SquashedGaussianMLPActor.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">deterministic=False</em>, <em class="sig-param">with_logprob=True</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">deterministic: bool = False</em>, <em class="sig-param">with_logprob: bool = True</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.neuralnets.SquashedGaussianMLPActor.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an action and action log prob from the policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – state from the environment.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – whether to act deterministically or not.</p></li>
+<li><p><strong>with_logprob</strong> (<em>bool</em>) – whether to return with action log probability or not.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -823,17 +928,28 @@ registered hooks while the latter silently ignores them.</p>
 <span id="flare-kindling-saver-module"></span><h2>flare.kindling.saver module<a class="headerlink" href="#module-flare.kindling.saver" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="flare.kindling.saver.Saver">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.saver.</code><code class="sig-name descname">Saver</code><span class="sig-paren">(</span><em class="sig-param">out_dir</em>, <em class="sig-param">keys: Optional[list] = []</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.saver.</code><code class="sig-name descname">Saver</code><span class="sig-paren">(</span><em class="sig-param">out_dir: str</em>, <em class="sig-param">keys: Optional[list] = []</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to pickle generic Python objects saved over a model’s training cycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_dir</strong> (<em>str</em>) – Directory to save to.</p></li>
+<li><p><strong>keys</strong> (<em>list</em>) – Keys to initialize the save dictionary with.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.saver.Saver.save">
 <code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver.save" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Write save dictionary to .pkl file.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="flare.kindling.saver.Saver.store">
 <code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.saver.Saver.store" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Store input kwargs in save dictionary.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -844,25 +960,63 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="flare.kindling.tblog.TensorBoardWriter">
 <em class="property">class </em><code class="sig-prename descclassname">flare.kindling.tblog.</code><code class="sig-name descname">TensorBoardWriter</code><span class="sig-paren">(</span><em class="sig-param">fpath: Optional[str] = 'flare_runs'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A writer to log inputs to tensorboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<em>str</em>) – File directory to log to.</p>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.tblog.TensorBoardWriter.add_hist">
 <code class="sig-name descname">add_hist</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, list, numpy.array, tuple], step: int, bins: Optional[str] = 'tensorflow'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_hist" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Helper function to add a vector value to a tensorboard histogram. Called for you in <a class="reference internal" href="#flare.kindling.tblog.TensorBoardWriter.add_vals" title="flare.kindling.tblog.TensorBoardWriter.add_vals"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_vals()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Key to dictionary value to write with.</p></li>
+<li><p><strong>val</strong> (<em>torch.Tensor</em><em> or </em><em>np.array</em><em> or </em><em>list</em><em> or </em><em>tuple</em>) – Value to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+<li><p><strong>bins</strong> (<em>str</em>) – binning style for histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="flare.kindling.tblog.TensorBoardWriter.add_plot">
 <code class="sig-name descname">add_plot</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, numpy.array, list, float, int], step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Helper function to add a scalar value to a tensorboard plot. Called for you in <a class="reference internal" href="#flare.kindling.tblog.TensorBoardWriter.add_vals" title="flare.kindling.tblog.TensorBoardWriter.add_vals"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_vals()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Key to dictionary value to write with.</p></li>
+<li><p><strong>val</strong> (<em>torch.Tensor</em><em> or </em><em>np.array</em><em> or </em><em>list</em><em> or </em><em>float</em><em> or </em><em>int</em>) – Value to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="flare.kindling.tblog.TensorBoardWriter.add_vals">
 <code class="sig-name descname">add_vals</code><span class="sig-paren">(</span><em class="sig-param">val_dict: dict</em>, <em class="sig-param">step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.add_vals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Add input values to tensorboard.</p>
+<p>Can handle scalar and vector input. Scalar values are written to line plots, vector values are written to histograms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_dict</strong> (<em>dict</em>) – Dictionary of key/value pairs to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="flare.kindling.tblog.TensorBoardWriter.end">
 <code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.tblog.TensorBoardWriter.end" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>flush tensorboard writer.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -873,6 +1027,7 @@ registered hooks while the latter silently ignores them.</p>
 <dt id="flare.kindling.utils.NetworkUtils">
 <em class="property">class </em><code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">NetworkUtils</code><a class="headerlink" href="#flare.kindling.utils.NetworkUtils" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Random utilities for neural networks.</p>
 <dl class="method">
 <dt id="flare.kindling.utils.NetworkUtils.conv2d_output_size">
 <code class="sig-name descname">conv2d_output_size</code><span class="sig-paren">(</span><em class="sig-param">kernel_size</em>, <em class="sig-param">stride</em>, <em class="sig-param">sidesize</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.NetworkUtils.conv2d_output_size" title="Permalink to this definition">¶</a></dt>
@@ -895,8 +1050,19 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="function">
 <dt id="flare.kindling.utils.calc_logstd_anneal">
-<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">calc_logstd_anneal</code><span class="sig-paren">(</span><em class="sig-param">n_anneal_cycles</em>, <em class="sig-param">anneal_start</em>, <em class="sig-param">anneal_end</em>, <em class="sig-param">epochs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.calc_logstd_anneal" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">calc_logstd_anneal</code><span class="sig-paren">(</span><em class="sig-param">n_anneal_cycles: int</em>, <em class="sig-param">anneal_start: float</em>, <em class="sig-param">anneal_end: float</em>, <em class="sig-param">epochs: int</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#flare.kindling.utils.calc_logstd_anneal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate log standard deviation annealing schedule. Can be used in PG algorithms on continuous action spaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_anneal_cycles</strong> (<em>int</em>) – How many times to cycle from anneal_start to anneal_end over the training epochs.</p></li>
+<li><p><strong>anneal_start</strong> (<em>float</em>) – Starting log standard deviation value.</p></li>
+<li><p><strong>anneal_end</strong> (<em>float</em>) – Ending log standard deviation value.</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>) – Number of training cycles.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="flare.kindling.utils.colorize">
@@ -904,11 +1070,6 @@ registered hooks while the latter silently ignores them.</p>
 <dd><p>Colorize a string.
 This function was originally written by John Schulman.</p>
 </dd></dl>
-
-<dl class="function">
-<dt id="flare.kindling.utils.gaussian_likelihood">
-<code class="sig-prename descclassname">flare.kindling.utils.</code><code class="sig-name descname">gaussian_likelihood</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">mu</em>, <em class="sig-param">log_std</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.utils.gaussian_likelihood" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="function">
 <dt id="flare.kindling.utils.save_frames_as_gif">
@@ -924,9 +1085,23 @@ This function was originally written by John Schulman.</p>
 <dt id="flare.kindling.FireActorCritic">
 <em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (32</em>, <em class="sig-param">32)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method tanh of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = None</em>, <em class="sig-param">policy: Optional[torch.nn.modules.module.Module] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>An Actor Critic class for Policy Gradient algorithms.</p>
+<p>Has built-in capability to work with continuous (gym.spaces.Box) and discrete (gym.spaces.Discrete) action spaces. The policy and value function are both <code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code>. If working with a different action space, the user can pass in a custom policy class for that action space as an argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Space</em>) – Action space of the environment.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation function for the network.</p></li>
+<li><p><strong>policy</strong> (<em>nn.Module</em>) – Custom policy class for an environment where the action space is not gym.spaces.Box or gym.spaces.Discrete</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.FireActorCritic.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: Optional[torch.Tensor] = None</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.FireActorCritic.forward" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines the computation performed at every call.</p>
 <p>Should be overridden by all subclasses.</p>
 <div class="admonition note">
@@ -942,41 +1117,189 @@ registered hooks while the latter silently ignores them.</p>
 
 <dl class="class">
 <dt id="flare.kindling.FireQActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: int</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireQActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[Tuple</em>, <em class="sig-param">List</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em>, <em class="sig-param">out_activation: Optional[Callable] = &lt;class 'torch.nn.modules.linear.Identity'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireQActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Generic Q Actor Critic class.</p>
+<p>Policy is an <code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code>. Q function is a <code class="xref py py-func docutils literal notranslate"><span class="pre">MLP()</span></code> as well.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>tuple</em><em> or </em><em>list</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the networks.</p></li>
+<li><p><strong>out_activation</strong> (<em>Function</em>) – Output activation for the networks.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="method">
 <dt id="flare.kindling.FireQActorCritic.forward">
-<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<code class="sig-name descname">forward</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">a: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; Tuple[torch.Tensor, torch.Tensor, torch.Tensor]<a class="headerlink" href="#flare.kindling.FireQActorCritic.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get action, q value estimates for action taken, and q value estimates for previous actions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – State from the environment.</p></li>
+<li><p><strong>a</strong> (<em>torch.Tensor</em>) – Action taken in the environment.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.FireDDPGActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireDDPGActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireDDPGActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>An Actor Critic for the DDPG algorithm.</p>
+<p>The policy is an <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQActor()</span></code> and the q-value function is an <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunction()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="flare.kindling.FireDDPGActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.FireDDPGActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an action from the policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Observations from the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.FireTD3ActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireTD3ActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireTD3ActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Actor Critic for the TD3 algorithm.</p>
+<p>The policy is an <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQActor()</span></code> and the q-function is an <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunction()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of the state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the network.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="flare.kindling.FireTD3ActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em><span class="sig-paren">)</span> &#x2192; torch.Tensor<a class="headerlink" href="#flare.kindling.FireTD3ActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an action from the policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Observations from the environment.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="flare.kindling.FireSACActorCritic">
-<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">observation_space</em>, <em class="sig-param">action_space</em>, <em class="sig-param">hidden_sizes=(256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation=&lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">FireSACActorCritic</code><span class="sig-paren">(</span><em class="sig-param">state_features: int</em>, <em class="sig-param">action_space: gym.spaces.box.Box</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">256)</em>, <em class="sig-param">activation: Optional[Callable] = &lt;built-in method relu of type object&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.FireSACActorCritic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
-<p>From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<p>An SAC Actor Critic class. From <a class="reference external" href="https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py">https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py</a></p>
+<p>The policy is a <code class="xref py py-func docutils literal notranslate"><span class="pre">SquashedGaussianMLPActor()</span></code> and the q-functions are both <code class="xref py py-func docutils literal notranslate"><span class="pre">MLPQFunctions()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state_features</strong> (<em>int</em>) – Dimensionality of state space.</p></li>
+<li><p><strong>action_space</strong> (<em>gym.spaces.Box</em>) – Environment action space.</p></li>
+<li><p><strong>hidden_sizes</strong> (<em>list</em><em> or </em><em>tuple</em>) – Hidden layer sizes.</p></li>
+<li><p><strong>activation</strong> (<em>Function</em>) – Activation function for the networks.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="flare.kindling.FireSACActorCritic.act">
+<code class="sig-name descname">act</code><span class="sig-paren">(</span><em class="sig-param">x: torch.Tensor</em>, <em class="sig-param">deterministic: bool = False</em><span class="sig-paren">)</span> &#x2192; numpy.ndarray<a class="headerlink" href="#flare.kindling.FireSACActorCritic.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get action from policy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – State from the environment.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em>) – Whether to act deterministically.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.TensorBoardWriter">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">TensorBoardWriter</code><span class="sig-paren">(</span><em class="sig-param">fpath: Optional[str] = 'flare_runs'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.TensorBoardWriter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A writer to log inputs to tensorboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fpath</strong> (<em>str</em>) – File directory to log to.</p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="flare.kindling.TensorBoardWriter.add_hist">
+<code class="sig-name descname">add_hist</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, list, numpy.array, tuple], step: int, bins: Optional[str] = 'tensorflow'</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.TensorBoardWriter.add_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to add a vector value to a tensorboard histogram. Called for you in <a class="reference internal" href="#flare.kindling.TensorBoardWriter.add_vals" title="flare.kindling.TensorBoardWriter.add_vals"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_vals()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Key to dictionary value to write with.</p></li>
+<li><p><strong>val</strong> (<em>torch.Tensor</em><em> or </em><em>np.array</em><em> or </em><em>list</em><em> or </em><em>tuple</em>) – Value to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+<li><p><strong>bins</strong> (<em>str</em>) – binning style for histogram.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.TensorBoardWriter.add_plot">
+<code class="sig-name descname">add_plot</code><span class="sig-paren">(</span><em class="sig-param">key: str, val: Union[torch.Tensor, numpy.array, list, float, int], step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.TensorBoardWriter.add_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to add a scalar value to a tensorboard plot. Called for you in <a class="reference internal" href="#flare.kindling.TensorBoardWriter.add_vals" title="flare.kindling.TensorBoardWriter.add_vals"><code class="xref py py-func docutils literal notranslate"><span class="pre">add_vals()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>str</em>) – Key to dictionary value to write with.</p></li>
+<li><p><strong>val</strong> (<em>torch.Tensor</em><em> or </em><em>np.array</em><em> or </em><em>list</em><em> or </em><em>float</em><em> or </em><em>int</em>) – Value to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.TensorBoardWriter.add_vals">
+<code class="sig-name descname">add_vals</code><span class="sig-paren">(</span><em class="sig-param">val_dict: dict</em>, <em class="sig-param">step: int</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.TensorBoardWriter.add_vals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add input values to tensorboard.</p>
+<p>Can handle scalar and vector input. Scalar values are written to line plots, vector values are written to histograms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val_dict</strong> (<em>dict</em>) – Dictionary of key/value pairs to log to tensorboard.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Training step.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.TensorBoardWriter.end">
+<code class="sig-name descname">end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.TensorBoardWriter.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>flush tensorboard writer.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1027,6 +1350,33 @@ mean zero and std one). Also, resets some pointers in the buffer.</p>
 <dt id="flare.kindling.PGBuffer.store">
 <code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">obs: numpy.array, act: numpy.array, rew: Union[int, float, numpy.array], val: Union[int, float, numpy.array], logp: Union[float, numpy.array]</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.PGBuffer.store" title="Permalink to this definition">¶</a></dt>
 <dd><p>Append one timestep of agent-environment interaction to the buffer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="flare.kindling.Saver">
+<em class="property">class </em><code class="sig-prename descclassname">flare.kindling.</code><code class="sig-name descname">Saver</code><span class="sig-paren">(</span><em class="sig-param">out_dir: str</em>, <em class="sig-param">keys: Optional[list] = []</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Saver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to pickle generic Python objects saved over a model’s training cycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_dir</strong> (<em>str</em>) – Directory to save to.</p></li>
+<li><p><strong>keys</strong> (<em>list</em>) – Keys to initialize the save dictionary with.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="flare.kindling.Saver.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Saver.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write save dictionary to .pkl file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="flare.kindling.Saver.store">
+<code class="sig-name descname">store</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.kindling.Saver.store" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store input kwargs in save dictionary.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1213,7 +1563,7 @@ values.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="flare.polgrad.html" class="btn btn-neutral float-right" title="flare.polgrad package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="flare.polgrad.html" class="btn btn-neutral float-right" title="flare.polgrad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="flare.html" class="btn btn-neutral float-left" title="flare package contents" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

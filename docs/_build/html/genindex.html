@@ -101,8 +101,8 @@
 <li class="toctree-l2"><a class="reference internal" href="usage.html#details">Details</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="source/flare.html">flare package contents</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="source/flare.kindling.html">flare.kindling package</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="source/flare.html">flare package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.kindling.html">flare.kindling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
@@ -115,19 +115,8 @@
 <li class="toctree-l3"><a class="reference internal" href="source/flare.kindling.html#module-flare.kindling">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="source/flare.polgrad.html">flare.polgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="source/flare.qpolgrad.html">flare.qpolgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="source/flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.polgrad.html">flare.polgrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/flare.qpolgrad.html">flare.qpolgrad</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing to flare</a><ul>
@@ -232,9 +221,15 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.polgrad.html#flare.polgrad.A2C">A2C (class in flare.polgrad)</a>
 </li>
-      <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FireDDPGActorCritic.act">act() (flare.kindling.neuralnets.FireDDPGActorCritic method)</a>
+      <li><a href="source/flare.kindling.html#flare.kindling.FireDDPGActorCritic.act">act() (flare.kindling.FireDDPGActorCritic method)</a>
 
       <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.FireSACActorCritic.act">(flare.kindling.FireSACActorCritic method)</a>
+</li>
+        <li><a href="source/flare.kindling.html#flare.kindling.FireTD3ActorCritic.act">(flare.kindling.FireTD3ActorCritic method)</a>
+</li>
+        <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FireDDPGActorCritic.act">(flare.kindling.neuralnets.FireDDPGActorCritic method)</a>
+</li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FireSACActorCritic.act">(flare.kindling.neuralnets.FireSACActorCritic method)</a>
 </li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FireTD3ActorCritic.act">(flare.kindling.neuralnets.FireTD3ActorCritic method)</a>
@@ -243,11 +238,23 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter.add_hist">add_hist() (flare.kindling.tblog.TensorBoardWriter method)</a>
+
+      <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.TensorBoardWriter.add_hist">(flare.kindling.TensorBoardWriter method)</a>
 </li>
+      </ul></li>
       <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter.add_plot">add_plot() (flare.kindling.tblog.TensorBoardWriter method)</a>
+
+      <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.TensorBoardWriter.add_plot">(flare.kindling.TensorBoardWriter method)</a>
 </li>
+      </ul></li>
       <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter.add_vals">add_vals() (flare.kindling.tblog.TensorBoardWriter method)</a>
+
+      <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.TensorBoardWriter.add_vals">(flare.kindling.TensorBoardWriter method)</a>
 </li>
+      </ul></li>
       <li><a href="source/flare.kindling.html#flare.kindling.mpi_tools.allreduce">allreduce() (in module flare.kindling.mpi_tools)</a>
 </li>
   </ul></td>
@@ -258,14 +265,10 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.polgrad.html#flare.polgrad.BasePolicyGradient">BasePolicyGradient (class in flare.polgrad)</a>
 </li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient">BaseQPolicyGradient (class in flare.qpolgrad)</a>
-
-      <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient">(class in flare.qpolgrad.base)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient">BaseQPolicyGradient (class in flare.qpolgrad)</a>
+</li>
       <li><a href="source/flare.kindling.html#flare.kindling.mpi_tools.broadcast">broadcast() (in module flare.kindling.mpi_tools)</a>
 </li>
   </ul></td>
@@ -276,40 +279,24 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.utils.calc_logstd_anneal">calc_logstd_anneal() (in module flare.kindling.utils)</a>
 </li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.calc_policy_loss">calc_policy_loss() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.calc_policy_loss">calc_policy_loss() (flare.qpolgrad.BaseQPolicyGradient method)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.calc_policy_loss">(flare.qpolgrad.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG.calc_policy_loss">(flare.qpolgrad.DDPG method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG.calc_policy_loss">(flare.qpolgrad.ddpg.DDPG method)</a>
 </li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC.calc_policy_loss">(flare.qpolgrad.SAC method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC.calc_policy_loss">(flare.qpolgrad.sac.SAC method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3.calc_policy_loss">(flare.qpolgrad.TD3 method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3.calc_policy_loss">(flare.qpolgrad.td3.TD3 method)</a>
-</li>
       </ul></li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.calc_qfunc_loss">calc_qfunc_loss() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.calc_qfunc_loss">calc_qfunc_loss() (flare.qpolgrad.BaseQPolicyGradient method)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.calc_qfunc_loss">(flare.qpolgrad.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG.calc_qfunc_loss">(flare.qpolgrad.DDPG method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG.calc_qfunc_loss">(flare.qpolgrad.ddpg.DDPG method)</a>
 </li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC.calc_qfunc_loss">(flare.qpolgrad.SAC method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC.calc_qfunc_loss">(flare.qpolgrad.sac.SAC method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3.calc_qfunc_loss">(flare.qpolgrad.TD3 method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3.calc_qfunc_loss">(flare.qpolgrad.td3.TD3 method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -331,11 +318,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG">DDPG (class in flare.qpolgrad)</a>
-
-      <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG">(class in flare.qpolgrad.ddpg)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.Logger.dump_tabular">dump_tabular() (flare.kindling.Logger method)</a>
@@ -351,17 +334,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter.end">end() (flare.kindling.tblog.TensorBoardWriter method)</a>
+
+      <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.TensorBoardWriter.end">(flare.kindling.TensorBoardWriter method)</a>
 </li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.EpochLogger">EpochLogger (class in flare.kindling)</a>
 
       <ul>
         <li><a href="source/flare.kindling.html#flare.kindling.loggingfuncs.EpochLogger">(class in flare.kindling.loggingfuncs)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FullyConnectedDQN.evaluate">evaluate() (flare.kindling.neuralnets.FullyConnectedDQN method)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -412,6 +397,8 @@
 </li>
       <li><a href="source/flare.kindling.html#module-flare.kindling.mpi_pytorch">flare.kindling.mpi_pytorch (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#module-flare.kindling.mpi_tools">flare.kindling.mpi_tools (module)</a>
 </li>
       <li><a href="source/flare.kindling.html#module-flare.kindling.neuralnets">flare.kindling.neuralnets (module)</a>
@@ -420,21 +407,11 @@
 </li>
       <li><a href="source/flare.kindling.html#module-flare.kindling.tblog">flare.kindling.tblog (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#module-flare.kindling.utils">flare.kindling.utils (module)</a>
 </li>
       <li><a href="source/flare.polgrad.html#module-flare.polgrad">flare.polgrad (module)</a>
 </li>
       <li><a href="source/flare.qpolgrad.html#module-flare.qpolgrad">flare.qpolgrad (module)</a>
-</li>
-      <li><a href="source/flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base (module)</a>
-</li>
-      <li><a href="source/flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg (module)</a>
-</li>
-      <li><a href="source/flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac (module)</a>
-</li>
-      <li><a href="source/flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 (module)</a>
 </li>
       <li><a href="source/flare.kindling.html#flare.kindling.FireActorCritic.forward">forward() (flare.kindling.FireActorCritic method)</a>
 
@@ -447,8 +424,6 @@
 </li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FireQActorCritic.forward">(flare.kindling.neuralnets.FireQActorCritic method)</a>
 </li>
-        <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FullyConnectedDQN.forward">(flare.kindling.neuralnets.FullyConnectedDQN method)</a>
-</li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.GaussianPolicy.forward">(flare.kindling.neuralnets.GaussianPolicy method)</a>
 </li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.MLP.forward">(flare.kindling.neuralnets.MLP method)</a>
@@ -457,21 +432,15 @@
 </li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.MLPQFunction.forward">(flare.kindling.neuralnets.MLPQFunction method)</a>
 </li>
-        <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.NatureDQN.forward">(flare.kindling.neuralnets.NatureDQN method)</a>
-</li>
         <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.SquashedGaussianMLPActor.forward">(flare.kindling.neuralnets.SquashedGaussianMLPActor method)</a>
 </li>
       </ul></li>
-      <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.FullyConnectedDQN">FullyConnectedDQN (class in flare.kindling.neuralnets)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/flare.kindling.html#flare.kindling.utils.gaussian_likelihood">gaussian_likelihood() (in module flare.kindling.utils)</a>
-</li>
       <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.GaussianPolicy">GaussianPolicy (class in flare.kindling.neuralnets)</a>
 </li>
       <li><a href="source/flare.kindling.html#flare.kindling.buffers.PGBuffer.get">get() (flare.kindling.buffers.PGBuffer method)</a>
@@ -480,14 +449,8 @@
         <li><a href="source/flare.kindling.html#flare.kindling.PGBuffer.get">(flare.kindling.PGBuffer method)</a>
 </li>
       </ul></li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.get_action">get_action() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
-
-      <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.get_action">(flare.qpolgrad.BaseQPolicyGradient method)</a>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.get_action">get_action() (flare.qpolgrad.BaseQPolicyGradient method)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.polgrad.html#flare.polgrad.A2C.get_name">get_name() (flare.polgrad.A2C method)</a>
 
       <ul>
@@ -495,11 +458,11 @@
 </li>
         <li><a href="source/flare.polgrad.html#flare.polgrad.PPO.get_name">(flare.polgrad.PPO method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.get_name">(flare.qpolgrad.base.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.get_name">(flare.qpolgrad.BaseQPolicyGradient method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.kindling.html#flare.kindling.EpochLogger.get_stats">get_stats() (flare.kindling.EpochLogger method)</a>
 
       <ul>
@@ -515,8 +478,6 @@
       <li><a href="source/flare.polgrad.html#flare.polgrad.BasePolicyGradient.learn">learn() (flare.polgrad.BasePolicyGradient method)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.learn">(flare.qpolgrad.base.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.learn">(flare.qpolgrad.BaseQPolicyGradient method)</a>
 </li>
       </ul></li>
@@ -544,22 +505,14 @@
         <li><a href="source/flare.kindling.html#flare.kindling.loggingfuncs.Logger">(class in flare.kindling.loggingfuncs)</a>
 </li>
       </ul></li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.logger_tabular_to_dump">logger_tabular_to_dump() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.logger_tabular_to_dump">logger_tabular_to_dump() (flare.qpolgrad.BaseQPolicyGradient method)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.logger_tabular_to_dump">(flare.qpolgrad.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG.logger_tabular_to_dump">(flare.qpolgrad.DDPG method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG.logger_tabular_to_dump">(flare.qpolgrad.ddpg.DDPG method)</a>
 </li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC.logger_tabular_to_dump">(flare.qpolgrad.SAC method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC.logger_tabular_to_dump">(flare.qpolgrad.sac.SAC method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3.logger_tabular_to_dump">(flare.qpolgrad.TD3 method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3.logger_tabular_to_dump">(flare.qpolgrad.td3.TD3 method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -596,8 +549,6 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/flare.kindling.html#flare.kindling.neuralnets.NatureDQN">NatureDQN (class in flare.kindling.neuralnets)</a>
-</li>
       <li><a href="source/flare.kindling.html#flare.kindling.utils.NetworkUtils">NetworkUtils (class in flare.kindling.utils)</a>
 </li>
   </ul></td>
@@ -647,15 +598,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC">SAC (class in flare.qpolgrad)</a>
-
-      <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC">(class in flare.qpolgrad.sac)</a>
 </li>
-      </ul></li>
       <li><a href="source/flare.kindling.html#flare.kindling.buffers.ReplayBuffer.sample_batch">sample_batch() (flare.kindling.buffers.ReplayBuffer method)</a>
 </li>
-      <li><a href="source/flare.kindling.html#flare.kindling.saver.Saver.save">save() (flare.kindling.saver.Saver method)</a>
+      <li><a href="source/flare.kindling.html#flare.kindling.Saver.save">save() (flare.kindling.Saver method)</a>
+
+      <ul>
+        <li><a href="source/flare.kindling.html#flare.kindling.saver.Saver.save">(flare.kindling.saver.Saver method)</a>
 </li>
+      </ul></li>
       <li><a href="source/flare.kindling.html#flare.kindling.Logger.save_config">save_config() (flare.kindling.Logger method)</a>
 
       <ul>
@@ -670,24 +621,20 @@
         <li><a href="source/flare.kindling.html#flare.kindling.loggingfuncs.Logger.save_state">(flare.kindling.loggingfuncs.Logger method)</a>
 </li>
       </ul></li>
-      <li><a href="source/flare.kindling.html#flare.kindling.saver.Saver">Saver (class in flare.kindling.saver)</a>
-</li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.setup_optimizers">setup_optimizers() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
+      <li><a href="source/flare.kindling.html#flare.kindling.Saver">Saver (class in flare.kindling)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.setup_optimizers">(flare.qpolgrad.BaseQPolicyGradient method)</a>
+        <li><a href="source/flare.kindling.html#flare.kindling.saver.Saver">(class in flare.kindling.saver)</a>
 </li>
+      </ul></li>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.setup_optimizers">setup_optimizers() (flare.qpolgrad.BaseQPolicyGradient method)</a>
+
+      <ul>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG.setup_optimizers">(flare.qpolgrad.DDPG method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG.setup_optimizers">(flare.qpolgrad.ddpg.DDPG method)</a>
 </li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC.setup_optimizers">(flare.qpolgrad.SAC method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC.setup_optimizers">(flare.qpolgrad.sac.SAC method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3.setup_optimizers">(flare.qpolgrad.TD3 method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3.setup_optimizers">(flare.qpolgrad.td3.TD3 method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -723,6 +670,8 @@
 </li>
         <li><a href="source/flare.kindling.html#flare.kindling.ReplayBuffer.store">(flare.kindling.ReplayBuffer method)</a>
 </li>
+        <li><a href="source/flare.kindling.html#flare.kindling.Saver.store">(flare.kindling.Saver method)</a>
+</li>
         <li><a href="source/flare.kindling.html#flare.kindling.saver.Saver.store">(flare.kindling.saver.Saver method)</a>
 </li>
       </ul></li>
@@ -735,21 +684,17 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3">TD3 (class in flare.qpolgrad)</a>
+</li>
+      <li><a href="source/flare.kindling.html#flare.kindling.TensorBoardWriter">TensorBoardWriter (class in flare.kindling)</a>
 
       <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3">(class in flare.qpolgrad.td3)</a>
+        <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter">(class in flare.kindling.tblog)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/flare.kindling.html#flare.kindling.tblog.TensorBoardWriter">TensorBoardWriter (class in flare.kindling.tblog)</a>
+      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.test_agent">test_agent() (flare.qpolgrad.BaseQPolicyGradient method)</a>
 </li>
-      <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.test_agent">test_agent() (flare.qpolgrad.base.BaseQPolicyGradient method)</a>
-
-      <ul>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.test_agent">(flare.qpolgrad.BaseQPolicyGradient method)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -763,21 +708,13 @@
 </li>
         <li><a href="source/flare.polgrad.html#flare.polgrad.PPO.update">(flare.polgrad.PPO method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.base.BaseQPolicyGradient.update">(flare.qpolgrad.base.BaseQPolicyGradient method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.BaseQPolicyGradient.update">(flare.qpolgrad.BaseQPolicyGradient method)</a>
 </li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.DDPG.update">(flare.qpolgrad.DDPG method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.ddpg.DDPG.update">(flare.qpolgrad.ddpg.DDPG method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.SAC.update">(flare.qpolgrad.SAC method)</a>
 </li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.sac.SAC.update">(flare.qpolgrad.sac.SAC method)</a>
-</li>
         <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.TD3.update">(flare.qpolgrad.TD3 method)</a>
-</li>
-        <li><a href="source/flare.qpolgrad.html#flare.qpolgrad.td3.TD3.update">(flare.qpolgrad.td3.TD3 method)</a>
 </li>
       </ul></li>
   </ul></td>

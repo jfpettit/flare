@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flare.polgrad package &mdash; flare 0.1.6 documentation</title>
+  <title>flare.polgrad &mdash; flare 0.1.6 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="flare.qpolgrad package" href="flare.qpolgrad.html" />
-    <link rel="prev" title="flare.kindling package" href="flare.kindling.html" /> 
+    <link rel="next" title="flare.qpolgrad" href="flare.qpolgrad.html" />
+    <link rel="prev" title="flare.kindling" href="flare.kindling.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,8 +102,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../usage.html#details">Details</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package contents</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="flare.kindling.html">flare.kindling package</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flare.kindling.html">flare.kindling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
@@ -116,19 +116,8 @@
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.polgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.polgrad">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="flare.qpolgrad.html">flare.qpolgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="flare.qpolgrad.html#module-flare.qpolgrad">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.polgrad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.qpolgrad.html">flare.qpolgrad</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to flare</a><ul>
@@ -186,9 +175,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="flare.html">flare package contents</a> &raquo;</li>
+          <li><a href="flare.html">flare package</a> &raquo;</li>
         
-      <li>flare.polgrad package</li>
+      <li>flare.polgrad</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -209,10 +198,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="flare-polgrad-package">
-<h1>flare.polgrad package<a class="headerlink" href="#flare-polgrad-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-flare.polgrad">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-flare.polgrad" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-flare.polgrad">
+<span id="flare-polgrad"></span><h1>flare.polgrad<a class="headerlink" href="#module-flare.polgrad" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="flare.polgrad.BasePolicyGradient">
 <em class="property">class </em><code class="sig-prename descclassname">flare.polgrad.</code><code class="sig-name descname">BasePolicyGradient</code><span class="sig-paren">(</span><em class="sig-param">env_fn: callable</em>, <em class="sig-param">actorcritic: Optional[torch.nn.modules.module.Module] = &lt;class 'flare.kindling.neuralnets.FireActorCritic'&gt;</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">lam: Optional[float] = 0.97</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">hidden_sizes: Optional[tuple] = (32</em>, <em class="sig-param">32)</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.polgrad.BasePolicyGradient" title="Permalink to this definition">¶</a></dt>
@@ -408,7 +395,6 @@ Example:</p>
 </dd></dl>
 
 </div>
-</div>
 
 
            </div>
@@ -418,10 +404,10 @@ Example:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="flare.qpolgrad.html" class="btn btn-neutral float-right" title="flare.qpolgrad package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="flare.qpolgrad.html" class="btn btn-neutral float-right" title="flare.qpolgrad" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="flare.kindling.html" class="btn btn-neutral float-left" title="flare.kindling package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="flare.kindling.html" class="btn btn-neutral float-left" title="flare.kindling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

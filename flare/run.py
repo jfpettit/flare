@@ -3,6 +3,7 @@ import argparse
 
 import flare.polgrad as pg
 import flare.qpolgrad as qpg
+import flare.kindling as fk
 import gym
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,6 +11,8 @@ import torch
 from gym import wrappers
 import pybullet_envs
 from flare.kindling.mpi_tools import mpi_fork, proc_id
+from typing import Optional, Union, Tuple, List
+import pytorch_lightning as pl
 
 # set up argparser.
 parser = argparse.ArgumentParser()
@@ -101,7 +104,7 @@ parser.add_argument(
     default=0,
 )
 parser.add_argument(
-    "-f", "--folder", help="Folder to log training output to.", default=None
+    "-f", "--folder", type=bool, help="Folder to log training output to.", default=None
 )
 parser.add_argument(
     "-nc", "--ncpu", type=int, help="Number of CPUs to parallelize over", default=1
@@ -116,40 +119,85 @@ parser.add_argument(
 # get args from argparser
 args = parser.parse_args()
 
+def learn(
+    env_name: str, 
+    algo: pg.BasePolicyGradient,
+    epochs: Optional[int] = 100, 
+    minibatch_size: Optional[Union[int, None]] = None, 
+    steps_per_epoch: Optional[int] = 4000,
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+    gamma: Optional[float] = 0.99,
+    lam: Optional[float] = 0.97,
+    hparams = None
+    ):
+
+    env = lambda: gym.make(env_name)
+    
+    agent = algo(
+        env,
+        fk.FireActorCritic,
+        hidden_sizes=hidden_sizes,
+        steps_per_epoch=steps_per_epoch, 
+        minibatch_size=minibatch_size,
+        gamma=gamma,
+        lam=lam,
+        hparams=hparams
+        )
+
+    trainer = pl.Trainer(
+        reload_dataloaders_every_epoch=True,
+        early_stop_callback=False,
+        max_epochs=epochs
+    )
+
+    trainer.fit(agent)
+
 if __name__ == "__main__":
     # initialize training object. defined in flare/algorithms.py
-    mpi_fork(args.ncpu)
-    hids = [int(i) for i in args.layers]
+    hids = tuple(int(i) for i in args.layers)
     logstds_anneal = (
         [float(i) for i in args.logstd_anneal]
         if args.logstd_anneal is not None
         else None
     )
     env = lambda: gym.make(args.env)
-    if args.alg == "PPO":
-        trainer = pg.PPO(
-            env,
+    if args.alg == "REINFORCE":
+        learn(
+            args.env,
+            pg.REINFORCE,
+            args.epochs,
+            steps_per_epoch=args.steps_per_epoch,
+            hidden_sizes=hids,
             gamma=args.gamma,
             lam=args.lam,
-            hidden_sizes=hids,
-            logger_dir=args.folder,
-            save_screen=args.save_screen,
-            save_states=args.save_states,
+            hparams=args
+        )
+    if args.alg == "PPO":
+        learn(
+            args.env,
+            pg.PPO,
+            args.epochs,
+            minibatch_size=args.steps_per_epoch,
             steps_per_epoch=args.steps_per_epoch,
+            hidden_sizes=hids,
+            gamma=args.gamma,
+            lam=args.lam,
+            hparams=args
         )
     elif args.alg == "A2C":
-        trainer = pg.A2C(
-            env,
+        learn(
+            args.env,
+            pg.PPO,
+            args.epochs,
+            minibatch_size=args.steps_per_epoch,
+            steps_per_epoch=args.steps_per_epoch,
+            hidden_sizes=hids,
             gamma=args.gamma,
             lam=args.lam,
-            hidden_sizes=hids,
-            logger_dir=args.folder,
-            save_screen=args.save_screen,
-            save_states=args.save_states,
-            steps_per_epoch=args.steps_per_epoch,
+            hparams=args
         )
     elif args.alg == "DDPG":
-        trainer = qpg.DDPG(
+       trainer = qpg.DDPG(
             env,
             gamma=args.gamma,
             hidden_sizes=hids,
@@ -157,7 +205,7 @@ if __name__ == "__main__":
             save_screen=args.save_screen,
             save_states=args.save_states,
             steps_per_epoch=args.steps_per_epoch,
-        )
+        ) 
     elif args.alg == "TD3":
         trainer = qpg.TD3(
             env,

@@ -1,8 +1,5 @@
-flare.polgrad package
-=====================
-
-Module contents
----------------
+flare.polgrad
+=============
 
 .. automodule:: flare.polgrad
    :members:

@@ -9,6 +9,12 @@ from flare.kindling import utils
 
 
 class TensorBoardWriter:
+    """
+    A writer to log inputs to tensorboard.
+
+    Args:
+        fpath (str): File directory to log to.
+    """
     def __init__(self, fpath: Optional[str] = "flare_runs"):
         if fpath is None:
             self.fpath = "flare_runs/run_at_time_" + str(time.time())
@@ -33,6 +39,14 @@ class TensorBoardWriter:
     def add_plot(
         self, key: str, val: Union[torch.Tensor, np.array, list, float, int], step: int
     ):
+        """
+        Helper function to add a scalar value to a tensorboard plot. Called for you in :func:`~add_vals`
+
+        Args:
+            key (str): Key to dictionary value to write with.
+            val (torch.Tensor or np.array or list or float or int): Value to log to tensorboard.
+            step (int): Training step. 
+        """
         if proc_id() == 0:
             if isinstance(val, torch.Tensor):
                 val = val.item()
@@ -51,6 +65,15 @@ class TensorBoardWriter:
         step: int,
         bins: Optional[str] = "tensorflow",
     ):
+        """
+        Helper function to add a vector value to a tensorboard histogram. Called for you in :func:`~add_vals`
+
+        Args:
+           key (str): Key to dictionary value to write with.
+           val (torch.Tensor or np.array or list or tuple): Value to log to tensorboard.
+           step (int): Training step.  
+           bins (str): binning style for histogram.
+        """
         if proc_id() == 0:
             if isinstance(val, torch.Tensor):
                 val = val.item()
@@ -59,6 +82,16 @@ class TensorBoardWriter:
                 self.writer.add_histogram(key, val, global_step=step, bins=bins)
 
     def add_vals(self, val_dict: dict, step: int):
+        """
+        Add input values to tensorboard.
+
+        Can handle scalar and vector input. Scalar values are written to line plots, vector values are written to histograms.
+
+        Args:
+            val_dict (dict): Dictionary of key/value pairs to log to tensorboard.
+            step (int): Training step.
+        """
+
         for k in val_dict.keys():
             val = val_dict[k]
             if isinstance(val, torch.Tensor):
@@ -79,5 +112,6 @@ class TensorBoardWriter:
                 self.add_hist(k, val, step)
 
     def end(self):
+        """flush tensorboard writer."""
         if proc_id() == 0:
             self.writer.flush()

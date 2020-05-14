@@ -13,9 +13,23 @@ from typing import Optional, Iterable, List, Dict, Callable, Union, Tuple
 
 
 class MLP(nn.Module):
+    r"""
+    A class for building a simple MLP network.
+
+    Args:
+        layer_sizes (list or tuple): Layer sizes for the network.
+            Example::
+
+                sizes = (4, 64, 64, 2)
+                mlp = MLP(sizes)
+        activations (Function): Activation function for MLP net.
+        out_act (Function): Output activation function
+        out_squeeze (bool): Whether to squeeze the output of the network.
+    """
+
     def __init__(
         self,
-        layer_szs: Union[List, Tuple],
+        layer_sizes: Union[List, Tuple],
         activations: Optional[Callable] = torch.tanh,
         out_act: Optional[bool] = None,
         out_squeeze: Optional[bool] = False,
@@ -26,10 +40,10 @@ class MLP(nn.Module):
         self.out_act = out_act
         self.out_squeeze = out_squeeze
 
-        for i, l in enumerate(layer_szs[1:]):
-            self.layers.append(nn.Linear(layer_szs[i], l))
+        for i, l in enumerate(layer_sizes[1:]):
+            self.layers.append(nn.Linear(layer_sizes[i], l))
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         for l in self.layers[:-1]:
             x = self.activations(l(x))
 
@@ -38,71 +52,110 @@ class MLP(nn.Module):
         else:
             x = self.out_act(self.layers[-1](x))
 
-        return x.squeeze() if self.out_squeeze else x
+        return torch.squeeze(x, -1) if self.out_squeeze else x
 
+class Actor(nn.Module):
+    
+    def action_distribution(self, states):
+        raise NotImplementedError
 
-class CategoricalPolicy(nn.Module):
+    def logprob_from_distribution(self, policy, action):
+        raise NotImplementedError
+
+    def forward(self, x, a = None):
+        policy = self.action_distribution(x)
+        logp_a = None
+        if a is not None:
+            logp_a = self.logprob_from_distribution(policy, a)
+        return policy, logp_a
+
+class CategoricalPolicy(Actor):
+    r"""
+    A class for a Categorical Policy network. Used in discrete action space environments. The policy is an :func:`~MLP`.
+
+    Args:
+        state_features (int): Dimensionality of the state space.
+        action_dim (int): Dimensionality of the action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the network.
+        out_activation (Function): Output activation function for the network.
+    """
+
     def __init__(
         self,
         state_features: int,
+        action_dim: int,
         hidden_sizes: Union[List, Tuple],
         activation: Callable,
         out_activation: Callable,
-        action_dim: int,
     ):
-        super(CategoricalPolicy, self).__init__()
+        super().__init__()
         self.mlp = MLP(
             [state_features] + list(hidden_sizes) + [action_dim], activations=activation
         )
 
-    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
+    def action_distribution(self, x):
         logits = self.mlp(x)
+        return torch.distributions.Categorical(logits=logits)
 
-        policy = torch.distributions.Categorical(logits=logits)
-        pi = policy.sample()
-        logp_pi = policy.log_prob(pi).squeeze()
-
-        if a is not None:
-            logp = policy.log_prob(a).squeeze()
-        else:
-            logp = None
-
-        return pi, logp, logp_pi
+    def logprob_from_distribution(self, policy, actions):
+        return policy.log_prob(actions)
 
 
-class GaussianPolicy(nn.Module):
+class GaussianPolicy(Actor):
+    r"""
+    A class for a Gaussian Policy network. Used in continuous action space environments. The policy is an :func:`~MLP`.
+
+    Args:
+       state_features (int): Dimensionality of the state space.
+       action_dim (int): Dimensionality of the action space.
+       hidden_sizes (list or tuple): Hidden layer sizes.
+       activation (Function): Activation function for the network.
+       out_activation (Function): Output activation function for the network.
+    """
+
     def __init__(
         self,
         state_features: int,
+        action_dim: int,
         hidden_sizes: Union[List, Tuple],
         activation: Callable,
         out_activation: Callable,
-        action_dim: int,
     ):
-        super(GaussianPolicy, self).__init__()
+        super().__init__()
 
         self.mlp = MLP(
             [state_features] + list(hidden_sizes) + [action_dim],
             activations=activation,
             out_act=out_activation,
         )
-        self.logstd = nn.Parameter(-0.5 * torch.ones(action_dim))
+        self.logstd = nn.Parameter(-0.5 * torch.ones(action_dim, dtype=torch.float32))
 
-    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
-        mu = self.mlp(x)
+    def action_distribution(self, states):
+        mus = self.mlp(states)
         std = torch.exp(self.logstd)
-        policy = torch.distributions.Normal(mu, std)
-        pi = policy.sample()
-        logp_pi = policy.log_prob(pi).sum(dim=1)
-        if a is not None:
-            logp = policy.log_prob(a).sum(dim=1)
-        else:
-            logp = None
+        return torch.distributions.Normal(mus, std)
 
-        return pi, logp, logp_pi
+    def logprob_from_distribution(self, policy, actions):
+        return policy.log_prob(actions).sum(axis=-1)
 
 
 class FireActorCritic(nn.Module):
+    r"""
+    An Actor Critic class for Policy Gradient algorithms.
+
+    Has built-in capability to work with continuous (gym.spaces.Box) and discrete (gym.spaces.Discrete) action spaces. The policy and value function are both :func:`~MLP`. If working with a different action space, the user can pass in a custom policy class for that action space as an argument.
+
+    Args:
+       state_features (int): Dimensionality of the state space.
+       action_space (gym.spaces.Space): Action space of the environment.
+       hidden_sizes (list or tuple): Hidden layer sizes.
+       activation (Function): Activation function for the network.
+       out_activation (Function): Output activation function for the network.
+       policy (nn.Module): Custom policy class for an environment where the action space is not gym.spaces.Box or gym.spaces.Discrete 
+
+    """
+
     def __init__(
         self,
         state_features: int,
@@ -113,22 +166,32 @@ class FireActorCritic(nn.Module):
         policy: Optional[nn.Module] = None,
     ):
         super(FireActorCritic, self).__init__()
+    
+        obs_dim = state_features 
 
-        if policy is None and isinstance(action_space, gym.spaces.Box):
-            self.policy = GaussianPolicy(
-                state_features,
-                hidden_sizes,
-                activation,
-                out_activation,
-                action_space.shape[0],
-            )
-        elif policy is None and isinstance(action_space, gym.spaces.Discrete):
+        if isinstance(action_space, gym.spaces.Discrete):
+            act_dim = action_space.n
             self.policy = CategoricalPolicy(
-                state_features, hidden_sizes, activation, out_activation, action_space.n
-            )
+                obs_dim, 
+                act_dim, 
+                hidden_sizes, 
+                activation,
+                out_activation)
+        elif isinstance(action_space, gym.spaces.Box):
+            act_dim = action_space.shape[0]
+            self.policy = GaussianPolicy(
+                obs_dim, 
+                act_dim, 
+                hidden_sizes, 
+                activation, 
+                out_activation)
         else:
             self.policy = policy(
-                state_features, hidden_sizes, activation, out_activation, action_space
+                obs_dim,
+                action_space,
+                hidden_sizes,
+                activation,
+                out_activation
             )
 
         self.value_f = MLP(
@@ -137,46 +200,110 @@ class FireActorCritic(nn.Module):
             out_squeeze=True,
         )
 
-    def forward(self, x: torch.Tensor, a: Optional[torch.Tensor] = None):
-        pi, logp, logp_pi = self.policy(x, a)
-        value = self.value_f(x)
+    def step(self, x):
+        with torch.no_grad():
+            policy = self.policy.action_distribution(x)
+            action = policy.sample()
+            logp_action = self.policy.logprob_from_distribution(policy, action)
+            value = self.value_f(x)
+        return action.numpy(), logp_action.numpy(), value.numpy()
 
-        return pi, logp, logp_pi, value
+    def act(self, x):
+        return self.step(x)[0]
 
 
 class MLPQActor(nn.Module):
-    def __init__(self, obs_dim, act_dim, hidden_sizes, activation, act_limit):
-        super().__init__()
-        policy_layer_sizes = [obs_dim] + list(hidden_sizes) + [act_dim]
-        self.policy = MLP(policy_layer_sizes, activation, torch.tanh)
-        self.act_limit = act_limit
+    r"""
+    An actor for Q policy gradient algorithms. 
+    
+    The policy is an :func:`~MLP`. This differs from the :func:`~FireActorCritic` class because the output from the policy network is scaled to action space limits on the forward pass.
 
-    def forward(self, obs):
-        # Return output from network scaled to action space limits.
-        return self.act_limit * self.policy(obs)
+    Args:
+       state_features (int): Dimensionality of the state space.
+       action_dim (int): Dimensionality of the action space.
+       hidden_sizes (list or tuple): Hidden layer sizes.
+       activation (Function): Activation function for the network.
+       action_limit (float or int): Limits of the action space.
+    """
+
+    def __init__(
+        self,
+        state_features: int,
+        action_dim: int,
+        hidden_sizes: Union[list, tuple],
+        activation: Callable,
+        action_limit: Union[float, int],
+    ):
+        super(MLPQActor, self).__init__()
+        policy_layer_sizes = [state_features] + list(hidden_sizes) + [action_dim]
+        self.policy = MLP(policy_layer_sizes, activation, torch.tanh)
+        self.action_limit = action_limit
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Return output from the policy network scaled to the limits of the env action space."""
+        return self.action_limit * self.policy(x)
 
 
 class MLPQFunction(nn.Module):
-    def __init__(self, obs_dim, act_dim, hidden_sizes, activation):
-        super().__init__()
-        self.qfunc = MLP([obs_dim + act_dim] + list(hidden_sizes) + [1], activation)
+    r"""
+    A Q function network for Q policy gradient methods. 
 
-    def forward(self, obs, act):
-        q = self.qfunc(torch.cat([obs, act], dim=-1))
+    The Q function is an :func:`~MLP`. It always takes in a (state, action) pair and returns a Q-value estimate for that pair.
+
+    Args:
+        state_features (int): Dimensionality of the state space.
+        action_dim (int): Dimensionality of the action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the network.
+    """
+
+    def __init__(
+        self,
+        state_features: int,
+        action_dim: int,
+        hidden_sizes: Union[tuple, list],
+        activation: Callable,
+    ):
+        super().__init__()
+        self.qfunc = MLP(
+            [state_features + action_dim] + list(hidden_sizes) + [1], activation
+        )
+
+    def forward(self, x: torch.Tensor, a: torch.Tensor) -> torch.Tensor:
+        """
+        Return Q-value estimate for state, action pair (x, a).
+        
+        Args:
+            x (torch.Tensor): Environment state.
+            a (torch.Tensor): Action taken by the policy.
+        """
+        q = self.qfunc(torch.cat([x, a], dim=-1))
         return torch.squeeze(q, -1)  # Critical to ensure q has right shape.
 
 
 class FireDDPGActorCritic(nn.Module):
+    r"""
+    An Actor Critic for the DDPG algorithm. 
+
+    The policy is an :func:`~MLPQActor` and the q-value function is an :func:`~MLPQFunction`. 
+
+    Args:
+        state_features (int): Dimensionality of the state space.
+        action_space (gym.spaces.Box): Environment action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the network.
+    """
+
     def __init__(
         self,
-        observation_space,
-        action_space,
-        hidden_sizes=(256, 256),
-        activation=torch.relu,
+        state_features: int,
+        action_space: gym.spaces.Box,
+        hidden_sizes: Optional[Union[tuple, list]] = (256, 256),
+        activation: Optional[Callable] = torch.relu,
     ):
         super().__init__()
 
-        obs_dim = observation_space
+        obs_dim = state_features
         act_dim = action_space.shape[0]
         act_limit = action_space.high[0]
 
@@ -184,22 +311,40 @@ class FireDDPGActorCritic(nn.Module):
         self.policy = MLPQActor(obs_dim, act_dim, hidden_sizes, activation, act_limit)
         self.qfunc = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
 
-    def act(self, obs):
+    def act(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Get an action from the policy.
+
+        Args:
+            x (torch.Tensor): Observations from the environment.
+        """
         with torch.no_grad():
-            return self.policy(obs).numpy()
+            return self.policy(x).numpy()
 
 
 class FireTD3ActorCritic(nn.Module):
+    r"""
+    Actor Critic for the TD3 algorithm.
+
+    The policy is an :func:`~MLPQActor` and the q-function is an :func:`~MLPQFunction`.
+
+    Args:
+        state_features (int): Dimensionality of the state space.
+        action_space (gym.spaces.Box): Environment action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the network. 
+    """
+
     def __init__(
         self,
-        observation_space,
-        action_space,
-        hidden_sizes=(256, 256),
-        activation=torch.relu,
+        state_features: int,
+        action_space: gym.spaces.Box,
+        hidden_sizes: Optional[Union[list, tuple]] = (256, 256),
+        activation: Optional[Callable] = torch.relu,
     ):
-        super().__init__()
+        super(FireTD3ActorCritic, self).__init__()
 
-        obs_dim = observation_space
+        obs_dim = state_features
         act_dim = action_space.shape[0]
         act_limit = action_space.high[0]
 
@@ -208,29 +353,61 @@ class FireTD3ActorCritic(nn.Module):
         self.qfunc1 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
         self.qfunc2 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
 
-    def act(self, obs):
+    def act(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Get an action from the policy.
+
+        Args:
+            x (torch.Tensor): Observations from the environment.
+        """
         with torch.no_grad():
-            return self.policy(obs).numpy()
+            return self.policy(x).numpy()
 
-
-"""
-From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
-"""
 
 LOG_STD_MAX = 2
 LOG_STD_MIN = -20
 
 
 class SquashedGaussianMLPActor(nn.Module):
-    def __init__(self, obs_dim, act_dim, hidden_sizes, activation, act_limit):
-        super().__init__()
-        self.net = MLP([obs_dim] + list(hidden_sizes), activation, activation)
-        self.mu_layer = nn.Linear(hidden_sizes[-1], act_dim)
-        self.log_std_layer = nn.Linear(hidden_sizes[-1], act_dim)
-        self.act_limit = act_limit
+    """
+    GaussianMLP Actor for SAC. From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
+    
+    Policy network is an :func:`~MLP` with heads for mean and log standard deviation of the action distribution.
 
-    def forward(self, obs, deterministic=False, with_logprob=True):
-        net_out = self.net(obs)
+    Args:
+        state_features (int): Dimensionality of the state space.
+        action_dim (int): Dimensionality of the action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the network.
+        action_limit (float or int): Limit of the action space.
+    """
+
+    def __init__(
+        self,
+        state_features: int,
+        action_dim: int,
+        hidden_sizes: Union[list, tuple],
+        activation: Callable,
+        action_limit: Union[float, int],
+    ):
+        super().__init__()
+        self.net = MLP([state_features] + list(hidden_sizes), activation, activation)
+        self.mu_layer = nn.Linear(hidden_sizes[-1], action_dim)
+        self.log_std_layer = nn.Linear(hidden_sizes[-1], action_dim)
+        self.act_limit = action_limit
+
+    def forward(
+        self, x: torch.Tensor, deterministic: bool = False, with_logprob: bool = True
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        Get an action and action log prob from the policy.
+        
+        Args:
+            x (torch.Tensor): state from the environment.
+            deterministic (bool): whether to act deterministically or not.
+            with_logprob (bool): whether to return with action log probability or not.
+        """
+        net_out = self.net(x)
         mu = self.mu_layer(net_out)
         log_std = self.log_std_layer(net_out)
         log_std = torch.clamp(log_std, LOG_STD_MIN, LOG_STD_MAX)
@@ -265,19 +442,27 @@ class SquashedGaussianMLPActor(nn.Module):
 
 class FireSACActorCritic(nn.Module):
     """
-    From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
+    An SAC Actor Critic class. From https://github.com/openai/spinningup/blob/master/spinup/algos/pytorch/sac/core.py
+    
+    The policy is a :func:`~SquashedGaussianMLPActor` and the q-functions are both :func:`~MLPQFunctions`.
+
+    Args:
+        state_features (int): Dimensionality of state space.
+        action_space (gym.spaces.Box): Environment action space.
+        hidden_sizes (list or tuple): Hidden layer sizes.
+        activation (Function): Activation function for the networks.
     """
 
     def __init__(
         self,
-        observation_space,
-        action_space,
-        hidden_sizes=(256, 256),
-        activation=torch.relu,
+        state_features: int,
+        action_space: gym.spaces.Box,
+        hidden_sizes: Optional[Union[tuple, list]] = (256, 256),
+        activation: Optional[Callable] = torch.relu,
     ):
         super().__init__()
 
-        obs_dim = observation_space
+        obs_dim = state_features
         act_dim = action_space.shape[0]
         act_limit = action_space.high[0]
 
@@ -288,17 +473,37 @@ class FireSACActorCritic(nn.Module):
         self.qfunc1 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
         self.qfunc2 = MLPQFunction(obs_dim, act_dim, hidden_sizes, activation)
 
-    def act(self, obs, deterministic=False):
+    def act(self, x: torch.Tensor, deterministic: bool = False) -> np.ndarray:
+        r"""
+        Get action from policy.
+
+        Args:
+            x (torch.Tensor): State from the environment.
+            deterministic (bool): Whether to act deterministically.
+        """
         with torch.no_grad():
-            a, _ = self.policy(obs, deterministic, False)
+            a, _ = self.policy(x, deterministic, False)
             return a.numpy()
 
 
 class FireQActorCritic(nn.Module):
+    r"""
+    Generic Q Actor Critic class.
+
+    Policy is an :func:`~MLP`. Q function is a :func:`~MLP` as well.
+
+    Args:
+        state_features (int): Dimensionality of state space.
+        action_space (gym.spaces.Box): Environment action space.
+        hidden_sizes (tuple or list): Hidden layer sizes.
+        activation (Function): Activation function for the networks.
+        out_activation (Function): Output activation for the networks.
+    """
+
     def __init__(
         self,
         state_features: int,
-        action_space: int,
+        action_space: gym.spaces.Box,
         hidden_sizes: Optional[Union[Tuple, List]] = (256, 128),
         activation: Optional[Callable] = torch.relu,
         out_activation: Optional[Callable] = nn.Identity,
@@ -306,7 +511,6 @@ class FireQActorCritic(nn.Module):
         super(FireQActorCritic, self).__init__()
 
         action_dim = action_space.shape[0]
-        action_lim = action_space.high[0]
 
         self.policy = MLP(
             [state_features] + list(hidden_sizes) + [action_dim],
@@ -319,58 +523,18 @@ class FireQActorCritic(nn.Module):
             out_squeeze=True,
         )
 
-    def forward(self, x: torch.Tensor, a: torch.Tensor):
+    def forward(
+        self, x: torch.Tensor, a: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        r"""
+        Get action, q value estimates for action taken, and q value estimates for previous actions.
+
+        Args:
+            x (torch.Tensor): State from the environment.
+            a (torch.Tensor): Action taken in the environment.
+        """
         act = self.policy(x)
         q = self.qfunc(torch.cat(x, a, dim=1))
         q_act = self.qfunc(torch.cat(x, act, dim=1))
 
         return act, q, q_act
-
-
-class NatureDQN(nn.Module):
-    def __init__(self, in_channels, out_channels, h, w):
-        super(NatureDQN, self).__init__()
-        self.netutil = netu()
-
-        self.conv1 = nn.Conv2d(in_channels, 32, 8, stride=4)
-        height = self.netutil.conv2d_output_size(8, 4, h)
-        width = self.netutil.conv2d_output_size(8, 4, w)
-        self.conv2 = nn.Conv2d(32, 64, 4, stride=2)
-        height = self.netutil.conv2d_output_size(4, 2, height)
-        width = self.netutil.conv2d_output_size(4, 2, width)
-        self.conv3 = nn.Conv2d(64, 64, 3, stride=1)
-        height = self.netutil.conv2d_output_size(3, 1, height)
-        width = self.netutil.conv2d_output_size(3, 1, width)
-
-        self.fc1 = nn.Linear(height * width * 64, 512)
-        self.fc2 = nn.Linear(512, out_channels)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = F.relu(self.conv3(x))
-        x = x.view(x.size(0), -1)
-        x = F.relu(self.fc1(x))
-        return self.fc2(x)
-
-
-class FullyConnectedDQN(nn.Module):
-    def __init__(self, in_channels, out_channels):
-        super(FullyConnectedDQN, self).__init__()
-        self.fc1 = nn.Linear(in_channels, 32)
-        self.fc2 = nn.Linear(32, 64)
-        self.fc3 = nn.Linear(64, 64)
-        self.fc4 = nn.Linear(64, 512)
-        self.fc5 = nn.Linear(512, out_channels)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = F.relu(self.fc4(x))
-        x = self.fc5(x)
-        return x
-
-    def evaluate(self, states, actions):
-        action_values = self.forward(states.float())
-        return action_values.gather(1, actions)

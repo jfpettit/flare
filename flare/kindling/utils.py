@@ -45,7 +45,16 @@ def colorize(
     return "\x1b[%sm%s\x1b[0m" % (";".join(attr), string)
 
 
-def calc_logstd_anneal(n_anneal_cycles, anneal_start, anneal_end, epochs):
+def calc_logstd_anneal(n_anneal_cycles: int, anneal_start: float, anneal_end: float, epochs: int) -> np.ndarray:
+    """
+    Calculate log standard deviation annealing schedule. Can be used in PG algorithms on continuous action spaces.
+
+    Args:
+        n_anneal_cycles (int): How many times to cycle from anneal_start to anneal_end over the training epochs.
+        anneal_start (float): Starting log standard deviation value.
+        anneal_end (float): Ending log standard deviation value.
+        epochs (int): Number of training cycles.
+    """
     if n_anneal_cycles > 0:
         logstds = np.linspace(anneal_start, anneal_end, num=epochs // n_anneal_cycles)
         for _ in range(n_anneal_cycles):
@@ -56,16 +65,10 @@ def calc_logstd_anneal(n_anneal_cycles, anneal_start, anneal_end, epochs):
     return logstds
 
 
-def gaussian_likelihood(x, mu, log_std):
-    vals = (
-        -0.5 * (((x - mu) / torch.exp(log_std) + 1e-8)) ** 2
-        + 2 * log_std
-        + torch.log(torch.tensor(2 * math.pi))
-    )
-    return vals.sum()
-
-
 class NetworkUtils:
+    """
+    Random utilities for neural networks.
+    """
     def __init__(self):
         super(NetworkUtils, self).__init__()
 
@@ -113,3 +116,18 @@ class NormalizedActions(gym.ActionWrapper):
         action /= self.action_space.high - self.action_space.low
         action = action * 2 - 1
         return action
+
+def _discount_cumsum(x: np.array, discount: float):
+    """
+    magic from rllab for computing discounted cumulative sums of vectors.
+    input:
+        vector x,
+        [x0,
+        x1,
+        x2]
+    output:
+        [x0 + discount * x1 + discount^2 * x2,
+        x1 + discount * x2,
+        x2]
+    """
+    return scipy.signal.lfilter([1], [1, float(-discount)], x[::-1], axis=0)[::-1]

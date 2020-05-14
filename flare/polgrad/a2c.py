@@ -1,122 +1,138 @@
-# import needed packages
+import torch
+import torch.nn as nn
+import torch.nn.functional as f
 import numpy as np
 import gym
-import torch
-from flare.kindling import utils
-from flare.polgrad import BasePolicyGradient
+import pybullet_envs
+import time
 import flare.kindling as fk
-import torch.nn.functional as F
-from flare.kindling.mpi_pytorch import mpi_avg_grads, mpi_avg
+from flare.kindling import utils
+from flare.kindling.mpi_tools import mpi_avg
+from typing import Optional, Any, Union, Callable, Tuple, List
+import pytorch_lightning as pl
+from torch.utils.data import DataLoader, Dataset
+import sys
+from flare.polgrad import BasePolicyGradient
 
+try:
+    from apex import amp
 
-class A2C(BasePolicyGradient):
-    r"""
-    An implementation of the Advantage Actor Critic (A2C) reinforcement learning algorithm.
+    APEX_AVAILABLE = True
+except ImportError:
+    APEX_AVAILABLE = False
 
-    Args:
-        env_fn: lambda function making the desired gym environment.
-            Example::
+try:
+    import torch_xla.core.xla_model as xm
+    XLA_AVAILABLE = True
 
-                import gym
-                env_fn = lambda: gym.make("CartPole-v1")
-                agent = PPO(env_fn)
-        hidden_sizes: Tuple of integers representing hidden layer sizes for the MLP policy.
-        actorcritic: Class for policy and value networks.
-        gamma: Discount factor for GAE-lambda estimation.
-        lam: Lambda for GAE-lambda estimation.
-        steps_per_epoch: Number of state, action, reward, done tuples to train on per epoch.
-        pol_lr: Learning rate for the policy optimizer.
-        val_lr: Learning rate for the value optimizer.
-        seed: random seeding for NumPy and PyTorch.
-        state_preproc: An optional state preprocessing function. Any desired manipulations to the state before it is passed to the agent can be performed here. The state_preproc function must take in and return a NumPy array.
-            Example::
+except ImportError:
+    XLA_AVAILABLE = False
 
-                def state_square(state):
-                    state = state**2
-                    return state
-                agent = PPO(env_fn, state_preproc=state_square, state_sze=shape_of_state_after_preprocessing)
-        state_sze: If a state preprocessing function is included, the size of the state after preprocessing must be passed in as well.
-        logger_dir: Directory to log results to.
-        tensorboard: Whether or not to use tensorboard logging.
-        save_screen: Whether to save rendered screen images to a pickled file. Saves within logger_dir.
-        save_states: Whether to save environment states to a pickled file. Saves within logger_dir.
-    """
+class LitA2C(BasePolicyGradient):
     def __init__(
         self,
         env,
-        hidden_sizes=(64, 32),
-        actorcritic=fk.FireActorCritic,
-        gamma=0.99,
-        lam=0.97,
-        steps_per_epoch=4000,
-        pol_lr=3e-4,
-        val_lr=1e-3,
-        seed=0,
-        state_preproc=None,
-        state_sze=None,
-        logger_dir=None,
-        tensorboard=True,
-        save_screen=False,
-        save_states=False,
+        ac = fk.FireActorCritic,
+        hidden_sizes = (64, 64),
+        steps_per_epoch = 4000,
+        minibatch_size = None,
+        gamma = 0.99,
+        lam = 0.97,
+        pol_lr = 3e-4,
+        val_lr = 1e-3,
+        train_iters = 80,
+        seed = 0,
+        hparams = None
     ):
+
         super().__init__(
             env,
-            actorcritic=actorcritic,
+            ac,
+            hidden_sizes=hidden_sizes,
+            steps_per_epoch=steps_per_epoch,
+            minibatch_size=minibatch_size,
             gamma=gamma,
             lam=lam,
-            steps_per_epoch=steps_per_epoch,
-            hidden_sizes=hidden_sizes,
+            pol_lr=pol_lr,
+            val_lr=val_lr,
+            train_iters=train_iters,
             seed=seed,
-            state_sze=state_sze,
-            state_preproc=state_preproc,
-            logger_dir=logger_dir,
-            tensorboard=tensorboard,
-            save_screen=save_screen,
-            save_states=save_states,
+            hparams=hparams
         )
 
-        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
-        self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=val_lr)
+    def calc_pol_loss(self, logps, advs):
+        return -(logps * advs).mean()
 
-    def get_name(self):
-        return self.__class__.__name__
+    def training_step(self, batch, batch_idx, optimizer_idx):
+        states, acts, advs, rets, logps_old = batch
 
-    def update(self):
-        """Update rule for Advantage Actor Critic algorithm."""
-        self.ac.train()
-        states, acts, advs, rets, logprobs_old = [
-            torch.Tensor(x) for x in self.buffer.get()
-        ]
+        if optimizer_idx == 0:
+            pol_loss_old = self.calc_pol_loss(logps_old, advs)
 
-        _, logp, _ = self.ac.policy(states, acts)
-        approx_ent = (-logp).mean()
-        pol_loss_old = -(logp * advs).mean()
+            policy, logps = self.ac.policy(states, a=acts)
+            pol_loss = self.calc_pol_loss(logps, advs)
 
-        values = self.ac.value_f(states)
-        val_loss_old = F.mse_loss(values, rets)
+            ent = policy.entropy().mean().item() 
+            kl = mpi_avg((logps_old - logps).mean().item())
+            delta_pol_loss = (pol_loss - pol_loss_old).item()
+            log = {"PolicyLoss": pol_loss_old.item(), "DeltaPolLoss": delta_pol_loss, "Entropy": ent, "KL": kl}
+            loss = pol_loss
 
-        self.policy_optimizer.zero_grad()
-        _, logp, _ = self.ac.policy(states, acts)
-        kl = mpi_avg((logprobs_old - logp).mean().item())
-        pol_loss = -(logp * advs).mean()
-        pol_loss.backward()
-        mpi_avg_grads(self.ac.policy)
-        self.policy_optimizer.step()
+        elif optimizer_idx == 1:
+            values_old = self.ac.value_f(states)
+            val_loss_old = self.calc_val_loss(values_old, rets)
+            for i in range(self.train_iters):
+                self.value_optimizer.zero_grad()
+                values = self.ac.value_f(states)
+                val_loss = self.calc_val_loss(values, rets)
+                val_loss.backward()
+                self.value_optimizer.step()
 
-        for _ in range(80):
-            self.value_optimizer.zero_grad()
-            values = self.ac.value_f(states)
-            val_loss = F.mse_loss(values, rets)
-            val_loss.backward()
-            mpi_avg_grads(self.ac.value_f)
-            self.value_optimizer.step()
+            delta_val_loss = (val_loss - val_loss_old).item()
+            log = {"ValueLoss": val_loss_old.item(), "DeltaValLoss": delta_val_loss}
+            loss = val_loss
 
-        self.logger.store(
-            PolicyLoss=pol_loss_old.detach().numpy(),
-            ValueLoss=val_loss_old.detach().numpy(),
-            KL=kl,
-            Entropy=approx_ent.detach().numpy(),
-            DeltaPolLoss=(pol_loss - pol_loss_old).detach().numpy(),
-            DeltaValLoss=(val_loss - val_loss_old).detach().numpy(),
-        )
-        return pol_loss, val_loss, approx_ent, kl
+        self.tracker_dict.update(log)
+        return {"loss": loss, "log": log, "progress_bar": log}
+
+    def optimizer_step(
+        self,
+        epoch,
+        batch_idx,
+        optimizer,
+        optimizer_idx,
+        second_order_closure=None
+    ):
+        if optimizer_idx == 0:
+            if self.trainer.use_tpu and XLA_AVAILABLE:
+                xm.optimizer_step(optimizer)
+            elif isinstance(optimizer, torch.optim.LBFGS):
+                optimizer.step(second_order_closure)
+            else:
+                optimizer.step()
+
+            # clear gradients
+            optimizer.zero_grad()
+
+        elif optimizer_idx == 1:
+            pass
+
+    def backward(
+        self,
+        trainer,
+        loss,
+        optimizer,
+        optimizer_idx
+    ):
+        if optimizer_idx == 0:
+            if trainer.precision == 16:
+
+                # .backward is not special on 16-bit with TPUs
+                if not trainer.on_tpu:
+                    with amp.scale_loss(loss, optimizer) as scaled_loss:
+                        scaled_loss.backward()
+            else:
+                loss.backward()
+
+        elif optimizer_idx == 1:
+            pass

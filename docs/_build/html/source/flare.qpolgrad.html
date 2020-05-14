@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>flare.qpolgrad package &mdash; flare 0.1.6 documentation</title>
+  <title>flare.qpolgrad &mdash; flare 0.1.6 documentation</title>
   
 
   
@@ -36,7 +36,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Contributing to flare" href="../CONTRIBUTING.html" />
-    <link rel="prev" title="flare.polgrad package" href="flare.polgrad.html" /> 
+    <link rel="prev" title="flare.polgrad" href="flare.polgrad.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -102,8 +102,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../usage.html#details">Details</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package contents</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="flare.kindling.html">flare.kindling package</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="flare.html">flare package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="flare.kindling.html">flare.kindling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling.buffers">flare.kindling.buffers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling.loggingfuncs">flare.kindling.loggingfuncs module</a></li>
@@ -116,19 +116,8 @@
 <li class="toctree-l3"><a class="reference internal" href="flare.kindling.html#module-flare.kindling">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="flare.polgrad.html">flare.polgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="flare.polgrad.html#module-flare.polgrad">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.qpolgrad package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.qpolgrad.base">flare.qpolgrad.base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.qpolgrad.ddpg">flare.qpolgrad.ddpg module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.qpolgrad.sac">flare.qpolgrad.sac module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.qpolgrad.td3">flare.qpolgrad.td3 module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-flare.qpolgrad">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="flare.polgrad.html">flare.polgrad</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">flare.qpolgrad</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CONTRIBUTING.html">Contributing to flare</a><ul>
@@ -186,9 +175,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-          <li><a href="flare.html">flare package contents</a> &raquo;</li>
+          <li><a href="flare.html">flare package</a> &raquo;</li>
         
-      <li>flare.qpolgrad package</li>
+      <li>flare.qpolgrad</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -209,190 +198,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="flare-qpolgrad-package">
-<h1>flare.qpolgrad package<a class="headerlink" href="#flare-qpolgrad-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-flare.qpolgrad.base">
-<span id="flare-qpolgrad-base-module"></span><h2>flare.qpolgrad.base module<a class="headerlink" href="#module-flare.qpolgrad.base" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient">
-<em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.base.</code><code class="sig-name descname">BaseQPolicyGradient</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.calc_policy_loss">
-<em class="property">abstract </em><code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute policy loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.calc_qfunc_loss">
-<em class="property">abstract </em><code class="sig-name descname">calc_qfunc_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.calc_qfunc_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute q-function loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.get_action">
-<code class="sig-name descname">get_action</code><span class="sig-paren">(</span><em class="sig-param">o</em>, <em class="sig-param">noise_scale</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.get_action" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.get_name">
-<code class="sig-name descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.get_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.learn">
-<code class="sig-name descname">learn</code><span class="sig-paren">(</span><em class="sig-param">epochs</em>, <em class="sig-param">horizon=1000</em>, <em class="sig-param">num_test_episodes=10</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.learn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.logger_tabular_to_dump">
-<em class="property">abstract </em><code class="sig-name descname">logger_tabular_to_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.logger_tabular_to_dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to log tabular logger outputs for the particular algorithm. Should not call logger.dump_tabular(). This will be called for you.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.setup_optimizers">
-<em class="property">abstract </em><code class="sig-name descname">setup_optimizers</code><span class="sig-paren">(</span><em class="sig-param">pol_lr</em>, <em class="sig-param">q_lr</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.setup_optimizers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to initialize optimizers</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.test_agent">
-<code class="sig-name descname">test_agent</code><span class="sig-paren">(</span><em class="sig-param">num_test_episodes</em>, <em class="sig-param">max_ep_len</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.test_agent" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.base.BaseQPolicyGradient.update">
-<em class="property">abstract </em><code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">timer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.base.BaseQPolicyGradient.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update rule for algorithm</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-flare.qpolgrad.ddpg">
-<span id="flare-qpolgrad-ddpg-module"></span><h2>flare.qpolgrad.ddpg module<a class="headerlink" href="#module-flare.qpolgrad.ddpg" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="flare.qpolgrad.ddpg.DDPG">
-<em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.ddpg.</code><code class="sig-name descname">DDPG</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireDDPGActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
-<p>Implementation of the Deep Deterministic Policy Gradient (DDPG) algorithm.</p>
-<dl class="method">
-<dt id="flare.qpolgrad.ddpg.DDPG.calc_policy_loss">
-<code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute policy loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.ddpg.DDPG.calc_qfunc_loss">
-<code class="sig-name descname">calc_qfunc_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG.calc_qfunc_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute q-function loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.ddpg.DDPG.logger_tabular_to_dump">
-<code class="sig-name descname">logger_tabular_to_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG.logger_tabular_to_dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to log tabular logger outputs for the particular algorithm. Should not call logger.dump_tabular(). This will be called for you.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.ddpg.DDPG.setup_optimizers">
-<code class="sig-name descname">setup_optimizers</code><span class="sig-paren">(</span><em class="sig-param">pol_lr</em>, <em class="sig-param">q_lr</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG.setup_optimizers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to initialize optimizers</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.ddpg.DDPG.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">timer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.ddpg.DDPG.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update rule for algorithm</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-flare.qpolgrad.sac">
-<span id="flare-qpolgrad-sac-module"></span><h2>flare.qpolgrad.sac module<a class="headerlink" href="#module-flare.qpolgrad.sac" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="flare.qpolgrad.sac.SAC">
-<em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.sac.</code><code class="sig-name descname">SAC</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireSACActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">alpha: Optional[float] = 0.2</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
-<dl class="method">
-<dt id="flare.qpolgrad.sac.SAC.calc_policy_loss">
-<code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute policy loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.sac.SAC.calc_qfunc_loss">
-<code class="sig-name descname">calc_qfunc_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC.calc_qfunc_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute q-function loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.sac.SAC.logger_tabular_to_dump">
-<code class="sig-name descname">logger_tabular_to_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC.logger_tabular_to_dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to log tabular logger outputs for the particular algorithm. Should not call logger.dump_tabular(). This will be called for you.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.sac.SAC.setup_optimizers">
-<code class="sig-name descname">setup_optimizers</code><span class="sig-paren">(</span><em class="sig-param">pol_lr</em>, <em class="sig-param">q_lr</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC.setup_optimizers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to initialize optimizers</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.sac.SAC.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">timer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.sac.SAC.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update rule for algorithm</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-flare.qpolgrad.td3">
-<span id="flare-qpolgrad-td3-module"></span><h2>flare.qpolgrad.td3 module<a class="headerlink" href="#module-flare.qpolgrad.td3" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="flare.qpolgrad.td3.TD3">
-<em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.td3.</code><code class="sig-name descname">TD3</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireTD3ActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">noise_clip: Optional[float] = 0.5</em>, <em class="sig-param">policy_delay: Optional[int] = 2</em>, <em class="sig-param">target_noise: Optional[float] = 0.2</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
-<dl class="method">
-<dt id="flare.qpolgrad.td3.TD3.calc_policy_loss">
-<code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute policy loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.td3.TD3.calc_qfunc_loss">
-<code class="sig-name descname">calc_qfunc_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3.calc_qfunc_loss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to compute q-function loss</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.td3.TD3.logger_tabular_to_dump">
-<code class="sig-name descname">logger_tabular_to_dump</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3.logger_tabular_to_dump" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to log tabular logger outputs for the particular algorithm. Should not call logger.dump_tabular(). This will be called for you.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.td3.TD3.setup_optimizers">
-<code class="sig-name descname">setup_optimizers</code><span class="sig-paren">(</span><em class="sig-param">pol_lr</em>, <em class="sig-param">q_lr</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3.setup_optimizers" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to initialize optimizers</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="flare.qpolgrad.td3.TD3.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">timer</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.td3.TD3.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Update rule for algorithm</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-flare.qpolgrad">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-flare.qpolgrad" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-flare.qpolgrad">
+<span id="flare-qpolgrad"></span><h1>flare.qpolgrad<a class="headerlink" href="#module-flare.qpolgrad" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="flare.qpolgrad.BaseQPolicyGradient">
 <em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.</code><code class="sig-name descname">BaseQPolicyGradient</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.BaseQPolicyGradient" title="Permalink to this definition">¶</a></dt>
@@ -452,7 +259,7 @@
 <dl class="class">
 <dt id="flare.qpolgrad.DDPG">
 <em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.</code><code class="sig-name descname">DDPG</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireDDPGActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.DDPG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></p>
 <p>Implementation of the Deep Deterministic Policy Gradient (DDPG) algorithm.</p>
 <dl class="method">
 <dt id="flare.qpolgrad.DDPG.calc_policy_loss">
@@ -489,7 +296,7 @@
 <dl class="class">
 <dt id="flare.qpolgrad.TD3">
 <em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.</code><code class="sig-name descname">TD3</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireTD3ActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">noise_clip: Optional[float] = 0.5</em>, <em class="sig-param">policy_delay: Optional[int] = 2</em>, <em class="sig-param">target_noise: Optional[float] = 0.2</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.TD3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></p>
 <dl class="method">
 <dt id="flare.qpolgrad.TD3.calc_policy_loss">
 <code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.TD3.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
@@ -525,7 +332,7 @@
 <dl class="class">
 <dt id="flare.qpolgrad.SAC">
 <em class="property">class </em><code class="sig-prename descclassname">flare.qpolgrad.</code><code class="sig-name descname">SAC</code><span class="sig-paren">(</span><em class="sig-param">env_fn: Callable</em>, <em class="sig-param">actorcritic: Callable = &lt;class 'flare.kindling.neuralnets.FireSACActorCritic'&gt;</em>, <em class="sig-param">seed: Optional[int] = 0</em>, <em class="sig-param">steps_per_epoch: Optional[int] = 4000</em>, <em class="sig-param">replay_size: Optional[int] = 1000000</em>, <em class="sig-param">gamma: Optional[float] = 0.99</em>, <em class="sig-param">polyak: Optional[float] = 0.95</em>, <em class="sig-param">pol_lr: Optional[float] = 0.001</em>, <em class="sig-param">q_lr: Optional[float] = 0.001</em>, <em class="sig-param">alpha: Optional[float] = 0.2</em>, <em class="sig-param">hidden_sizes: Union[tuple</em>, <em class="sig-param">list</em>, <em class="sig-param">None] = (256</em>, <em class="sig-param">128)</em>, <em class="sig-param">bs: Optional[int] = 100</em>, <em class="sig-param">warmup_steps: Optional[int] = 10000</em>, <em class="sig-param">update_after: Optional[int] = 1000</em>, <em class="sig-param">update_every: Optional[int] = 50</em>, <em class="sig-param">act_noise: Optional[float] = 0.1</em>, <em class="sig-param">buffer: Optional[float] = &lt;class 'flare.kindling.buffers.ReplayBuffer'&gt;</em>, <em class="sig-param">save_freq: Optional[int] = 1</em>, <em class="sig-param">state_preproc: Optional[Callable] = None</em>, <em class="sig-param">state_sze: Union[int</em>, <em class="sig-param">tuple</em>, <em class="sig-param">None] = None</em>, <em class="sig-param">logger_dir: Optional[str] = None</em>, <em class="sig-param">tensorboard: Optional[bool] = True</em>, <em class="sig-param">save_states: Optional[bool] = False</em>, <em class="sig-param">save_screen: Optional[bool] = False</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.SAC" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#flare.qpolgrad.base.BaseQPolicyGradient" title="flare.qpolgrad.base.BaseQPolicyGradient"><code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flare.qpolgrad.base.BaseQPolicyGradient</span></code></p>
 <dl class="method">
 <dt id="flare.qpolgrad.SAC.calc_policy_loss">
 <code class="sig-name descname">calc_policy_loss</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#flare.qpolgrad.SAC.calc_policy_loss" title="Permalink to this definition">¶</a></dt>
@@ -559,7 +366,6 @@
 </dd></dl>
 
 </div>
-</div>
 
 
            </div>
@@ -572,7 +378,7 @@
         <a href="../CONTRIBUTING.html" class="btn btn-neutral float-right" title="Contributing to flare" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="flare.polgrad.html" class="btn btn-neutral float-left" title="flare.polgrad package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="flare.polgrad.html" class="btn btn-neutral float-left" title="flare.polgrad" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
