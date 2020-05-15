@@ -15,7 +15,7 @@ import sys
 from flare.polgrad import BasePolicyGradient
 
 
-class LitPPO(BasePolicyGradient):
+class PPO(BasePolicyGradient):
     def __init__(
         self,
         env,
@@ -120,41 +120,29 @@ class LitPPO(BasePolicyGradient):
         self.tracker_dict.update(log)
         return {"loss": loss, "log": log, "progress_bar": log}
 
-"""
+
 def learn(
-    env_name: str, 
-    epochs: Optional[int] = 100, 
-    minibatch_size: Optional[Union[int, None]] = None, 
+    env_name,
+    epochs: Optional[int] = 100,
+    minibatch_size: Optional[int] = None,
     steps_per_epoch: Optional[int] = 4000,
-    hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 32),
     gamma: Optional[float] = 0.99,
-    lam: Optional[float] = 0.97
-    ):
-    
-    env = lambda: gym.make(env_name)
-    
-    agent = LitPPO(
-        env,
-        fk.FireActorCritic,
-        hidden_sizes=hidden_sizes,
-        steps_per_epoch=steps_per_epoch, 
-        minibatch_size=steps_per_epoch,
+    lam: Optional[float] = 0.97,
+    hparams = None,
+    seed = 0
+):
+    from flare.polgrad.base import runner 
+    minibatch_size = 4000 if minibatch_size is None else minibatch_size
+    runner(
+        env_name, 
+        PPO, 
+        epochs=epochs, 
+        minibatch_size=minibatch_size, 
+        hidden_sizes=(64, 32),
         gamma=gamma,
-        lam=lam
+        lam=lam,
+        hparams=hparams,
+        seed = seed
         )
-
-    trainer = pl.Trainer(
-        reload_dataloaders_every_epoch=True,
-        early_stop_callback=False,
-        max_epochs=epochs
-    )
-
-    trainer.fit(agent)
-"""
-
-if __name__ == '__main__':
-    env_name = "HalfCheetahBulletEnv-v0"
-    epochs = 100
-
-    from flare.polgrad.base import learn
-    learn(env_name, LitPPO, epochs=epochs, minibatch_size=4000)
+    

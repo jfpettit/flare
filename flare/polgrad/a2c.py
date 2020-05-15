@@ -28,7 +28,7 @@ try:
 except ImportError:
     XLA_AVAILABLE = False
 
-class LitA2C(BasePolicyGradient):
+class A2C(BasePolicyGradient):
     def __init__(
         self,
         env,
@@ -136,3 +136,28 @@ class LitA2C(BasePolicyGradient):
 
         elif optimizer_idx == 1:
             pass
+
+def learn(
+    env_name,
+    epochs: Optional[int] = 100,
+    minibatch_size: Optional[int] = None,
+    steps_per_epoch: Optional[int] = 4000,
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 32),
+    gamma: Optional[float] = 0.99,
+    lam: Optional[float] = 0.97,
+    hparams = None,
+    seed = 0
+):
+    from flare.polgrad.base import runner 
+    minibatch_size = 4000 if minibatch_size is None else minibatch_size
+    runner(
+        env_name, 
+        A2C, 
+        epochs=epochs, 
+        minibatch_size=minibatch_size, 
+        hidden_sizes=(64, 32),
+        gamma=gamma,
+        lam=lam,
+        hparams=hparams,
+        seed = seed
+        )

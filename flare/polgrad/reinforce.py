@@ -15,14 +15,7 @@ from flare.kindling import utils
 from gym.spaces import Box
 from flare.kindling import EpochLogger
 from flare.kindling import TensorBoardWriter
-from flare.kindling.mpi_tools import (
-    mpi_fork,
-    mpi_avg,
-    proc_id,
-    mpi_statistics_scalar,
-    num_procs,
-)
-from flare.kindling.mpi_pytorch import setup_pytorch_for_mpi, sync_params, mpi_avg_grads
+from flare.kindling.mpi_tools import mpi_avg
 import pickle as pkl
 from typing import Optional, Any, Union, Callable, Tuple, List
 import pytorch_lightning as pl
@@ -31,7 +24,7 @@ import sys
 from flare.polgrad import BasePolicyGradient
 
 
-class LitREINFORCE(BasePolicyGradient):
+class REINFORCE(BasePolicyGradient):
     r"""
     REINFORCE Policy Gradient Class, written using PyTorch + PyTorch Lightning
 
@@ -47,28 +40,32 @@ class LitREINFORCE(BasePolicyGradient):
     def __init__(
         self,
         env: Callable,
-        actor = Actor,
+        actor = fk.FireActorCritic,
         hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
         steps_per_epoch: Optional[int] = 4000,
         minibatch_size: Optional[Union[None, int]] = None,
         gamma: Optional[float] = 0.99,
-        lam: Optional[float] = 0.97
+        lam: Optional[float] = 0.97,
+        seed = 0,
+        hparams = None
     ):
         super().__init__(
             env,
-            actor,
-            hidden_sizes,
-            steps_per_epoch,
-            minibatch_size,
-            gamma,
-            lam
+            ac=actor,
+            hidden_sizes=hidden_sizes,
+            steps_per_epoch=steps_per_epoch,
+            minibatch_size=minibatch_size,
+            gamma=gamma,
+            lam=lam,
+            seed=seed,
+            hparams=hparams
         )
 
     def configure_optimizers(self) -> tuple:
         r"""
         Set up optimizers for agent.
         """
-        return torch.optim.Adam(self.ac.parameters(), lr=3e-4)
+        return torch.optim.Adam(self.ac.policy.parameters(), lr=3e-4)
     
     def inner_loop(self) -> None:
         r"""
@@ -83,9 +80,9 @@ class LitREINFORCE(BasePolicyGradient):
         lenlst = []
 
         for i in range(self.steps_per_epoch):
-            action, _, logp = self.ac(torch.as_tensor(state, dtype=torch.float32))
+            action, logp, _ = self.ac.step(torch.as_tensor(state, dtype=torch.float32))
 
-            next_state, reward, done, _ = self.env.step(action.detach().numpy())
+            next_state, reward, done, _ = self.env.step(action)
 
             self.buffer.store(
                 state,
@@ -148,10 +145,10 @@ class LitREINFORCE(BasePolicyGradient):
         """
         states, acts, _, rets, logps_old = batch
 
-        _, logps, _ = self.ac(states, acts)
+        policy, logps = self.ac.policy(states, acts)
         pol_loss = self.calc_pol_loss(logps, rets)
 
-        ent = (-logps).mean()
+        ent = policy.entropy().mean() 
         kl = (logps_old - logps).mean()
         log = {"PolicyLoss": pol_loss, "Entropy": ent, "KL": kl}
         self.tracker_dict.update(log)
@@ -160,31 +157,26 @@ class LitREINFORCE(BasePolicyGradient):
 
 
 def learn(
-    env_name: str, 
-    epochs: Optional[int] = 100, 
-    minibatch_size: Optional[Union[int, None]] = None, 
+    env_name,
+    epochs: Optional[int] = 100,
+    minibatch_size: Optional[int] = None,
     steps_per_epoch: Optional[int] = 4000,
-    hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
+    hidden_sizes: Optional[Union[Tuple, List]] = (64, 32),
     gamma: Optional[float] = 0.99,
-    lam: Optional[float] = 0.97
-    ):
-    
-    env = lambda: gym.make(env_name)
-    
-    agent = LitREINFORCE(
-        env,
-        Actor,
-        hidden_sizes=hidden_sizes,
-        steps_per_epoch=steps_per_epoch, 
-        minibatch_size=minibatch_size,
+    lam: Optional[float] = 0.97,
+    hparams = None,
+    seed = 0
+):
+    from flare.polgrad.base import runner 
+    minibatch_size = 4000 if minibatch_size is None else minibatch_size
+    runner(
+        env_name, 
+        REINFORCE, 
+        epochs=epochs, 
+        minibatch_size=minibatch_size, 
+        hidden_sizes=(64, 32),
         gamma=gamma,
-        lam=lam
+        lam=lam,
+        hparams=hparams,
+        seed = seed
         )
-
-    trainer = pl.Trainer(
-        reload_dataloaders_every_epoch=True,
-        early_stop_callback=False,
-        max_epochs=epochs
-    )
-
-    trainer.fit(agent)

@@ -14,7 +14,7 @@ import sys
 import abc
 from argparse import Namespace
 
-class LitBasePolicyGradient(pl.LightningModule):
+class BasePolicyGradient(pl.LightningModule):
     r"""
     Base Policy Gradient Class, written using PyTorch + PyTorch Lightning
 
@@ -217,7 +217,7 @@ class LitBasePolicyGradient(pl.LightningModule):
             self.print(f"{k}: {v}", file=out_file)
         self.print("\n", file=out_file)
     
-    def on_epoch_end(self):
+    def on_epoch_end(self) -> None:
         r"""
         Print tracker_dict, reset tracker_dict, and generate new data with inner loop.
         """
@@ -226,27 +226,32 @@ class LitBasePolicyGradient(pl.LightningModule):
         self.inner_loop()
 
 
-def learn(
+def runner(
     env_name: str, 
-    algo: LitBasePolicyGradient,
+    algo: BasePolicyGradient,
+    ac: nn.Module = fk.FireActorCritic,
     epochs: Optional[int] = 100, 
     minibatch_size: Optional[Union[int, None]] = None, 
     steps_per_epoch: Optional[int] = 4000,
     hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
     gamma: Optional[float] = 0.99,
-    lam: Optional[float] = 0.97
+    lam: Optional[float] = 0.97,
+    hparams: Optional[Namespace] = None,
+    seed: Optional[int] = 0
     ):
 
     env = lambda: gym.make(env_name)
     
     agent = algo(
         env,
-        fk.FireActorCritic,
+        ac,
         hidden_sizes=hidden_sizes,
+        seed=seed,
         steps_per_epoch=steps_per_epoch, 
         minibatch_size=minibatch_size,
         gamma=gamma,
-        lam=lam
+        lam=lam,
+        hparams=hparams
         )
 
     trainer = pl.Trainer(
