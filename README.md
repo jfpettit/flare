@@ -19,6 +19,8 @@
 
 ## Installation
 
+**MPI parallelization will soon be removed. Work is being done to rebase the code using [PyTorch Lightning](https://pytorch-lightning.readthedocs.io/en/latest/) which uses PyTorch's multiprocessing under the hood.**
+
 **Flare supports parallelization via MPI!** So, you'll need to install [OpenMPI](https://www.open-mpi.org/) to run this code. [SpinningUp](https://spinningup.openai.com/en/latest/user/installation.html#installing-openmpi) provides the following installation instructions:
 
 ### On Ubuntu:
@@ -33,11 +35,13 @@ sudo apt-get update && sudo apt-get install libopenmpi-dev
 brew install openmpi
 ```
 
+If using homebrew doesn't work for you, consider these [instructions](http://www.science.smith.edu/dftwiki/index.php/Install_MPI_on_a_MacBook).  
+
 ### On Windows
 
 If you're on Windows, [here is a link to some instructions](https://nyu-cds.github.io/python-mpi/setup/).
 
-If the Mac instructions don't work for you, consider these [instructions](http://www.science.smith.edu/dftwiki/index.php/Install_MPI_on_a_MacBook).  
+### Installing flare
 
 It is recommended to use a virtual env before installing this, to avoid conflicting with other installed packages. Anaconda and Python offer virtual environment systems.
 
@@ -53,7 +57,8 @@ pip install -e .
 
 ### Running from command line
 
-Presently, A2C and PPO are implemented and working. Run from the command line with:
+Each algorithm implemented can be run from the command line. A good way to test your installation is to do the foll
+
 ```
 python -m flare.run
 ```
@@ -66,11 +71,11 @@ Import required packages:
 
 ```python
 import gym
-from flare.polgrad import A2C
+from flare.polgrad import a2c 
 
 env = gym.make('CartPole-v0') # or other gym env
-agent = A2C(env)
-rew, leng = agent.learn(100)
+epochs = 100
+a2c.learn(env, epochs)
 ```
 
 The above snippet will train an agent on the [CartPole environment](http://gym.openai.com/envs/CartPole-v1/) for 100 epochs. 
@@ -78,13 +83,10 @@ The above snippet will train an agent on the [CartPole environment](http://gym.o
 You may alter the architecture of your actor-critic network by passing in a tuple of hidden layer sizes to your agent initialization. i.e.:
 
 ```python
-from flare.polgrad import PPO
-agent = PPO(env, hidden_sizes=(64, 32))
-rew, leng = agent.learn(100)
+from flare.polgrad import ppo 
+hidden_sizes = (64, 32)
+ppo.learn(env, epochs=100, hidden_sizes=hidden_sizes)
 ```
-
-For a more detailed example using PPO, see the example file at: [examples/ppo_example.py](https://github.com/jfpettit/flare/blob/master/examples/ppo_example.py).
-
 
 ## Details
 
@@ -92,18 +94,17 @@ This repository is intended to be a lightweight and simple to use RL framework, 
 
 Algorithms will be listed here as they are implemented: 
 
+- [REINFORCE Policy Gradient (this link is to a PDF)](https://people.cs.umass.edu/~barto/courses/cs687/williams92simple.pdf)
 - [Advantage Actor Critic (A2C)](https://arxiv.org/abs/1602.01783)
 - [Proximal Policy Optimization (PPO)](https://arxiv.org/abs/1707.06347)
 - [Deep Deterministic Policy Gradients (DDPG)](https://arxiv.org/abs/1509.02971)
 - [Twin Delayed Deep Deterministic Policy Gradients (TD3)](https://arxiv.org/abs/1802.09477)
 - [Soft Actor Critic (SAC)](https://arxiv.org/abs/1801.01290)
 
-The policy gradient algorithms (A2C, PPO), support running on multiple CPUs via MPI. The Q Policy Gradient algorithms (SAC, DDPG, TD3) do not yet support MPI parallelization.
+The policy gradient algorithms (REINFORCE, A2C, PPO), support running on multiple CPUs/GPUs via PyTorch Lightning. The Q Policy Gradient algorithms (SAC, DDPG, TD3) do not yet use Lightning, they will soon be brought up to parity with the policy gradient algorithms.
 
+If you wish to build your own actor-critic from scratch, then it is recommended to use the [FireActorCritic](https://github.com/jfpettit/flare/blob/master/flare/kindling/neuralnets.py#L143) as a template.
 
-If you wish to build your own actor-critic from scratch, then it is recommended to use the [FireActorCritic](https://github.com/jfpettit/flare/blob/master/flare/neural_nets.py#L72) as a template.
-
-Flare now automatically logs run metrics to [TensorBoard](https://www.tensorflow.org/tensorboard). View these by running ```tensorboard --logdir flare_runs``` in a terminal.
 
 ## Contributing
 
@@ -115,7 +116,9 @@ We'd love for you to contribute! Any help is welcome. See [CONTRIBUTING.md](./CO
 - [PPO paper](https://arxiv.org/abs/1707.06347)
 - [A3C paper](https://arxiv.org/abs/1602.01783)
 - [Pytorch RL examples](https://github.com/pytorch/examples/tree/master/reinforcement_learning)
+- [PyTorch Lightning RL example](https://github.com/PyTorchLightning/pytorch-lightning/blob/master/pl_examples/domain_templates/reinforce_learn_Qnet.py)
 
 ## More to come!
+- Update Q-policy gradient algorithms to use Pytorch Lightning
 - Comment code to make it clearer
 - Test algorithm performance
