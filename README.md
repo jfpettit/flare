@@ -45,19 +45,39 @@ If you're on Windows, [here is a link to some instructions](https://nyu-cds.gith
 
 It is recommended to use a virtual env before installing this, to avoid conflicting with other installed packages. Anaconda and Python offer virtual environment systems.
 
-Finally, clone the repository, cd into it: 
+Clone the repository and cd into it: 
 
 ```
 git clone https://github.com/jfpettit/flare.git
 cd flare
-pip install -e .
+```
+
+**The next step depends on your package manager.**
+
+If you are using pip, pip install the ```requirements``` file:
+
+```
+pip install -r requirements.txt
+```
+
+Alternatively, if you're using Anaconda, create a new Anaconda env from the ```environments.yml``` file, and activate your new conda environment:
+
+```
+conda env create -f environment.yml
+conda activate flare
+```
+
+A third option, if you don't want to clone a custom environment or run through the ```requirements.txt``` file, is to simply pip install the repository via:
+
+```
+pip install -e git+https://github.com/jfpettit/flare.git@98d6d3e74dfadc458b1197d995f6d60ef516f1ee#egg=flare
 ```
 
 ## Usage
 
 ### Running from command line
 
-Each algorithm implemented can be run from the command line. A good way to test your installation is to do the foll
+Each algorithm implemented can be run from the command line. A good way to test your installation is to do the following:
 
 ```
 python -m flare.run
