@@ -95,12 +95,20 @@ class BasePolicyGradient(pl.LightningModule):
     def forward(self, x: torch.Tensor, a: torch.Tensor = None) -> torch.Tensor:
         r"""
         Forward pass for the agent.
+
+        Args:
+            x (PyTorch Tensor): state of the environment
+            a (PyTorch Tensor): action agent took. Optional. Defaults to None.
         """
         return self.ac(x, a) 
 
     def configure_optimizers(self) -> tuple:
         r"""
         Set up optimizers for agent.
+
+        Returns:
+            policy_optimizer (torch.optim.Adam): Optimizer for policy network.
+            value_optimizer (torch.optim.Adam): Optimizer for value network.
         """
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=self.pol_lr)
         self.value_optimizer = torch.optim.Adam(self.ac.value_f.parameters(), lr=self.val_lr) 
@@ -165,10 +173,24 @@ class BasePolicyGradient(pl.LightningModule):
     def calc_pol_loss(self, *args) -> torch.Tensor:
         r"""
         Loss for policy gradient agent.
+
+        To be defined depending on policy gradient algorithm.
         """
-        pass
+        raise NotImplementedError
 
     def calc_val_loss(self, values: torch.Tensor, rets: torch.Tensor) -> torch.Tensor:
+        r"""
+        Value function loss.
+
+        Is mean squared error loss. mean((values - returns)**2)
+
+        Args:
+            values (PyTorch Tensor): Estimated state values.
+            rets (PyTorch Tensor): Observed discounted returns.
+
+        Returns:
+            Value loss (PyTorch Tensor): Value loss calculated over the input.
+        """
         return ((values - rets)**2).mean()
 
     @abc.abstractmethod
@@ -178,19 +200,40 @@ class BasePolicyGradient(pl.LightningModule):
 
         Args:
             batch (Tuple of PyTorch tensors): Batch to train on.
-            batch_idx: batch index.
-            optimizer_idx: Index of optimizer to use
+            batch_idx (int): batch index.
+            optimizer_idx (int): Index of optimizer to use
+
+        Returns:
+            out_dct (dict): A dictionary of loss value, things to log, and things to add to the progress bar.
         """
-        pass
+        raise NotImplementedError
 
     def training_step_end(
         self,
-        step_dict
-    ):
+        step_dict: dict
+    ) -> dict:
+        r"""
+        Method for end of training step. Makes sure that episode reward and length info get added to logger.
+
+        Args:
+            step_dict (dict): dictioanry from last training step.
+        
+        Returns:
+            step_dict (dict): dictionary from last training step with episode return and length info from last epoch added to log.
+        """
         step_dict['log'] = self.add_to_log_dict(step_dict['log'])
         return step_dict
 
-    def add_to_log_dict(self, log_dict):
+    def add_to_log_dict(self, log_dict) -> dict:
+        r"""
+        Adds episode return and length info to logger dictionary.
+
+        Args:
+            log_dict (dict): Dictionary to log to.
+        
+        Returns:
+            log_dict (dict): Modified log_dict to include episode return and length info.
+        """
         add_to_dict = {
             "MeanEpReturn": self.tracker_dict["MeanEpReturn"],
             "MaxEpReturn": self.tracker_dict["MaxEpReturn"],
@@ -203,6 +246,9 @@ class BasePolicyGradient(pl.LightningModule):
     def train_dataloader(self) -> DataLoader:
         r"""
         Define a PyTorch dataset with the data from the last :func:`~inner_loop` run and return a dataloader.
+
+        Returns:
+            dataloader (PyTorch Dataloader): Object for loading data collected during last epoch.
         """
         dataset = PolicyGradientRLDataset(self.data)
         dataloader = DataLoader(dataset, batch_size=self.minibatch_size, sampler=None)
@@ -211,6 +257,9 @@ class BasePolicyGradient(pl.LightningModule):
     def printdict(self, out_file: Optional[str] = sys.stdout) -> None:
         r"""
         Print the contents of the epoch tracking dict to stdout or to a file.
+
+        Args:
+            out_file (sys.stdout or string): File for output. If writing to a file, opening it for writing should be handled in :func:`on_epoch_end`.
         """
         self.print("\n", file=out_file)
         for k, v in self.tracker_dict.items():
@@ -231,14 +280,29 @@ def runner(
     algo: BasePolicyGradient,
     ac: nn.Module = fk.FireActorCritic,
     epochs: Optional[int] = 100, 
-    minibatch_size: Optional[Union[int, None]] = None, 
     steps_per_epoch: Optional[int] = 4000,
+    minibatch_size: Optional[Union[int, None]] = None, 
     hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
     gamma: Optional[float] = 0.99,
     lam: Optional[float] = 0.97,
     hparams: Optional[Namespace] = None,
     seed: Optional[int] = 0
     ):
+    r"""
+    Runner function to train algorithms in env.
+
+    Args:
+        algo (BasePolicyGradient subclass): The policy gradient algorithm to run. Included are A2C, PPO, and REINFORCE.
+        ac (nn.Module): Actor-Critic network following same API as :func:`~FireActorCritic`.
+        epochs (int): Number of epochs to train for.
+        steps_per_epoch (int): Number of agent - environment interaction steps to train on each epoch.
+        minibatch_size (int): Size of minibatches to sample from the batch collected over the epoch and train on. Default is None. When set to None, trains on minibatches one tenth the size of the full batch.
+        hidden_sizes (tuple or list): Hidden layer sizes for MLP Policy and MLP Critic.
+        gamma (float): Discount factor for return discounting and GAE-Lambda.
+        lam (float): Lambda parameter for GAE-Lambda.
+        hparams (Namespace): Hyperparameters to log. Defaults to None.
+        seed (int): Random seeding for environment, PyTorch, and NumPy.
+    """
 
     env = lambda: gym.make(env_name)
     
