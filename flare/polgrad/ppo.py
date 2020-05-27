@@ -7,7 +7,6 @@ import pybullet_envs
 import time
 import flare.kindling as fk
 from flare.kindling import utils
-from flare.kindling.mpi_tools import mpi_avg
 from typing import Optional, Any, Union, Callable, Tuple, List
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset
@@ -85,8 +84,7 @@ class PPO(BasePolicyGradient):
                 self.policy_optimizer.zero_grad()
                 policy, logps = self.ac.policy(states, actions)
                 pol_loss, kl = self.calc_pol_loss(logps, logps_old, advs)
-                approx_kl = fk.mpi_tools.mpi_avg(kl)
-                if approx_kl > 1.5 * self.maxkl:
+                if kl > 1.5 * self.maxkl:
                     stops += 1
                     stopslst.append(i)
                     break
@@ -96,7 +94,7 @@ class PPO(BasePolicyGradient):
             log = {
                 "PolicyLoss": pol_loss_old.item(),
                 "DeltaPolLoss": (pol_loss - pol_loss_old).item(),
-                "KL": approx_kl,
+                "KL": kl,
                 "Entropy": policy.entropy().mean().item(),
                 "TimesEarlyStopped": stops,
                 "AvgEarlyStopStep": np.mean(stopslst) if len(stopslst) > 0 else 0

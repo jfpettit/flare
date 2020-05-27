@@ -15,7 +15,6 @@ from flare.kindling import utils
 from gym.spaces import Box
 from flare.kindling import EpochLogger
 from flare.kindling import TensorBoardWriter
-from flare.kindling.mpi_tools import mpi_avg
 import pickle as pkl
 from typing import Optional, Any, Union, Callable, Tuple, List
 import pytorch_lightning as pl

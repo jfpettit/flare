@@ -55,15 +55,10 @@ class BasePolicyGradient(pl.LightningModule):
         else:
             self.hparams = hparams
 
-
-        seed += 10000
         torch.manual_seed(seed)
         np.random.seed(seed)
 
         self.env = env()
-        self.env.seed(seed)
-        self.env.action_space.seed(seed)
-        self.env.observation_space.seed(seed)
 
         self.ac = ac(
             self.env.observation_space.shape[0],

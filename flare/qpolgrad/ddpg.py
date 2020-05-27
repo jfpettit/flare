@@ -3,7 +3,7 @@ import torch
 import gym
 import torch.nn.functional as F
 from termcolor import cprint
-from flare.qpolgrad import BaseQPolicyGradient
+from flare.qpolgrad.base import BaseQPolicyGradient
 import flare.kindling as fk
 from flare.kindling import ReplayBuffer
 from typing import Optional, Union, Callable
@@ -32,13 +32,6 @@ class DDPG(BaseQPolicyGradient):
         update_every: Optional[int] = 50,
         act_noise: Optional[float] = 0.1,
         buffer: Optional[float] = ReplayBuffer,
-        save_freq: Optional[int] = 1,
-        state_preproc: Optional[Callable] = None,
-        state_sze: Optional[Union[int, tuple]] = None,
-        logger_dir: Optional[str] = None,
-        tensorboard: Optional[bool] = True,
-        save_states: Optional[bool] = False,
-        save_screen: Optional[bool] = False,
     ):
 
         super().__init__(
@@ -57,33 +50,18 @@ class DDPG(BaseQPolicyGradient):
             update_after=update_after,
             update_every=update_every,
             act_noise=act_noise,
-            save_freq=save_freq,
-            buffer=buffer,
-            state_preproc=state_preproc,
-            state_sze=state_sze,
-            logger_dir=logger_dir,
-            tensorboard=tensorboard,
-            save_states=save_states,
-            save_screen=save_screen,
         )
 
-    def setup_optimizers(self, pol_lr, q_lr):
+    def configure_optimizers(self, pol_lr, q_lr):
         self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
         self.q_optimizer = torch.optim.Adam(self.ac.qfunc.parameters(), lr=q_lr)
 
-    def calc_policy_loss(self, data):
-        o = data["obs"]
-        q_pi = self.ac.qfunc(o, self.ac.policy(o))
+    def calc_pol_loss(self, states):
+        q_pi = self.ac.qfunc(states, self.ac.policy(states))
         return -q_pi.mean()
 
     def calc_qfunc_loss(self, data):
-        o, a, r, o2, d = (
-            data["obs"],
-            data["act"],
-            data["rew"],
-            data["obs2"],
-            data["done"],
-        )
+        o, a, r, o2, d = data 
 
         q = self.ac.qfunc(o, a)
 
@@ -100,40 +78,79 @@ class DDPG(BaseQPolicyGradient):
 
         return loss_q, loss_info
 
-    def update(self, data, timer=None):
-        # First run one gradient descent step for Q.
-        self.q_optimizer.zero_grad()
-        loss_q, loss_info = self.calc_qfunc_loss(data)
-        loss_q.backward()
-        self.q_optimizer.step()
+    def training_step(self, batch, batch_idx, optimizer_idx):
+        if optimizer_idx == 0:
+            self.policy_optimizer.zero_grad()
+            policy_loss = self.calc_pol_loss(batch[0])
+            policy_loss.backward()
+            self.policy_optimizer.step()
+            log = {
+                "PolicyLoss": policy_loss
+            }
+            loss = policy_loss
 
-        # Freeze Q-network so you don't waste computational effort
-        # computing gradients for it during the policy learning step.
-        for p in self.ac.qfunc.parameters():
-            p.requires_grad = False
+        if optimizer_idx == 1:
+            # First run one gradient descent step for Q.
+            self.q_optimizer.zero_grad()
+            q_loss, loss_info = self.calc_qfunc_loss(batch)
+            q_loss.backward()
+            self.q_optimizer.step()
 
-        # Next run one gradient descent step for pi.
-        self.policy_optimizer.zero_grad()
-        loss_pi = self.calc_policy_loss(data)
-        loss_pi.backward()
-        self.policy_optimizer.step()
+            # Freeze Q-network so you don't waste computational effort
+            # computing gradients for it during the policy learning step.
+            for p in self.ac.qfunc.parameters():
+                p.requires_grad = False
 
-        # Unfreeze Q-network so you can optimize it at next DDPG step.
-        for p in self.ac.qfunc.parameters():
-            p.requires_grad = True
+            # Unfreeze Q-network so you can optimize it at next DDPG step.
+            for p in self.ac.qfunc.parameters():
+                p.requires_grad = True
 
-        # Record things
-        self.logger.store(QLoss=loss_q.item(), PolicyLoss=loss_pi.item(), **loss_info)
+            # Finally, update target networks by polyak averaging.
+            with torch.no_grad():
+                for p, p_targ in zip(self.ac.parameters(), self.ac_targ.parameters()):
+                    # NB: We use an in-place operations "mul_", "add_" to update target
+                    # params, as opposed to "mul" and "add", which would make new tensors.
+                    p_targ.data.mul_(self.polyak)
+                    p_targ.data.add_((1 - self.polyak) * p.data)
 
-        # Finally, update target networks by polyak averaging.
-        with torch.no_grad():
-            for p, p_targ in zip(self.ac.parameters(), self.ac_targ.parameters()):
-                # NB: We use an in-place operations "mul_", "add_" to update target
-                # params, as opposed to "mul" and "add", which would make new tensors.
-                p_targ.data.mul_(self.polyak)
-                p_targ.data.add_((1 - self.polyak) * p.data)
+            log = dict(QLoss=q_loss, **loss_info)
+            loss = q_loss
 
-    def logger_tabular_to_dump(self):
-        self.logger.log_tabular("QValues", with_min_and_max=True)
-        self.logger.log_tabular("PolicyLoss", average_only=True)
-        self.logger.log_tabular("QLoss", average_only=True)
+        self.tracker_dict.update(log)
+        return {"loss": loss, "log": log, "progress_bar": log}
+
+    def backward(self, trainer, loss, optimizer, optimizer_idx):
+        pass
+
+    def optimizer_step(
+        self,
+        epoch,
+        batch_idx,
+        optimizer,
+        optimizer_idx,
+        second_order_closure = None
+    ):
+        optimizer.zero_grad()
+
+def learn(
+    env_name,
+    epochs: Optional[int] = 10000,
+    minibatch_size: Optional[int] = None,
+    steps_per_epoch: Optional[int] = 4000,
+    hidden_sizes: Optional[Union[Tuple, List]] = (256, 256),
+    gamma: Optional[float] = 0.99,
+    hparams = None,
+    seed = 0
+):
+    from flare.qpolgrad.base import runner 
+    minibatch_size = 50 if minibatch_size is None else minibatch_size
+    runner(
+        env_name, 
+        DDPG,
+        epochs=epochs, 
+        minibatch_size=minibatch_size, 
+        hidden_sizes=hidden_sizes,
+        gamma=gamma,
+        hparams=hparams,
+        seed = seed
+        )

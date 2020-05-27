@@ -7,7 +7,6 @@ import pybullet_envs
 import time
 import flare.kindling as fk
 from flare.kindling import utils
-from flare.kindling.mpi_tools import mpi_avg
 from typing import Optional, Any, Union, Callable, Tuple, List
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, Dataset
@@ -73,7 +72,7 @@ class A2C(BasePolicyGradient):
             pol_loss = self.calc_pol_loss(logps, advs)
 
             ent = policy.entropy().mean().item() 
-            kl = mpi_avg((logps_old - logps).mean().item())
+            kl = (logps_old - logps).mean().item()
             delta_pol_loss = (pol_loss - pol_loss_old).item()
             log = {"PolicyLoss": pol_loss_old.item(), "DeltaPolLoss": delta_pol_loss, "Entropy": ent, "KL": kl}
             loss = pol_loss
