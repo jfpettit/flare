@@ -1,1707 +1,0 @@
-
-  | Name | Type            | Params
------------------------------------------
-0 | ac   | FireActorCritic | 7 K   
-Training: 0it [00:00, ?it/s]/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Training:   0%|                                                                                            | 0/1 [00:00<?, ?it/s]Epoch 1:   0%|                                                                                             | 0/1 [00:00<?, ?it/s]Epoch 1: 100%|█████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.23it/s]Epoch 1: 100%|█| 1/1 [00:00<00:00,  1.23it/s, loss=5394.669, v_num=2by5xy7v, PolicyLoss=1.01e-7, DeltaPolLoss=-.0192, KL=0.0122, 
-
-MeanEpReturn: -1160.8214600718436
-StdEpReturn: 24.44069819255433
-MaxEpReturn: -1136.4403207169978
-MinEpReturn: -1194.1440334880508
-MeanEpLength: 1000.0
-PolicyLoss: 1.0085106083579376e-07
-DeltaPolLoss: -0.019161643460392952
-KL: 0.012175094336271286
-Entropy: 0.9109542369842529
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 11997.2041015625
-DeltaValLoss: -1207.865234375
-
-
-Epoch 1:   0%| | 0/1 [00:00<?, ?it/s, loss=5394.669, v_num=2by5xy7v, PolicyLoss=1.01e-7, DeltaPolLoss=-.0192, KL=0.0122, Entropy=Epoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=5394.669, v_num=2by5xy7v, PolicyLoss=1.01e-7, DeltaPolLoss=-.0192, KL=0.0122, Entropy=Epoch 2: 100%|█| 1/1 [00:00<00:00,  2.32it/s, loss=5394.669, v_num=2by5xy7v, PolicyLoss=1.01e-7, DeltaPolLoss=-.0192, KL=0.0122, Epoch 2: 100%|█| 1/1 [00:00<00:00,  2.32it/s, loss=5327.576, v_num=2by5xy7v, PolicyLoss=-1.84e-7, DeltaPolLoss=-.00925, KL=0.0178
-
-MeanEpReturn: -1172.175737115665
-StdEpReturn: 73.448115136462
-MaxEpReturn: -1069.2294407755464
-MinEpReturn: -1272.2629203033282
-MeanEpLength: 1000.0
-PolicyLoss: -1.8405914659069822e-07
-DeltaPolLoss: -0.009245935827493668
-KL: 0.0177923571318388
-Entropy: 0.9105064272880554
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 6.0
-ValueLoss: 11143.376953125
-DeltaValLoss: -622.4111328125
-
-
-Epoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=5327.576, v_num=2by5xy7v, PolicyLoss=-1.84e-7, DeltaPolLoss=-.00925, KL=0.0178, EntropEpoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=5327.576, v_num=2by5xy7v, PolicyLoss=-1.84e-7, DeltaPolLoss=-.00925, KL=0.0178, EntropEpoch 3: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=5327.576, v_num=2by5xy7v, PolicyLoss=-1.84e-7, DeltaPolLoss=-.00925, KL=0.0178Epoch 3: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=4876.074, v_num=2by5xy7v, PolicyLoss=-1.65e-7, DeltaPolLoss=-.0186, KL=0.00896
-
-MeanEpReturn: -1055.7377305750645
-StdEpReturn: 53.833860236765496
-MaxEpReturn: -983.4416407249377
-MinEpReturn: -1135.343543209618
-MeanEpLength: 1000.0
-PolicyLoss: -1.6474723452120088e-07
-DeltaPolLoss: -0.0185950119048357
-KL: 0.008964505046606064
-Entropy: 0.8992970585823059
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 8399.06640625
-DeltaValLoss: -452.9248046875
-
-
-Epoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=4876.074, v_num=2by5xy7v, PolicyLoss=-1.65e-7, DeltaPolLoss=-.0186, KL=0.00896, EntropEpoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=4876.074, v_num=2by5xy7v, PolicyLoss=-1.65e-7, DeltaPolLoss=-.0186, KL=0.00896, EntropEpoch 4: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=4876.074, v_num=2by5xy7v, PolicyLoss=-1.65e-7, DeltaPolLoss=-.0186, KL=0.00896Epoch 4: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=4542.234, v_num=2by5xy7v, PolicyLoss=-3.69e-7, DeltaPolLoss=-.019, KL=0.00874,
-
-MeanEpReturn: -1009.9986598907341
-StdEpReturn: 27.13180356798734
-MaxEpReturn: -976.1323256315122
-MinEpReturn: -1051.948910574849
-MeanEpLength: 1000.0
-PolicyLoss: -3.689527545702731e-07
-DeltaPolLoss: -0.019019611179828644
-KL: 0.008738490752875805
-Entropy: 0.8875589370727539
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 7487.66650390625
-DeltaValLoss: -406.23486328125
-
-
-Epoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=4542.234, v_num=2by5xy7v, PolicyLoss=-3.69e-7, DeltaPolLoss=-.019, KL=0.00874, EntropyEpoch 5:   0%| | 0/1 [00:00<?, ?it/s, loss=4542.234, v_num=2by5xy7v, PolicyLoss=-3.69e-7, DeltaPolLoss=-.019, KL=0.00874, EntropyEpoch 5: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=4542.234, v_num=2by5xy7v, PolicyLoss=-3.69e-7, DeltaPolLoss=-.019, KL=0.00874,Epoch 5: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=4155.919, v_num=2by5xy7v, PolicyLoss=3.54e-7, DeltaPolLoss=-.0196, KL=0.00893,
-
-MeanEpReturn: -905.666997939301
-StdEpReturn: 67.03175793395137
-MaxEpReturn: -798.7455611482155
-MinEpReturn: -981.3165604260408
-MeanEpLength: 1000.0
-PolicyLoss: 3.5357476235731156e-07
-DeltaPolLoss: -0.019633067771792412
-KL: 0.008927724324166775
-Entropy: 0.8797721266746521
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 5529.98291015625
-DeltaValLoss: -308.66064453125
-
-
-Epoch 5:   0%| | 0/1 [00:00<?, ?it/s, loss=4155.919, v_num=2by5xy7v, PolicyLoss=3.54e-7, DeltaPolLoss=-.0196, KL=0.00893, EntropyEpoch 6:   0%| | 0/1 [00:00<?, ?it/s, loss=4155.919, v_num=2by5xy7v, PolicyLoss=3.54e-7, DeltaPolLoss=-.0196, KL=0.00893, EntropyEpoch 6: 100%|█| 1/1 [00:00<00:00,  1.22it/s, loss=4155.919, v_num=2by5xy7v, PolicyLoss=3.54e-7, DeltaPolLoss=-.0196, KL=0.00893,Epoch 6: 100%|█| 1/1 [00:00<00:00,  1.22it/s, loss=3830.550, v_num=2by5xy7v, PolicyLoss=-2.72e-7, DeltaPolLoss=-.0208, KL=0.0113,
-
-MeanEpReturn: -869.7356125527649
-StdEpReturn: 61.28528711194588
-MaxEpReturn: -818.5997162278292
-MinEpReturn: -974.3289325959753
-MeanEpLength: 1000.0
-PolicyLoss: -2.7191637741452723e-07
-DeltaPolLoss: -0.020834650844335556
-KL: 0.011344457976520061
-Entropy: 0.8784632086753845
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4674.6171875
-DeltaValLoss: -267.212890625
-
-
-Epoch 6:   0%| | 0/1 [00:00<?, ?it/s, loss=3830.550, v_num=2by5xy7v, PolicyLoss=-2.72e-7, DeltaPolLoss=-.0208, KL=0.0113, EntropyEpoch 7:   0%| | 0/1 [00:00<?, ?it/s, loss=3830.550, v_num=2by5xy7v, PolicyLoss=-2.72e-7, DeltaPolLoss=-.0208, KL=0.0113, EntropyEpoch 7: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=3830.550, v_num=2by5xy7v, PolicyLoss=-2.72e-7, DeltaPolLoss=-.0208, KL=0.0113,Epoch 7: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=3585.553, v_num=2by5xy7v, PolicyLoss=-9.39e-8, DeltaPolLoss=-.0205, KL=0.00834
-
-MeanEpReturn: -869.9031478184972
-StdEpReturn: 58.47980022035901
-MaxEpReturn: -799.0961060046963
-MinEpReturn: -961.7287928747843
-MeanEpLength: 1000.0
-PolicyLoss: -9.393691868808673e-08
-DeltaPolLoss: -0.02046727016568184
-KL: 0.00833933986723423
-Entropy: 0.8620955348014832
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4501.16650390625
-DeltaValLoss: -270.01708984375
-
-
-Epoch 7:   0%| | 0/1 [00:00<?, ?it/s, loss=3585.553, v_num=2by5xy7v, PolicyLoss=-9.39e-8, DeltaPolLoss=-.0205, KL=0.00834, EntropEpoch 8:   0%| | 0/1 [00:00<?, ?it/s, loss=3585.553, v_num=2by5xy7v, PolicyLoss=-9.39e-8, DeltaPolLoss=-.0205, KL=0.00834, EntropEpoch 8: 100%|█| 1/1 [00:00<00:00,  1.26it/s, loss=3585.553, v_num=2by5xy7v, PolicyLoss=-9.39e-8, DeltaPolLoss=-.0205, KL=0.00834Epoch 8: 100%|█| 1/1 [00:00<00:00,  1.26it/s, loss=3347.651, v_num=2by5xy7v, PolicyLoss=3.55e-8, DeltaPolLoss=-.0213, KL=0.00957,
-
-MeanEpReturn: -802.1524195570998
-StdEpReturn: 49.700289243352195
-MaxEpReturn: -734.210626950062
-MinEpReturn: -870.6840684859447
-MeanEpLength: 1000.0
-PolicyLoss: 3.5524369224049224e-08
-DeltaPolLoss: -0.021277299150824547
-KL: 0.009572713635861874
-Entropy: 0.8549161553382874
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 3584.42431640625
-DeltaValLoss: -219.761474609375
-
-
-Epoch 8:   0%| | 0/1 [00:00<?, ?it/s, loss=3347.651, v_num=2by5xy7v, PolicyLoss=3.55e-8, DeltaPolLoss=-.0213, KL=0.00957, EntropyEpoch 9:   0%| | 0/1 [00:00<?, ?it/s, loss=3347.651, v_num=2by5xy7v, PolicyLoss=3.55e-8, DeltaPolLoss=-.0213, KL=0.00957, EntropyEpoch 9: 100%|█| 1/1 [00:00<00:00,  1.26it/s, loss=3347.651, v_num=2by5xy7v, PolicyLoss=3.55e-8, DeltaPolLoss=-.0213, KL=0.00957,Epoch 9: 100%|█| 1/1 [00:00<00:00,  1.26it/s, loss=3255.577, v_num=2by5xy7v, PolicyLoss=-9.16e-8, DeltaPolLoss=-.0165, KL=0.00533
-
-MeanEpReturn: -919.1990869204872
-StdEpReturn: 231.26855553046755
-MaxEpReturn: -783.0679904854943
-MinEpReturn: -1319.7535225107454
-MeanEpLength: 1000.0
-PolicyLoss: -9.155273517080786e-08
-DeltaPolLoss: -0.01647946983575821
-KL: 0.005331696476787329
-Entropy: 0.8497428297996521
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 5336.86328125
-DeltaValLoss: -298.89111328125
-
-
-Epoch 9:   0%| | 0/1 [00:00<?, ?it/s, loss=3255.577, v_num=2by5xy7v, PolicyLoss=-9.16e-8, DeltaPolLoss=-.0165, KL=0.00533, EntropEpoch 10:   0%| | 0/1 [00:00<?, ?it/s, loss=3255.577, v_num=2by5xy7v, PolicyLoss=-9.16e-8, DeltaPolLoss=-.0165, KL=0.00533, EntroEpoch 10: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=3255.577, v_num=2by5xy7v, PolicyLoss=-9.16e-8, DeltaPolLoss=-.0165, KL=0.0053Epoch 10: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=3055.208, v_num=2by5xy7v, PolicyLoss=-4.01e-8, DeltaPolLoss=-.0196, KL=0.0068
-
-MeanEpReturn: -771.7216142773852
-StdEpReturn: 24.145346720317953
-MaxEpReturn: -746.4425290262215
-MinEpReturn: -797.9891508277145
-MeanEpLength: 1000.0
-PolicyLoss: -4.005432074905002e-08
-DeltaPolLoss: -0.0195823572576046
-KL: 0.006810125894844532
-Entropy: 0.8463835716247559
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2681.45556640625
-DeltaValLoss: -177.669677734375
-
-
-Epoch 10:   0%| | 0/1 [00:00<?, ?it/s, loss=3055.208, v_num=2by5xy7v, PolicyLoss=-4.01e-8, DeltaPolLoss=-.0196, KL=0.00681, EntroEpoch 11:   0%| | 0/1 [00:00<?, ?it/s, loss=3055.208, v_num=2by5xy7v, PolicyLoss=-4.01e-8, DeltaPolLoss=-.0196, KL=0.00681, EntroEpoch 11: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=3055.208, v_num=2by5xy7v, PolicyLoss=-4.01e-8, DeltaPolLoss=-.0196, KL=0.0068Epoch 11: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=2619.187, v_num=2by5xy7v, PolicyLoss=9.99e-8, DeltaPolLoss=-.0208, KL=0.00931
-
-MeanEpReturn: -744.3648354140298
-StdEpReturn: 23.447714929192443
-MaxEpReturn: -705.1432998410363
-MinEpReturn: -763.7026262611332
-MeanEpLength: 1000.0
-PolicyLoss: 9.989738458671127e-08
-DeltaPolLoss: -0.02083374187350273
-KL: 0.009306921623647213
-Entropy: 0.8397087454795837
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2219.279052734375
-DeltaValLoss: -150.37744140625
-
-
-Epoch 11:   0%| | 0/1 [00:00<?, ?it/s, loss=2619.187, v_num=2by5xy7v, PolicyLoss=9.99e-8, DeltaPolLoss=-.0208, KL=0.00931, EntropEpoch 12:   0%| | 0/1 [00:00<?, ?it/s, loss=2619.187, v_num=2by5xy7v, PolicyLoss=9.99e-8, DeltaPolLoss=-.0208, KL=0.00931, EntropEpoch 12: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=2619.187, v_num=2by5xy7v, PolicyLoss=9.99e-8, DeltaPolLoss=-.0208, KL=0.00931Epoch 12: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=2283.475, v_num=2by5xy7v, PolicyLoss=-1.19e-10, DeltaPolLoss=-.0151, KL=0.006
-
-MeanEpReturn: -858.4292429104319
-StdEpReturn: 283.9950252252863
-MaxEpReturn: -677.5195820496241
-MinEpReturn: -1349.3337684624228
-MeanEpLength: 1000.0
-PolicyLoss: -1.1920929521291868e-10
-DeltaPolLoss: -0.015118860639631748
-KL: 0.006328565534204245
-Entropy: 0.8368078470230103
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4030.248046875
-DeltaValLoss: -223.529541015625
-
-
-Epoch 12:   0%| | 0/1 [00:00<?, ?it/s, loss=2283.475, v_num=2by5xy7v, PolicyLoss=-1.19e-10, DeltaPolLoss=-.0151, KL=0.00633, EntrEpoch 13:   0%| | 0/1 [00:00<?, ?it/s, loss=2283.475, v_num=2by5xy7v, PolicyLoss=-1.19e-10, DeltaPolLoss=-.0151, KL=0.00633, EntrEpoch 13: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=2283.475, v_num=2by5xy7v, PolicyLoss=-1.19e-10, DeltaPolLoss=-.0151, KL=0.006Epoch 13: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=2056.772, v_num=2by5xy7v, PolicyLoss=-8.21e-8, DeltaPolLoss=-.0159, KL=0.0055
-
-MeanEpReturn: -844.2896195024639
-StdEpReturn: 275.8443660887487
-MaxEpReturn: -630.0752680069039
-MinEpReturn: -1318.2469856964187
-MeanEpLength: 1000.0
-PolicyLoss: -8.21352017510435e-08
-DeltaPolLoss: -0.01589452661573887
-KL: 0.005593685898929834
-Entropy: 0.8244375586509705
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 3618.28466796875
-DeltaValLoss: -206.1943359375
-
-
-Epoch 13:   0%| | 0/1 [00:00<?, ?it/s, loss=2056.772, v_num=2by5xy7v, PolicyLoss=-8.21e-8, DeltaPolLoss=-.0159, KL=0.00559, EntroEpoch 14:   0%| | 0/1 [00:00<?, ?it/s, loss=2056.772, v_num=2by5xy7v, PolicyLoss=-8.21e-8, DeltaPolLoss=-.0159, KL=0.00559, EntroEpoch 14: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=2056.772, v_num=2by5xy7v, PolicyLoss=-8.21e-8, DeltaPolLoss=-.0159, KL=0.0055Epoch 14: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=1766.133, v_num=2by5xy7v, PolicyLoss=1.26e-7, DeltaPolLoss=-.0204, KL=0.00723
-
-MeanEpReturn: -670.7544542743824
-StdEpReturn: 53.735130733385894
-MaxEpReturn: -578.9693359315962
-MinEpReturn: -711.8284732958813
-MeanEpLength: 1000.0
-PolicyLoss: 1.264810549628237e-07
-DeltaPolLoss: -0.020377781242132187
-KL: 0.007226197514683008
-Entropy: 0.8172426819801331
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1364.2586669921875
-DeltaValLoss: -95.6114501953125
-
-
-Epoch 14:   0%| | 0/1 [00:00<?, ?it/s, loss=1766.133, v_num=2by5xy7v, PolicyLoss=1.26e-7, DeltaPolLoss=-.0204, KL=0.00723, EntropEpoch 15:   0%| | 0/1 [00:00<?, ?it/s, loss=1766.133, v_num=2by5xy7v, PolicyLoss=1.26e-7, DeltaPolLoss=-.0204, KL=0.00723, EntropEpoch 15: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=1766.133, v_num=2by5xy7v, PolicyLoss=1.26e-7, DeltaPolLoss=-.0204, KL=0.00723Epoch 15: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=1540.158, v_num=2by5xy7v, PolicyLoss=-4.05e-8, DeltaPolLoss=-.0179, KL=0.0083
-
-MeanEpReturn: -596.6138457600586
-StdEpReturn: 44.189640775837546
-MaxEpReturn: -566.6153158904674
-MinEpReturn: -672.7944263721557
-MeanEpLength: 1000.0
-PolicyLoss: -4.0531158873591266e-08
-DeltaPolLoss: -0.01794659160077572
-KL: 0.008332397788763046
-Entropy: 0.8086804747581482
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 755.3767700195312
-DeltaValLoss: -53.555419921875
-
-
-Epoch 15:   0%| | 0/1 [00:00<?, ?it/s, loss=1540.158, v_num=2by5xy7v, PolicyLoss=-4.05e-8, DeltaPolLoss=-.0179, KL=0.00833, EntroEpoch 16:   0%| | 0/1 [00:00<?, ?it/s, loss=1540.158, v_num=2by5xy7v, PolicyLoss=-4.05e-8, DeltaPolLoss=-.0179, KL=0.00833, EntroEpoch 16: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=1540.158, v_num=2by5xy7v, PolicyLoss=-4.05e-8, DeltaPolLoss=-.0179, KL=0.0083Epoch 16: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=1357.213, v_num=2by5xy7v, PolicyLoss=1.5e-8, DeltaPolLoss=-.0224, KL=0.0112, 
-
-MeanEpReturn: -628.9542513779782
-StdEpReturn: 47.05524120623057
-MaxEpReturn: -574.6362718779977
-MinEpReturn: -696.2714862521891
-MeanEpLength: 1000.0
-PolicyLoss: 1.5020370724982968e-08
-DeltaPolLoss: -0.02240636758506298
-KL: 0.011178075335919857
-Entropy: 0.8015261292457581
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 809.8775024414062
-DeltaValLoss: -61.36724853515625
-
-
-Epoch 16:   0%| | 0/1 [00:00<?, ?it/s, loss=1357.213, v_num=2by5xy7v, PolicyLoss=1.5e-8, DeltaPolLoss=-.0224, KL=0.0112, Entropy=Epoch 17:   0%| | 0/1 [00:00<?, ?it/s, loss=1357.213, v_num=2by5xy7v, PolicyLoss=1.5e-8, DeltaPolLoss=-.0224, KL=0.0112, Entropy=Epoch 17: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=1357.213, v_num=2by5xy7v, PolicyLoss=1.5e-8, DeltaPolLoss=-.0224, KL=0.0112, Epoch 17: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=1277.562, v_num=2by5xy7v, PolicyLoss=3.54e-8, DeltaPolLoss=-.0143, KL=0.0056,
-
-MeanEpReturn: -760.3983888124783
-StdEpReturn: 360.82473484993255
-MaxEpReturn: -524.904603676453
-MinEpReturn: -1384.5792453861409
-MeanEpLength: 1000.0
-PolicyLoss: 3.543496163160853e-08
-DeltaPolLoss: -0.014257686212658882
-KL: 0.00559692969545722
-Entropy: 0.7880818843841553
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2764.232177734375
-DeltaValLoss: -126.107177734375
-
-
-Epoch 17:   0%| | 0/1 [00:00<?, ?it/s, loss=1277.562, v_num=2by5xy7v, PolicyLoss=3.54e-8, DeltaPolLoss=-.0143, KL=0.0056, EntropyEpoch 18:   0%| | 0/1 [00:00<?, ?it/s, loss=1277.562, v_num=2by5xy7v, PolicyLoss=3.54e-8, DeltaPolLoss=-.0143, KL=0.0056, EntropyEpoch 18: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=1277.562, v_num=2by5xy7v, PolicyLoss=3.54e-8, DeltaPolLoss=-.0143, KL=0.0056,Epoch 18: 100%|█| 1/1 [00:00<00:00,  1.33it/s, loss=1128.723, v_num=2by5xy7v, PolicyLoss=2.03e-8, DeltaPolLoss=-.0188, KL=0.0104,
-
-MeanEpReturn: -552.9953340227396
-StdEpReturn: 30.72489520378139
-MaxEpReturn: -502.2016907132471
-MinEpReturn: -580.9109534783073
-MeanEpLength: 1000.0
-PolicyLoss: 2.0265579436795633e-08
-DeltaPolLoss: -0.018811091780662537
-KL: 0.0103856660425663
-Entropy: 0.7783041000366211
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 422.1385498046875
-DeltaValLoss: -34.244415283203125
-
-
-Epoch 18:   0%| | 0/1 [00:00<?, ?it/s, loss=1128.723, v_num=2by5xy7v, PolicyLoss=2.03e-8, DeltaPolLoss=-.0188, KL=0.0104, EntropyEpoch 19:   0%| | 0/1 [00:00<?, ?it/s, loss=1128.723, v_num=2by5xy7v, PolicyLoss=2.03e-8, DeltaPolLoss=-.0188, KL=0.0104, EntropyEpoch 19: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=1128.723, v_num=2by5xy7v, PolicyLoss=2.03e-8, DeltaPolLoss=-.0188, KL=0.0104,Epoch 19: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=888.726, v_num=2by5xy7v, PolicyLoss=5.78e-9, DeltaPolLoss=-.0199, KL=0.00876,
-
-MeanEpReturn: -517.2921013535995
-StdEpReturn: 45.42836127073938
-MaxEpReturn: -447.1356031905097
-MinEpReturn: -560.4592106001408
-MeanEpLength: 1000.0
-PolicyLoss: 5.781650713743147e-09
-DeltaPolLoss: -0.019934412091970444
-KL: 0.008759329095482826
-Entropy: 0.7659707069396973
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 254.7480926513672
-DeltaValLoss: -16.730361938476562
-
-
-Epoch 19:   0%| | 0/1 [00:00<?, ?it/s, loss=888.726, v_num=2by5xy7v, PolicyLoss=5.78e-9, DeltaPolLoss=-.0199, KL=0.00876, EntropyEpoch 20:   0%| | 0/1 [00:00<?, ?it/s, loss=888.726, v_num=2by5xy7v, PolicyLoss=5.78e-9, DeltaPolLoss=-.0199, KL=0.00876, EntropyEpoch 20: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=888.726, v_num=2by5xy7v, PolicyLoss=5.78e-9, DeltaPolLoss=-.0199, KL=0.00876,Epoch 20: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=775.556, v_num=2by5xy7v, PolicyLoss=-2.17e-8, DeltaPolLoss=-.0216, KL=0.00391
-
-MeanEpReturn: -507.0418442260932
-StdEpReturn: 44.3543536168492
-MaxEpReturn: -432.0033823481466
-MinEpReturn: -547.5195283467035
-MeanEpLength: 1000.0
-PolicyLoss: -2.169609025770569e-08
-DeltaPolLoss: -0.021629352122545242
-KL: 0.003914143890142441
-Entropy: 0.7519323825836182
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 256.0047302246094
-DeltaValLoss: -15.612899780273438
-
-
-Epoch 20:   0%| | 0/1 [00:00<?, ?it/s, loss=775.556, v_num=2by5xy7v, PolicyLoss=-2.17e-8, DeltaPolLoss=-.0216, KL=0.00391, EntropEpoch 21:   0%| | 0/1 [00:00<?, ?it/s, loss=775.556, v_num=2by5xy7v, PolicyLoss=-2.17e-8, DeltaPolLoss=-.0216, KL=0.00391, EntropEpoch 21: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=775.556, v_num=2by5xy7v, PolicyLoss=-2.17e-8, DeltaPolLoss=-.0216, KL=0.00391Epoch 21: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=679.555, v_num=2by5xy7v, PolicyLoss=1.34e-8, DeltaPolLoss=-.0193, KL=0.0127, 
-
-MeanEpReturn: -447.5564900570617
-StdEpReturn: 55.07910093030696
-MaxEpReturn: -382.5084696351244
-MinEpReturn: -530.0830378459128
-MeanEpLength: 1000.0
-PolicyLoss: 1.3351440841802287e-08
-DeltaPolLoss: -0.0192506555467844
-KL: 0.012713861651718616
-Entropy: 0.7455767393112183
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 152.70863342285156
-DeltaValLoss: -3.82421875
-
-
-Epoch 21:   0%| | 0/1 [00:00<?, ?it/s, loss=679.555, v_num=2by5xy7v, PolicyLoss=1.34e-8, DeltaPolLoss=-.0193, KL=0.0127, Entropy=Epoch 22:   0%| | 0/1 [00:00<?, ?it/s, loss=679.555, v_num=2by5xy7v, PolicyLoss=1.34e-8, DeltaPolLoss=-.0193, KL=0.0127, Entropy=Epoch 22: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=679.555, v_num=2by5xy7v, PolicyLoss=1.34e-8, DeltaPolLoss=-.0193, KL=0.0127, Epoch 22: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=607.648, v_num=2by5xy7v, PolicyLoss=-1.45e-8, DeltaPolLoss=-.0185, KL=0.00735
-
-MeanEpReturn: -653.3711808408306
-StdEpReturn: 437.9070315600658
-MaxEpReturn: -355.7562773140673
-MinEpReturn: -1409.1357160613643
-MeanEpLength: 1000.0
-PolicyLoss: -1.4513730661747104e-08
-DeltaPolLoss: -0.01850920543074608
-KL: 0.007352108135819435
-Entropy: 0.7407094836235046
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2430.39404296875
-DeltaValLoss: -61.814453125
-
-
-Epoch 22:   0%| | 0/1 [00:00<?, ?it/s, loss=607.648, v_num=2by5xy7v, PolicyLoss=-1.45e-8, DeltaPolLoss=-.0185, KL=0.00735, EntropEpoch 23:   0%| | 0/1 [00:00<?, ?it/s, loss=607.648, v_num=2by5xy7v, PolicyLoss=-1.45e-8, DeltaPolLoss=-.0185, KL=0.00735, EntropEpoch 23: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=607.648, v_num=2by5xy7v, PolicyLoss=-1.45e-8, DeltaPolLoss=-.0185, KL=0.00735Epoch 23: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=441.108, v_num=2by5xy7v, PolicyLoss=7.15e-9, DeltaPolLoss=-.0206, KL=0.0104, 
-
-MeanEpReturn: -426.80909377628547
-StdEpReturn: 36.118614722497874
-MaxEpReturn: -389.977783625982
-MinEpReturn: -481.3429173764421
-MeanEpLength: 1000.0
-PolicyLoss: 7.1525572131747595e-09
-DeltaPolLoss: -0.02064274251461029
-KL: 0.010430822148919106
-Entropy: 0.7400051355361938
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 82.65032958984375
-DeltaValLoss: -1.3568878173828125
-
-
-Epoch 23:   0%| | 0/1 [00:00<?, ?it/s, loss=441.108, v_num=2by5xy7v, PolicyLoss=7.15e-9, DeltaPolLoss=-.0206, KL=0.0104, Entropy=Epoch 24:   0%| | 0/1 [00:00<?, ?it/s, loss=441.108, v_num=2by5xy7v, PolicyLoss=7.15e-9, DeltaPolLoss=-.0206, KL=0.0104, Entropy=Epoch 24: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=441.108, v_num=2by5xy7v, PolicyLoss=7.15e-9, DeltaPolLoss=-.0206, KL=0.0104, Epoch 24: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=398.709, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0207, KL=0.0143,
-
-MeanEpReturn: -463.17171508859815
-StdEpReturn: 71.06858157047876
-MaxEpReturn: -359.4551016181882
-MinEpReturn: -557.1020851232793
-MeanEpLength: 1000.0
-PolicyLoss: -1.8119811429073707e-08
-DeltaPolLoss: -0.020730601623654366
-KL: 0.014338000677525997
-Entropy: 0.7423710227012634
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 424.0783996582031
-DeltaValLoss: -3.41741943359375
-
-
-Epoch 24:   0%| | 0/1 [00:00<?, ?it/s, loss=398.709, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0207, KL=0.0143, EntropyEpoch 25:   0%| | 0/1 [00:00<?, ?it/s, loss=398.709, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0207, KL=0.0143, EntropyEpoch 25: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=398.709, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0207, KL=0.0143,Epoch 25: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=485.468, v_num=2by5xy7v, PolicyLoss=1.04e-8, DeltaPolLoss=-.0153, KL=0.000452
-
-MeanEpReturn: -638.5468958082735
-StdEpReturn: 450.6325975236765
-MaxEpReturn: -305.11005600419793
-MinEpReturn: -1412.5406901990084
-MeanEpLength: 1000.0
-PolicyLoss: 1.037120789249002e-08
-DeltaPolLoss: -0.015254813246428967
-KL: 0.00045240542385727167
-Entropy: 0.7318320870399475
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2494.060791015625
-DeltaValLoss: -57.05712890625
-
-
-Epoch 25:   0%| | 0/1 [00:00<?, ?it/s, loss=485.468, v_num=2by5xy7v, PolicyLoss=1.04e-8, DeltaPolLoss=-.0153, KL=0.000452, EntropEpoch 26:   0%| | 0/1 [00:00<?, ?it/s, loss=485.468, v_num=2by5xy7v, PolicyLoss=1.04e-8, DeltaPolLoss=-.0153, KL=0.000452, EntropEpoch 26: 100%|█| 1/1 [00:00<00:00,  2.87it/s, loss=485.468, v_num=2by5xy7v, PolicyLoss=1.04e-8, DeltaPolLoss=-.0153, KL=0.000452Epoch 26: 100%|█| 1/1 [00:00<00:00,  2.87it/s, loss=454.384, v_num=2by5xy7v, PolicyLoss=4.53e-9, DeltaPolLoss=-.00582, KL=0.0153,
-
-MeanEpReturn: -379.923927392102
-StdEpReturn: 38.092078960540135
-MaxEpReturn: -332.4663336689674
-MinEpReturn: -438.5831499860018
-MeanEpLength: 1000.0
-PolicyLoss: 4.529952857268427e-09
-DeltaPolLoss: -0.005818590987473726
-KL: 0.015311088413000107
-Entropy: 0.7315878868103027
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 4.0
-ValueLoss: 127.35336303710938
-DeltaValLoss: -0.5275421142578125
-
-
-Epoch 26:   0%| | 0/1 [00:00<?, ?it/s, loss=454.384, v_num=2by5xy7v, PolicyLoss=4.53e-9, DeltaPolLoss=-.00582, KL=0.0153, EntropyEpoch 27:   0%| | 0/1 [00:00<?, ?it/s, loss=454.384, v_num=2by5xy7v, PolicyLoss=4.53e-9, DeltaPolLoss=-.00582, KL=0.0153, EntropyEpoch 27: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=454.384, v_num=2by5xy7v, PolicyLoss=4.53e-9, DeltaPolLoss=-.00582, KL=0.0153,Epoch 27: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=436.617, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0181, KL=0.00577,
-
-MeanEpReturn: -560.6255583642557
-StdEpReturn: 461.9250507119598
-MaxEpReturn: -272.40581259882606
-MinEpReturn: -1360.3737269444216
-MeanEpLength: 1000.0
-PolicyLoss: 2.7418136649970393e-09
-DeltaPolLoss: -0.018137643113732338
-KL: 0.005770712625235319
-Entropy: 0.7303213477134705
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2305.633544921875
-DeltaValLoss: -22.8505859375
-
-
-Epoch 27:   0%| | 0/1 [00:00<?, ?it/s, loss=436.617, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0181, KL=0.00577, EntropyEpoch 28:   0%| | 0/1 [00:00<?, ?it/s, loss=436.617, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0181, KL=0.00577, EntropyEpoch 28: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=436.617, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0181, KL=0.00577,Epoch 28: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=634.269, v_num=2by5xy7v, PolicyLoss=8.72e-9, DeltaPolLoss=-.0163, KL=0.00168,
-
-MeanEpReturn: -859.026548610376
-StdEpReturn: 555.0041054758202
-MaxEpReturn: -281.12266271173723
-MinEpReturn: -1419.281492009895
-MeanEpLength: 1000.0
-PolicyLoss: 8.717178978656648e-09
-DeltaPolLoss: -0.01626201532781124
-KL: 0.0016824842896312475
-Entropy: 0.726904034614563
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4547.13818359375
-DeltaValLoss: -206.2001953125
-
-
-Epoch 28:   0%| | 0/1 [00:00<?, ?it/s, loss=634.269, v_num=2by5xy7v, PolicyLoss=8.72e-9, DeltaPolLoss=-.0163, KL=0.00168, EntropyEpoch 29:   0%| | 0/1 [00:00<?, ?it/s, loss=634.269, v_num=2by5xy7v, PolicyLoss=8.72e-9, DeltaPolLoss=-.0163, KL=0.00168, EntropyEpoch 29: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=634.269, v_num=2by5xy7v, PolicyLoss=8.72e-9, DeltaPolLoss=-.0163, KL=0.00168,Epoch 29: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=737.872, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0139, KL=0.0023,
-
-MeanEpReturn: -619.8669034073774
-StdEpReturn: 475.3390608770133
-MaxEpReturn: -324.04853297875985
-MinEpReturn: -1442.4197121256607
-MeanEpLength: 1000.0
-PolicyLoss: -1.919269543293467e-08
-DeltaPolLoss: -0.013877661898732185
-KL: 0.002297124359756708
-Entropy: 0.7205026745796204
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2351.31298828125
-DeltaValLoss: -41.234619140625
-
-
-Epoch 29:   0%| | 0/1 [00:00<?, ?it/s, loss=737.872, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0139, KL=0.0023, EntropyEpoch 30:   0%| | 0/1 [00:00<?, ?it/s, loss=737.872, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0139, KL=0.0023, EntropyEpoch 30: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=737.872, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0139, KL=0.0023,Epoch 30: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=736.094, v_num=2by5xy7v, PolicyLoss=1.14e-8, DeltaPolLoss=-.0215, KL=0.00912,
-
-MeanEpReturn: -345.41838256863934
-StdEpReturn: 31.340317831476334
-MaxEpReturn: -301.18769903618676
-MinEpReturn: -382.8805439502701
-MeanEpLength: 1000.0
-PolicyLoss: 1.1444091896350983e-08
-DeltaPolLoss: -0.021492106840014458
-KL: 0.009116102010011673
-Entropy: 0.7163294553756714
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 223.3556365966797
-DeltaValLoss: -18.53033447265625
-
-
-Epoch 30:   0%| | 0/1 [00:00<?, ?it/s, loss=736.094, v_num=2by5xy7v, PolicyLoss=1.14e-8, DeltaPolLoss=-.0215, KL=0.00912, EntropyEpoch 31:   0%| | 0/1 [00:00<?, ?it/s, loss=736.094, v_num=2by5xy7v, PolicyLoss=1.14e-8, DeltaPolLoss=-.0215, KL=0.00912, EntropyEpoch 31: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=736.094, v_num=2by5xy7v, PolicyLoss=1.14e-8, DeltaPolLoss=-.0215, KL=0.00912,Epoch 31: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=939.593, v_num=2by5xy7v, PolicyLoss=-5.06e-8, DeltaPolLoss=-.0169, KL=-4.37e-
-
-MeanEpReturn: -829.1585220114611
-StdEpReturn: 550.2785056661107
-MaxEpReturn: -265.39317775827806
-MinEpReturn: -1379.6615376644895
-MeanEpLength: 1000.0
-PolicyLoss: -5.05894419688957e-08
-DeltaPolLoss: -0.016923848539590836
-KL: -4.3667554564308375e-05
-Entropy: 0.7013499140739441
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4386.1513671875
-DeltaValLoss: -167.28857421875
-
-
-Epoch 31:   0%| | 0/1 [00:00<?, ?it/s, loss=939.593, v_num=2by5xy7v, PolicyLoss=-5.06e-8, DeltaPolLoss=-.0169, KL=-4.37e-5, EntroEpoch 32:   0%| | 0/1 [00:00<?, ?it/s, loss=939.593, v_num=2by5xy7v, PolicyLoss=-5.06e-8, DeltaPolLoss=-.0169, KL=-4.37e-5, EntroEpoch 32: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=939.593, v_num=2by5xy7v, PolicyLoss=-5.06e-8, DeltaPolLoss=-.0169, KL=-4.37e-Epoch 32: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=944.600, v_num=2by5xy7v, PolicyLoss=-1.31e-9, DeltaPolLoss=-.0142, KL=0.00686
-
-MeanEpReturn: -519.16333081683
-StdEpReturn: 511.4910721705484
-MaxEpReturn: -146.84850896119747
-MinEpReturn: -1401.1792667681948
-MeanEpLength: 1000.0
-PolicyLoss: -1.3113021779531664e-09
-DeltaPolLoss: -0.014157048426568508
-KL: 0.006859267596155405
-Entropy: 0.6950837969779968
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2525.456787109375
-DeltaValLoss: -56.73486328125
-
-
-Epoch 32:   0%| | 0/1 [00:00<?, ?it/s, loss=944.600, v_num=2by5xy7v, PolicyLoss=-1.31e-9, DeltaPolLoss=-.0142, KL=0.00686, EntropEpoch 33:   0%| | 0/1 [00:00<?, ?it/s, loss=944.600, v_num=2by5xy7v, PolicyLoss=-1.31e-9, DeltaPolLoss=-.0142, KL=0.00686, EntropEpoch 33: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=944.600, v_num=2by5xy7v, PolicyLoss=-1.31e-9, DeltaPolLoss=-.0142, KL=0.00686Epoch 33: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=1044.175, v_num=2by5xy7v, PolicyLoss=1.38e-8, DeltaPolLoss=-.0165, KL=0.00579
-
-MeanEpReturn: -529.2000781015795
-StdEpReturn: 504.73078578761533
-MaxEpReturn: -167.69737892141586
-MinEpReturn: -1400.0684690782875
-MeanEpLength: 1000.0
-PolicyLoss: 1.3828277189986693e-08
-DeltaPolLoss: -0.016479847952723503
-KL: 0.0057860203087329865
-Entropy: 0.6824968457221985
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2455.444580078125
-DeltaValLoss: -382.64208984375
-
-
-Epoch 33:   0%| | 0/1 [00:00<?, ?it/s, loss=1044.175, v_num=2by5xy7v, PolicyLoss=1.38e-8, DeltaPolLoss=-.0165, KL=0.00579, EntropEpoch 34:   0%| | 0/1 [00:00<?, ?it/s, loss=1044.175, v_num=2by5xy7v, PolicyLoss=1.38e-8, DeltaPolLoss=-.0165, KL=0.00579, EntropEpoch 34: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=1044.175, v_num=2by5xy7v, PolicyLoss=1.38e-8, DeltaPolLoss=-.0165, KL=0.00579Epoch 34: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=1209.646, v_num=2by5xy7v, PolicyLoss=-3.14e-8, DeltaPolLoss=-.0175, KL=0.0060
-
-MeanEpReturn: -830.931727312971
-StdEpReturn: 578.2311136197694
-MaxEpReturn: -220.8549189584141
-MinEpReturn: -1425.900343258195
-MeanEpLength: 1000.0
-PolicyLoss: -3.135204451609752e-08
-DeltaPolLoss: -0.01745767705142498
-KL: 0.006064259447157383
-Entropy: 0.6761301755905151
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 4022.56005859375
-DeltaValLoss: -292.4794921875
-
-
-Epoch 34:   0%| | 0/1 [00:00<?, ?it/s, loss=1209.646, v_num=2by5xy7v, PolicyLoss=-3.14e-8, DeltaPolLoss=-.0175, KL=0.00606, EntroEpoch 35:   0%| | 0/1 [00:00<?, ?it/s, loss=1209.646, v_num=2by5xy7v, PolicyLoss=-3.14e-8, DeltaPolLoss=-.0175, KL=0.00606, EntroEpoch 35: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=1209.646, v_num=2by5xy7v, PolicyLoss=-3.14e-8, DeltaPolLoss=-.0175, KL=0.0060Epoch 35: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=1178.567, v_num=2by5xy7v, PolicyLoss=2.24e-8, DeltaPolLoss=-.0143, KL=0.00424
-
-MeanEpReturn: -571.8073016640354
-StdEpReturn: 485.67182637969216
-MaxEpReturn: -256.5422816009217
-MinEpReturn: -1411.2896011207379
-MeanEpLength: 1000.0
-PolicyLoss: 2.241134566816072e-08
-DeltaPolLoss: -0.014307175762951374
-KL: 0.004244323819875717
-Entropy: 0.6702260971069336
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1906.8116455078125
-DeltaValLoss: -91.3988037109375
-
-
-Epoch 35:   0%| | 0/1 [00:00<?, ?it/s, loss=1178.567, v_num=2by5xy7v, PolicyLoss=2.24e-8, DeltaPolLoss=-.0143, KL=0.00424, EntropEpoch 36:   0%| | 0/1 [00:00<?, ?it/s, loss=1178.567, v_num=2by5xy7v, PolicyLoss=2.24e-8, DeltaPolLoss=-.0143, KL=0.00424, EntropEpoch 36: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=1178.567, v_num=2by5xy7v, PolicyLoss=2.24e-8, DeltaPolLoss=-.0143, KL=0.00424Epoch 36: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=1237.265, v_num=2by5xy7v, PolicyLoss=-5.96e-11, DeltaPolLoss=-.0177, KL=0.006
-
-MeanEpReturn: -488.85490460265066
-StdEpReturn: 331.8237296296719
-MaxEpReturn: -223.73832819562253
-MinEpReturn: -1056.6106095187438
-MeanEpLength: 1000.0
-PolicyLoss: -5.960464760645934e-11
-DeltaPolLoss: -0.017747657373547554
-KL: 0.006660886574536562
-Entropy: 0.6544320583343506
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1369.7659912109375
-DeltaValLoss: -68.97216796875
-
-
-Epoch 36:   0%| | 0/1 [00:00<?, ?it/s, loss=1237.265, v_num=2by5xy7v, PolicyLoss=-5.96e-11, DeltaPolLoss=-.0177, KL=0.00666, EntrEpoch 37:   0%| | 0/1 [00:00<?, ?it/s, loss=1237.265, v_num=2by5xy7v, PolicyLoss=-5.96e-11, DeltaPolLoss=-.0177, KL=0.00666, EntrEpoch 37: 100%|█| 1/1 [00:00<00:00,  2.34it/s, loss=1237.265, v_num=2by5xy7v, PolicyLoss=-5.96e-11, DeltaPolLoss=-.0177, KL=0.006Epoch 37: 100%|█| 1/1 [00:00<00:00,  2.34it/s, loss=1137.291, v_num=2by5xy7v, PolicyLoss=-1.35e-8, DeltaPolLoss=-.00773, KL=0.016
-
-MeanEpReturn: -210.75294796004164
-StdEpReturn: 104.54992747810431
-MaxEpReturn: -102.48322600788818
-MinEpReturn: -383.592122144194
-MeanEpLength: 1000.0
-PolicyLoss: -1.3530254250326834e-08
-DeltaPolLoss: -0.007726294454187155
-KL: 0.01672440394759178
-Entropy: 0.6536158323287964
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 6.0
-ValueLoss: 446.5289306640625
-DeltaValLoss: -163.2325439453125
-
-
-Epoch 37:   0%| | 0/1 [00:00<?, ?it/s, loss=1137.291, v_num=2by5xy7v, PolicyLoss=-1.35e-8, DeltaPolLoss=-.00773, KL=0.0167, EntroEpoch 38:   0%| | 0/1 [00:00<?, ?it/s, loss=1137.291, v_num=2by5xy7v, PolicyLoss=-1.35e-8, DeltaPolLoss=-.00773, KL=0.0167, EntroEpoch 38: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=1137.291, v_num=2by5xy7v, PolicyLoss=-1.35e-8, DeltaPolLoss=-.00773, KL=0.016Epoch 38: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=1085.104, v_num=2by5xy7v, PolicyLoss=-4.23e-8, DeltaPolLoss=-.0164, KL=0.0016
-
-MeanEpReturn: -831.8718105084283
-StdEpReturn: 564.7865498565172
-MaxEpReturn: -145.28887231179678
-MinEpReturn: -1397.0593740899512
-MeanEpLength: 1000.0
-PolicyLoss: -4.231929651155042e-08
-DeltaPolLoss: -0.016354378312826157
-KL: 0.0016741183353587985
-Entropy: 0.6439321041107178
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 3633.688232421875
-DeltaValLoss: -336.488037109375
-
-
-Epoch 38:   0%| | 0/1 [00:00<?, ?it/s, loss=1085.104, v_num=2by5xy7v, PolicyLoss=-4.23e-8, DeltaPolLoss=-.0164, KL=0.00167, EntroEpoch 39:   0%| | 0/1 [00:00<?, ?it/s, loss=1085.104, v_num=2by5xy7v, PolicyLoss=-4.23e-8, DeltaPolLoss=-.0164, KL=0.00167, EntroEpoch 39: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=1085.104, v_num=2by5xy7v, PolicyLoss=-4.23e-8, DeltaPolLoss=-.0164, KL=0.0016Epoch 39: 100%|█| 1/1 [00:00<00:00,  1.27it/s, loss=1037.230, v_num=2by5xy7v, PolicyLoss=1.48e-8, DeltaPolLoss=-.0194, KL=0.00523
-
-MeanEpReturn: -425.6955368628821
-StdEpReturn: 315.000832956051
-MaxEpReturn: -94.8224489206695
-MinEpReturn: -795.7553812898723
-MeanEpLength: 1000.0
-PolicyLoss: 1.4781951662712345e-08
-DeltaPolLoss: -0.019373083487153053
-KL: 0.0052292984910309315
-Entropy: 0.6392784714698792
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1435.052734375
-DeltaValLoss: -82.4561767578125
-
-
-Epoch 39:   0%| | 0/1 [00:00<?, ?it/s, loss=1037.230, v_num=2by5xy7v, PolicyLoss=1.48e-8, DeltaPolLoss=-.0194, KL=0.00523, EntropEpoch 40:   0%| | 0/1 [00:00<?, ?it/s, loss=1037.230, v_num=2by5xy7v, PolicyLoss=1.48e-8, DeltaPolLoss=-.0194, KL=0.00523, EntropEpoch 40: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=1037.230, v_num=2by5xy7v, PolicyLoss=1.48e-8, DeltaPolLoss=-.0194, KL=0.00523Epoch 40: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=1144.416, v_num=2by5xy7v, PolicyLoss=-3.81e-9, DeltaPolLoss=-.0188, KL=0.0083
-
-MeanEpReturn: -663.7220023602487
-StdEpReturn: 474.5066061054535
-MaxEpReturn: -158.34069544405946
-MinEpReturn: -1195.7553844265783
-MeanEpLength: 1000.0
-PolicyLoss: -3.814697446813398e-09
-DeltaPolLoss: -0.018845951184630394
-KL: 0.008303462527692318
-Entropy: 0.632766842842102
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2542.329833984375
-DeltaValLoss: -193.770263671875
-
-
-Epoch 40:   0%| | 0/1 [00:00<?, ?it/s, loss=1144.416, v_num=2by5xy7v, PolicyLoss=-3.81e-9, DeltaPolLoss=-.0188, KL=0.0083, EntropEpoch 41:   0%| | 0/1 [00:00<?, ?it/s, loss=1144.416, v_num=2by5xy7v, PolicyLoss=-3.81e-9, DeltaPolLoss=-.0188, KL=0.0083, EntropEpoch 41: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=1144.416, v_num=2by5xy7v, PolicyLoss=-3.81e-9, DeltaPolLoss=-.0188, KL=0.0083Epoch 41: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=1041.455, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0156, KL=0.0033
-
-MeanEpReturn: -643.0720007016574
-StdEpReturn: 511.0837032599205
-MaxEpReturn: -125.82831947899537
-MinEpReturn: -1184.879839474366
-MeanEpLength: 1000.0
-PolicyLoss: -1.919269543293467e-08
-DeltaPolLoss: -0.01563664712011814
-KL: 0.00337286782450974
-Entropy: 0.6265258193016052
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2390.636962890625
-DeltaValLoss: -230.9951171875
-
-
-Epoch 41:   0%| | 0/1 [00:00<?, ?it/s, loss=1041.455, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0156, KL=0.00337, EntroEpoch 42:   0%| | 0/1 [00:00<?, ?it/s, loss=1041.455, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0156, KL=0.00337, EntroEpoch 42: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=1041.455, v_num=2by5xy7v, PolicyLoss=-1.92e-8, DeltaPolLoss=-.0156, KL=0.0033Epoch 42: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=1005.325, v_num=2by5xy7v, PolicyLoss=3.31e-8, DeltaPolLoss=-.0184, KL=0.00761
-
-MeanEpReturn: -575.9362896190746
-StdEpReturn: 536.6721058471314
-MaxEpReturn: -93.33348090555236
-MinEpReturn: -1410.9342955927464
-MeanEpLength: 1000.0
-PolicyLoss: 3.3140182154056674e-08
-DeltaPolLoss: -0.01844078116118908
-KL: 0.0076052350923419
-Entropy: 0.6216445565223694
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1990.8438720703125
-DeltaValLoss: -244.7222900390625
-
-
-Epoch 42:   0%| | 0/1 [00:00<?, ?it/s, loss=1005.325, v_num=2by5xy7v, PolicyLoss=3.31e-8, DeltaPolLoss=-.0184, KL=0.00761, EntropEpoch 43:   0%| | 0/1 [00:00<?, ?it/s, loss=1005.325, v_num=2by5xy7v, PolicyLoss=3.31e-8, DeltaPolLoss=-.0184, KL=0.00761, EntropEpoch 43: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=1005.325, v_num=2by5xy7v, PolicyLoss=3.31e-8, DeltaPolLoss=-.0184, KL=0.00761Epoch 43: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=978.358, v_num=2by5xy7v, PolicyLoss=2.96e-8, DeltaPolLoss=-.0186, KL=0.00618,
-
-MeanEpReturn: -461.97123884776124
-StdEpReturn: 567.8980012840541
-MaxEpReturn: -26.12357669400809
-MinEpReturn: -1417.8842023823615
-MeanEpLength: 1000.0
-PolicyLoss: 2.956390332542469e-08
-DeltaPolLoss: -0.01861197128891945
-KL: 0.006180783733725548
-Entropy: 0.6166687607765198
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1652.289306640625
-DeltaValLoss: -118.8402099609375
-
-
-Epoch 43:   0%| | 0/1 [00:00<?, ?it/s, loss=978.358, v_num=2by5xy7v, PolicyLoss=2.96e-8, DeltaPolLoss=-.0186, KL=0.00618, EntropyEpoch 44:   0%| | 0/1 [00:00<?, ?it/s, loss=978.358, v_num=2by5xy7v, PolicyLoss=2.96e-8, DeltaPolLoss=-.0186, KL=0.00618, EntropyEpoch 44: 100%|█| 1/1 [00:00<00:00,  1.32it/s, loss=978.358, v_num=2by5xy7v, PolicyLoss=2.96e-8, DeltaPolLoss=-.0186, KL=0.00618,Epoch 44: 100%|█| 1/1 [00:00<00:00,  1.32it/s, loss=852.857, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0183, KL=0.00688
-
-MeanEpReturn: -394.1938078335169
-StdEpReturn: 533.3082515208736
-MaxEpReturn: -32.43645767691345
-MinEpReturn: -1315.962166861421
-MeanEpLength: 1000.0
-PolicyLoss: -1.6570091077028337e-08
-DeltaPolLoss: -0.018304316326975822
-KL: 0.006876738741993904
-Entropy: 0.6135039329528809
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1291.566162109375
-DeltaValLoss: -71.4998779296875
-
-
-Epoch 44:   0%| | 0/1 [00:00<?, ?it/s, loss=852.857, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0183, KL=0.00688, EntropEpoch 45:   0%| | 0/1 [00:00<?, ?it/s, loss=852.857, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0183, KL=0.00688, EntropEpoch 45: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=852.857, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0183, KL=0.00688Epoch 45: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=867.778, v_num=2by5xy7v, PolicyLoss=2.12e-8, DeltaPolLoss=-.0179, KL=0.00943,
-
-MeanEpReturn: -713.4571235825488
-StdEpReturn: 690.521233536787
-MaxEpReturn: -11.696633409781516
-MinEpReturn: -1404.7182000656244
-MeanEpLength: 1000.0
-PolicyLoss: 2.1219253909521285e-08
-DeltaPolLoss: -0.017927875742316246
-KL: 0.009429728612303734
-Entropy: 0.6104557514190674
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2342.165771484375
-DeltaValLoss: -228.338623046875
-
-
-Epoch 45:   0%| | 0/1 [00:00<?, ?it/s, loss=867.778, v_num=2by5xy7v, PolicyLoss=2.12e-8, DeltaPolLoss=-.0179, KL=0.00943, EntropyEpoch 46:   0%| | 0/1 [00:00<?, ?it/s, loss=867.778, v_num=2by5xy7v, PolicyLoss=2.12e-8, DeltaPolLoss=-.0179, KL=0.00943, EntropyEpoch 46: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=867.778, v_num=2by5xy7v, PolicyLoss=2.12e-8, DeltaPolLoss=-.0179, KL=0.00943,Epoch 46: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=850.314, v_num=2by5xy7v, PolicyLoss=4.89e-9, DeltaPolLoss=-.0188, KL=0.00115,
-
-MeanEpReturn: -345.4591401217304
-StdEpReturn: 502.96009529724677
-MaxEpReturn: -22.34594949118624
-MinEpReturn: -1215.9035706589575
-MeanEpLength: 1000.0
-PolicyLoss: 4.887581006585151e-09
-DeltaPolLoss: -0.018806975334882736
-KL: 0.0011509106261655688
-Entropy: 0.593999445438385
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1071.5263671875
-DeltaValLoss: -119.997314453125
-
-
-Epoch 46:   0%| | 0/1 [00:00<?, ?it/s, loss=850.314, v_num=2by5xy7v, PolicyLoss=4.89e-9, DeltaPolLoss=-.0188, KL=0.00115, EntropyEpoch 47:   0%| | 0/1 [00:00<?, ?it/s, loss=850.314, v_num=2by5xy7v, PolicyLoss=4.89e-9, DeltaPolLoss=-.0188, KL=0.00115, EntropyEpoch 47: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=850.314, v_num=2by5xy7v, PolicyLoss=4.89e-9, DeltaPolLoss=-.0188, KL=0.00115,Epoch 47: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=891.937, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0174, KL=0.0073, 
-
-MeanEpReturn: -376.38746253747564
-StdEpReturn: 609.8713366118199
-MaxEpReturn: 14.038413760259562
-MinEpReturn: -1431.7511626168475
-MeanEpLength: 1000.0
-PolicyLoss: 2.7418136649970393e-09
-DeltaPolLoss: -0.01743415929377079
-KL: 0.007299796212464571
-Entropy: 0.5946528911590576
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1195.495849609375
-DeltaValLoss: -79.7425537109375
-
-
-Epoch 47:   0%| | 0/1 [00:00<?, ?it/s, loss=891.937, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0174, KL=0.0073, Entropy=Epoch 48:   0%| | 0/1 [00:00<?, ?it/s, loss=891.937, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0174, KL=0.0073, Entropy=Epoch 48: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=891.937, v_num=2by5xy7v, PolicyLoss=2.74e-9, DeltaPolLoss=-.0174, KL=0.0073, Epoch 48: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=821.993, v_num=2by5xy7v, PolicyLoss=2.79e-8, DeltaPolLoss=-.0188, KL=0.0029, 
-
-MeanEpReturn: -735.5287612636192
-StdEpReturn: 697.9208567841513
-MaxEpReturn: -30.878478829743102
-MinEpReturn: -1448.882917912219
-MeanEpLength: 1000.0
-PolicyLoss: 2.789497344224401e-08
-DeltaPolLoss: -0.018786096945405006
-KL: 0.00290005374699831
-Entropy: 0.5816875100135803
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2102.408447265625
-DeltaValLoss: -204.09228515625
-
-
-Epoch 48:   0%| | 0/1 [00:00<?, ?it/s, loss=821.993, v_num=2by5xy7v, PolicyLoss=2.79e-8, DeltaPolLoss=-.0188, KL=0.0029, Entropy=Epoch 49:   0%| | 0/1 [00:00<?, ?it/s, loss=821.993, v_num=2by5xy7v, PolicyLoss=2.79e-8, DeltaPolLoss=-.0188, KL=0.0029, Entropy=Epoch 49: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=821.993, v_num=2by5xy7v, PolicyLoss=2.79e-8, DeltaPolLoss=-.0188, KL=0.0029, Epoch 49: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=837.214, v_num=2by5xy7v, PolicyLoss=-1.26e-8, DeltaPolLoss=-.02, KL=0.00349, 
-
-MeanEpReturn: -727.4558078100827
-StdEpReturn: 696.443474588489
-MaxEpReturn: -27.40816538213114
-MinEpReturn: -1444.3260975247124
-MeanEpLength: 1000.0
-PolicyLoss: -1.2636184543168838e-08
-DeltaPolLoss: -0.019979996606707573
-KL: 0.0034879243467003107
-Entropy: 0.5728040933609009
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1842.9969482421875
-DeltaValLoss: -185.9722900390625
-
-
-Epoch 49:   0%| | 0/1 [00:00<?, ?it/s, loss=837.214, v_num=2by5xy7v, PolicyLoss=-1.26e-8, DeltaPolLoss=-.02, KL=0.00349, Entropy=Epoch 50:   0%| | 0/1 [00:00<?, ?it/s, loss=837.214, v_num=2by5xy7v, PolicyLoss=-1.26e-8, DeltaPolLoss=-.02, KL=0.00349, Entropy=Epoch 50: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=837.214, v_num=2by5xy7v, PolicyLoss=-1.26e-8, DeltaPolLoss=-.02, KL=0.00349, Epoch 50: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=793.294, v_num=2by5xy7v, PolicyLoss=9.89e-9, DeltaPolLoss=-.0166, KL=0.00438,
-
-MeanEpReturn: -653.7169696937312
-StdEpReturn: 682.9917784708146
-MaxEpReturn: 29.362093121247042
-MinEpReturn: -1420.1715783841075
-MeanEpLength: 1000.0
-PolicyLoss: 9.894370656127194e-09
-DeltaPolLoss: -0.016618680208921432
-KL: 0.004378494340926409
-Entropy: 0.5639997720718384
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1718.984375
-DeltaValLoss: -248.825439453125
-
-
-Epoch 50:   0%| | 0/1 [00:00<?, ?it/s, loss=793.294, v_num=2by5xy7v, PolicyLoss=9.89e-9, DeltaPolLoss=-.0166, KL=0.00438, EntropyEpoch 51:   0%| | 0/1 [00:00<?, ?it/s, loss=793.294, v_num=2by5xy7v, PolicyLoss=9.89e-9, DeltaPolLoss=-.0166, KL=0.00438, EntropyEpoch 51: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=793.294, v_num=2by5xy7v, PolicyLoss=9.89e-9, DeltaPolLoss=-.0166, KL=0.00438,Epoch 51: 100%|█| 1/1 [00:00<00:00,  1.30it/s, loss=719.886, v_num=2by5xy7v, PolicyLoss=-2.41e-8, DeltaPolLoss=-.0206, KL=0.00591
-
-MeanEpReturn: -302.8612788955425
-StdEpReturn: 502.5831200250726
-MaxEpReturn: 32.95121987743768
-MinEpReturn: -1170.5716509107206
-MeanEpLength: 1000.0
-PolicyLoss: -2.408027732769824e-08
-DeltaPolLoss: -0.020616384223103523
-KL: 0.005908257327973843
-Entropy: 0.548012375831604
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 800.16064453125
-DeltaValLoss: -108.67694091796875
-
-
-Epoch 51:   0%| | 0/1 [00:00<?, ?it/s, loss=719.886, v_num=2by5xy7v, PolicyLoss=-2.41e-8, DeltaPolLoss=-.0206, KL=0.00591, EntropEpoch 52:   0%| | 0/1 [00:00<?, ?it/s, loss=719.886, v_num=2by5xy7v, PolicyLoss=-2.41e-8, DeltaPolLoss=-.0206, KL=0.00591, EntropEpoch 52: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=719.886, v_num=2by5xy7v, PolicyLoss=-2.41e-8, DeltaPolLoss=-.0206, KL=0.00591Epoch 52: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=641.095, v_num=2by5xy7v, PolicyLoss=-9.54e-9, DeltaPolLoss=-.0199, KL=0.0118,
-
-MeanEpReturn: -73.30377630858126
-StdEpReturn: 124.70711042004311
-MaxEpReturn: 47.27680484146695
-MinEpReturn: -279.61682730260645
-MeanEpLength: 1000.0
-PolicyLoss: -9.53674295089968e-09
-DeltaPolLoss: -0.019897643476724625
-KL: 0.011778238229453564
-Entropy: 0.5417187809944153
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 210.64398193359375
-DeltaValLoss: -40.35667419433594
-
-
-Epoch 52:   0%| | 0/1 [00:00<?, ?it/s, loss=641.095, v_num=2by5xy7v, PolicyLoss=-9.54e-9, DeltaPolLoss=-.0199, KL=0.0118, EntropyEpoch 53:   0%| | 0/1 [00:00<?, ?it/s, loss=641.095, v_num=2by5xy7v, PolicyLoss=-9.54e-9, DeltaPolLoss=-.0199, KL=0.0118, EntropyEpoch 53: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=641.095, v_num=2by5xy7v, PolicyLoss=-9.54e-9, DeltaPolLoss=-.0199, KL=0.0118,Epoch 53: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=609.774, v_num=2by5xy7v, PolicyLoss=-3.11e-8, DeltaPolLoss=-.0172, KL=0.00495
-
-MeanEpReturn: -359.85167819407735
-StdEpReturn: 624.2944552439324
-MaxEpReturn: 119.82080127840163
-MinEpReturn: -1418.4596965419364
-MeanEpLength: 1000.0
-PolicyLoss: -3.11136254538269e-08
-DeltaPolLoss: -0.01716775633394718
-KL: 0.004947721492499113
-Entropy: 0.530743420124054
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 991.23193359375
-DeltaValLoss: -84.19390869140625
-
-
-Epoch 53:   0%| | 0/1 [00:00<?, ?it/s, loss=609.774, v_num=2by5xy7v, PolicyLoss=-3.11e-8, DeltaPolLoss=-.0172, KL=0.00495, EntropEpoch 54:   0%| | 0/1 [00:00<?, ?it/s, loss=609.774, v_num=2by5xy7v, PolicyLoss=-3.11e-8, DeltaPolLoss=-.0172, KL=0.00495, EntropEpoch 54: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=609.774, v_num=2by5xy7v, PolicyLoss=-3.11e-8, DeltaPolLoss=-.0172, KL=0.00495Epoch 54: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=603.263, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.0176, KL=0.00856,
-
-MeanEpReturn: -531.1491377227728
-StdEpReturn: 571.4417761188948
-MaxEpReturn: 36.482973961056196
-MinEpReturn: -1347.717102382671
-MeanEpLength: 1000.0
-PolicyLoss: 3.3378602104505717e-09
-DeltaPolLoss: -0.017570437863469124
-KL: 0.008558535017073154
-Entropy: 0.5347269773483276
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1241.260009765625
-DeltaValLoss: -151.409912109375
-
-
-Epoch 54:   0%| | 0/1 [00:00<?, ?it/s, loss=603.263, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.0176, KL=0.00856, EntropyEpoch 55:   0%| | 0/1 [00:00<?, ?it/s, loss=603.263, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.0176, KL=0.00856, EntropyEpoch 55: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=603.263, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.0176, KL=0.00856,Epoch 55: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=524.877, v_num=2by5xy7v, PolicyLoss=-1.76e-8, DeltaPolLoss=-.0196, KL=0.00847
-
-MeanEpReturn: -268.0049085444942
-StdEpReturn: 502.9751542486252
-MaxEpReturn: 39.53317499624969
-MinEpReturn: -1138.9759188108233
-MeanEpLength: 1000.0
-PolicyLoss: -1.76429750808893e-08
-DeltaPolLoss: -0.019556012004613876
-KL: 0.008470858447253704
-Entropy: 0.5361090302467346
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 616.2490234375
-DeltaValLoss: -70.1507568359375
-
-
-Epoch 55:   0%| | 0/1 [00:00<?, ?it/s, loss=524.877, v_num=2by5xy7v, PolicyLoss=-1.76e-8, DeltaPolLoss=-.0196, KL=0.00847, EntropEpoch 56:   0%| | 0/1 [00:00<?, ?it/s, loss=524.877, v_num=2by5xy7v, PolicyLoss=-1.76e-8, DeltaPolLoss=-.0196, KL=0.00847, EntropEpoch 56: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=524.877, v_num=2by5xy7v, PolicyLoss=-1.76e-8, DeltaPolLoss=-.0196, KL=0.00847Epoch 56: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=500.335, v_num=2by5xy7v, PolicyLoss=1.36e-8, DeltaPolLoss=-.0188, KL=0.00458,
-
-MeanEpReturn: -193.44858608093242
-StdEpReturn: 434.89475224628677
-MaxEpReturn: 65.27526526180287
-MinEpReturn: -946.544560140799
-MeanEpLength: 1000.0
-PolicyLoss: 1.358985901589449e-08
-DeltaPolLoss: -0.01880824938416481
-KL: 0.004584346432238817
-Entropy: 0.5287468433380127
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 577.3738403320312
-DeltaValLoss: -116.67803955078125
-
-
-Epoch 56:   0%| | 0/1 [00:00<?, ?it/s, loss=500.335, v_num=2by5xy7v, PolicyLoss=1.36e-8, DeltaPolLoss=-.0188, KL=0.00458, EntropyEpoch 57:   0%| | 0/1 [00:00<?, ?it/s, loss=500.335, v_num=2by5xy7v, PolicyLoss=1.36e-8, DeltaPolLoss=-.0188, KL=0.00458, EntropyEpoch 57: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=500.335, v_num=2by5xy7v, PolicyLoss=1.36e-8, DeltaPolLoss=-.0188, KL=0.00458,Epoch 57: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=449.561, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.0231, KL=0.00757
-
-MeanEpReturn: 29.034222460633444
-StdEpReturn: 49.770562337258376
-MaxEpReturn: 100.04082352580289
-MinEpReturn: -40.01263060603086
-MeanEpLength: 1000.0
-PolicyLoss: -6.675720420901143e-09
-DeltaPolLoss: -0.02309107780456543
-KL: 0.007571258582174778
-Entropy: 0.5126301050186157
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 116.69337463378906
-DeltaValLoss: -16.43585205078125
-
-
-Epoch 57:   0%| | 0/1 [00:00<?, ?it/s, loss=449.561, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.0231, KL=0.00757, EntropEpoch 58:   0%| | 0/1 [00:00<?, ?it/s, loss=449.561, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.0231, KL=0.00757, EntropEpoch 58: 100%|█| 1/1 [00:00<00:00,  2.66it/s, loss=449.561, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.0231, KL=0.00757Epoch 58: 100%|█| 1/1 [00:00<00:00,  2.66it/s, loss=358.387, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.00233, KL=0.0156,
-
-MeanEpReturn: 90.71967484106142
-StdEpReturn: 13.44684847591479
-MaxEpReturn: 103.99757941780143
-MinEpReturn: 68.85492210393718
-MeanEpLength: 1000.0
-PolicyLoss: 3.3378602104505717e-09
-DeltaPolLoss: -0.0023266414646059275
-KL: 0.01555661205202341
-Entropy: 0.5125146508216858
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 2.0
-ValueLoss: 94.4549331665039
-DeltaValLoss: -19.60999298095703
-
-
-Epoch 58:   0%| | 0/1 [00:00<?, ?it/s, loss=358.387, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.00233, KL=0.0156, EntropyEpoch 59:   0%| | 0/1 [00:00<?, ?it/s, loss=358.387, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.00233, KL=0.0156, EntropyEpoch 59: 100%|█| 1/1 [00:00<00:00,  2.79it/s, loss=358.387, v_num=2by5xy7v, PolicyLoss=3.34e-9, DeltaPolLoss=-.00233, KL=0.0156,Epoch 59: 100%|█| 1/1 [00:00<00:00,  2.79it/s, loss=344.858, v_num=2by5xy7v, PolicyLoss=-5.03e-8, DeltaPolLoss=-.00525, KL=0.0161
-
-MeanEpReturn: -864.3382872413686
-StdEpReturn: 282.2381476808957
-MaxEpReturn: -426.5975272677885
-MinEpReturn: -1168.0135359706267
-MeanEpLength: 1000.0
-PolicyLoss: -5.030631911040473e-08
-DeltaPolLoss: -0.005249338690191507
-KL: 0.016120770946145058
-Entropy: 0.5118007659912109
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 5.0
-ValueLoss: 2066.941650390625
-DeltaValLoss: -680.49951171875
-
-
-Epoch 59:   0%| | 0/1 [00:00<?, ?it/s, loss=344.858, v_num=2by5xy7v, PolicyLoss=-5.03e-8, DeltaPolLoss=-.00525, KL=0.0161, EntropEpoch 60:   0%| | 0/1 [00:00<?, ?it/s, loss=344.858, v_num=2by5xy7v, PolicyLoss=-5.03e-8, DeltaPolLoss=-.00525, KL=0.0161, EntropEpoch 60: 100%|█| 1/1 [00:00<00:00,  2.78it/s, loss=344.858, v_num=2by5xy7v, PolicyLoss=-5.03e-8, DeltaPolLoss=-.00525, KL=0.0161Epoch 60: 100%|█| 1/1 [00:00<00:00,  2.78it/s, loss=327.607, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.00261, KL=0.0151
-
-MeanEpReturn: -729.7003058885106
-StdEpReturn: 563.6797482913362
-MaxEpReturn: 137.457784600876
-MinEpReturn: -1353.858572472251
-MeanEpLength: 1000.0
-PolicyLoss: -6.675720420901143e-09
-DeltaPolLoss: -0.0026080221869051456
-KL: 0.015143736265599728
-Entropy: 0.5111600160598755
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 5.0
-ValueLoss: 1406.03076171875
-DeltaValLoss: -280.889892578125
-
-
-Epoch 60:   0%| | 0/1 [00:00<?, ?it/s, loss=327.607, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.00261, KL=0.0151, EntropEpoch 61:   0%| | 0/1 [00:00<?, ?it/s, loss=327.607, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.00261, KL=0.0151, EntropEpoch 61: 100%|█| 1/1 [00:00<00:00,  2.70it/s, loss=327.607, v_num=2by5xy7v, PolicyLoss=-6.68e-9, DeltaPolLoss=-.00261, KL=0.0151Epoch 61: 100%|█| 1/1 [00:00<00:00,  2.70it/s, loss=339.325, v_num=2by5xy7v, PolicyLoss=-2.69e-8, DeltaPolLoss=-.00544, KL=0.0156
-
-MeanEpReturn: -625.265185634835
-StdEpReturn: 724.2834126394483
-MaxEpReturn: 143.91676515561417
-MinEpReturn: -1366.9706416903757
-MeanEpLength: 1000.0
-PolicyLoss: -2.688169509212912e-08
-DeltaPolLoss: -0.005442236550152302
-KL: 0.01563981920480728
-Entropy: 0.5105640292167664
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 7.0
-ValueLoss: 1077.9302978515625
-DeltaValLoss: -152.09442138671875
-
-
-Epoch 61:   0%| | 0/1 [00:00<?, ?it/s, loss=339.325, v_num=2by5xy7v, PolicyLoss=-2.69e-8, DeltaPolLoss=-.00544, KL=0.0156, EntropEpoch 62:   0%| | 0/1 [00:00<?, ?it/s, loss=339.325, v_num=2by5xy7v, PolicyLoss=-2.69e-8, DeltaPolLoss=-.00544, KL=0.0156, EntropEpoch 62: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=339.325, v_num=2by5xy7v, PolicyLoss=-2.69e-8, DeltaPolLoss=-.00544, KL=0.0156Epoch 62: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=377.293, v_num=2by5xy7v, PolicyLoss=-8.46e-8, DeltaPolLoss=-.0213, KL=0.00535
-
-MeanEpReturn: -770.5481241184958
-StdEpReturn: 536.6336141520627
-MaxEpReturn: 51.036728867176976
-MinEpReturn: -1377.366828833436
-MeanEpLength: 1000.0
-PolicyLoss: -8.463859302310084e-08
-DeltaPolLoss: -0.021276302635669708
-KL: 0.00534706050530076
-Entropy: 0.49753710627555847
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1114.431884765625
-DeltaValLoss: -184.77569580078125
-
-
-Epoch 62:   0%| | 0/1 [00:00<?, ?it/s, loss=377.293, v_num=2by5xy7v, PolicyLoss=-8.46e-8, DeltaPolLoss=-.0213, KL=0.00535, EntropEpoch 63:   0%| | 0/1 [00:00<?, ?it/s, loss=377.293, v_num=2by5xy7v, PolicyLoss=-8.46e-8, DeltaPolLoss=-.0213, KL=0.00535, EntropEpoch 63: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=377.293, v_num=2by5xy7v, PolicyLoss=-8.46e-8, DeltaPolLoss=-.0213, KL=0.00535Epoch 63: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=352.363, v_num=2by5xy7v, PolicyLoss=-1.48e-8, DeltaPolLoss=-.0175, KL=0.0124,
-
-MeanEpReturn: -264.70295133493175
-StdEpReturn: 613.25503802766
-MaxEpReturn: 139.3697319674859
-MinEpReturn: -1325.504547675957
-MeanEpLength: 1000.0
-PolicyLoss: -1.4781951662712345e-08
-DeltaPolLoss: -0.017516357824206352
-KL: 0.012391055934131145
-Entropy: 0.4974067807197571
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 461.239990234375
-DeltaValLoss: -52.792572021484375
-
-
-Epoch 63:   0%| | 0/1 [00:00<?, ?it/s, loss=352.363, v_num=2by5xy7v, PolicyLoss=-1.48e-8, DeltaPolLoss=-.0175, KL=0.0124, EntropyEpoch 64:   0%| | 0/1 [00:00<?, ?it/s, loss=352.363, v_num=2by5xy7v, PolicyLoss=-1.48e-8, DeltaPolLoss=-.0175, KL=0.0124, EntropyEpoch 64: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=352.363, v_num=2by5xy7v, PolicyLoss=-1.48e-8, DeltaPolLoss=-.0175, KL=0.0124,Epoch 64: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=321.494, v_num=2by5xy7v, PolicyLoss=-2.52e-8, DeltaPolLoss=-.022, KL=0.013, E
-
-MeanEpReturn: -314.47172053283975
-StdEpReturn: 340.7362165467379
-MaxEpReturn: 135.80009751345938
-MinEpReturn: -698.717684296568
-MeanEpLength: 1000.0
-PolicyLoss: -2.5153159555202365e-08
-DeltaPolLoss: -0.021981095895171165
-KL: 0.01304151676595211
-Entropy: 0.4911648631095886
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 648.5025024414062
-DeltaValLoss: -176.0340576171875
-
-
-Epoch 64:   0%| | 0/1 [00:00<?, ?it/s, loss=321.494, v_num=2by5xy7v, PolicyLoss=-2.52e-8, DeltaPolLoss=-.022, KL=0.013, Entropy=0Epoch 65:   0%| | 0/1 [00:00<?, ?it/s, loss=321.494, v_num=2by5xy7v, PolicyLoss=-2.52e-8, DeltaPolLoss=-.022, KL=0.013, Entropy=0Epoch 65: 100%|█| 1/1 [00:00<00:00,  1.32it/s, loss=321.494, v_num=2by5xy7v, PolicyLoss=-2.52e-8, DeltaPolLoss=-.022, KL=0.013, EEpoch 65: 100%|█| 1/1 [00:00<00:00,  1.32it/s, loss=324.201, v_num=2by5xy7v, PolicyLoss=-2.24e-8, DeltaPolLoss=-.019, KL=0.00916,
-
-MeanEpReturn: -483.6238416364906
-StdEpReturn: 628.8932013534925
-MaxEpReturn: 160.32252959521708
-MinEpReturn: -1192.7873104320643
-MeanEpLength: 1000.0
-PolicyLoss: -2.241134566816072e-08
-DeltaPolLoss: -0.018976254388689995
-KL: 0.009159176610410213
-Entropy: 0.4918866455554962
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 671.3767700195312
-DeltaValLoss: -71.14886474609375
-
-
-Epoch 65:   0%| | 0/1 [00:00<?, ?it/s, loss=324.201, v_num=2by5xy7v, PolicyLoss=-2.24e-8, DeltaPolLoss=-.019, KL=0.00916, EntropyEpoch 66:   0%| | 0/1 [00:00<?, ?it/s, loss=324.201, v_num=2by5xy7v, PolicyLoss=-2.24e-8, DeltaPolLoss=-.019, KL=0.00916, EntropyEpoch 66: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=324.201, v_num=2by5xy7v, PolicyLoss=-2.24e-8, DeltaPolLoss=-.019, KL=0.00916,Epoch 66: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=307.151, v_num=2by5xy7v, PolicyLoss=-4.77e-10, DeltaPolLoss=-.0181, KL=0.0096
-
-MeanEpReturn: 76.33688011952296
-StdEpReturn: 101.76183708220019
-MaxEpReturn: 141.45905599574922
-MinEpReturn: -99.78786577801219
-MeanEpLength: 1000.0
-PolicyLoss: -4.768371808516747e-10
-DeltaPolLoss: -0.018146999180316925
-KL: 0.009667974896728992
-Entropy: 0.477134108543396
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 145.83213806152344
-DeltaValLoss: -26.141372680664062
-
-
-Epoch 66:   0%| | 0/1 [00:00<?, ?it/s, loss=307.151, v_num=2by5xy7v, PolicyLoss=-4.77e-10, DeltaPolLoss=-.0181, KL=0.00967, EntroEpoch 67:   0%| | 0/1 [00:00<?, ?it/s, loss=307.151, v_num=2by5xy7v, PolicyLoss=-4.77e-10, DeltaPolLoss=-.0181, KL=0.00967, EntroEpoch 67: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=307.151, v_num=2by5xy7v, PolicyLoss=-4.77e-10, DeltaPolLoss=-.0181, KL=0.0096Epoch 67: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=304.561, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0213, KL=0.0131,
-
-MeanEpReturn: 154.04568458758737
-StdEpReturn: 29.979833700956224
-MaxEpReturn: 194.85519449092118
-MinEpReturn: 124.20085341645331
-MeanEpLength: 1000.0
-PolicyLoss: -1.8119811429073707e-08
-DeltaPolLoss: -0.02128087356686592
-KL: 0.013050363399088383
-Entropy: 0.4693630337715149
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 90.6578598022461
-DeltaValLoss: -42.198814392089844
-
-
-Epoch 67:   0%| | 0/1 [00:00<?, ?it/s, loss=304.561, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0213, KL=0.0131, EntropyEpoch 68:   0%| | 0/1 [00:00<?, ?it/s, loss=304.561, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0213, KL=0.0131, EntropyEpoch 68: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=304.561, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=-.0213, KL=0.0131,Epoch 68: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=320.038, v_num=2by5xy7v, PolicyLoss=-1.39e-8, DeltaPolLoss=-.0195, KL=0.00587
-
-MeanEpReturn: -180.25807178642376
-StdEpReturn: 486.64539575985054
-MaxEpReturn: 179.84043318039042
-MinEpReturn: -1012.3805052345106
-MeanEpLength: 1000.0
-PolicyLoss: -1.3947486721122004e-08
-DeltaPolLoss: -0.019500909373164177
-KL: 0.0058698877692222595
-Entropy: 0.466386079788208
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 536.6865844726562
-DeltaValLoss: -152.30130004882812
-
-
-Epoch 68:   0%| | 0/1 [00:00<?, ?it/s, loss=320.038, v_num=2by5xy7v, PolicyLoss=-1.39e-8, DeltaPolLoss=-.0195, KL=0.00587, EntropEpoch 69:   0%| | 0/1 [00:00<?, ?it/s, loss=320.038, v_num=2by5xy7v, PolicyLoss=-1.39e-8, DeltaPolLoss=-.0195, KL=0.00587, EntropEpoch 69: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=320.038, v_num=2by5xy7v, PolicyLoss=-1.39e-8, DeltaPolLoss=-.0195, KL=0.00587Epoch 69: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=267.270, v_num=2by5xy7v, PolicyLoss=-7.99e-9, DeltaPolLoss=-.0211, KL=0.00256
-
-MeanEpReturn: -165.9787565502954
-StdEpReturn: 608.5013467635913
-MaxEpReturn: 221.72666522020165
-MinEpReturn: -1219.1996335238982
-MeanEpLength: 1000.0
-PolicyLoss: -7.98702259885431e-09
-DeltaPolLoss: -0.02109781838953495
-KL: 0.002556457882747054
-Entropy: 0.4618183970451355
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 369.18536376953125
-DeltaValLoss: -38.1019287109375
-
-
-Epoch 69:   0%| | 0/1 [00:00<?, ?it/s, loss=267.270, v_num=2by5xy7v, PolicyLoss=-7.99e-9, DeltaPolLoss=-.0211, KL=0.00256, EntropEpoch 70:   0%| | 0/1 [00:00<?, ?it/s, loss=267.270, v_num=2by5xy7v, PolicyLoss=-7.99e-9, DeltaPolLoss=-.0211, KL=0.00256, EntropEpoch 70: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=267.270, v_num=2by5xy7v, PolicyLoss=-7.99e-9, DeltaPolLoss=-.0211, KL=0.00256Epoch 70: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=213.473, v_num=2by5xy7v, PolicyLoss=-1.1e-8, DeltaPolLoss=-.0216, KL=0.0118, 
-
-MeanEpReturn: 164.5148469777412
-StdEpReturn: 18.36053636283596
-MaxEpReturn: 193.8258943402765
-MinEpReturn: 145.7731986117042
-MeanEpLength: 1000.0
-PolicyLoss: -1.0967254659988157e-08
-DeltaPolLoss: -0.021649515256285667
-KL: 0.011801094748079777
-Entropy: 0.4516828656196594
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 57.83266067504883
-DeltaValLoss: -8.618789672851562
-
-
-Epoch 70:   0%| | 0/1 [00:00<?, ?it/s, loss=213.473, v_num=2by5xy7v, PolicyLoss=-1.1e-8, DeltaPolLoss=-.0216, KL=0.0118, Entropy=Epoch 71:   0%| | 0/1 [00:00<?, ?it/s, loss=213.473, v_num=2by5xy7v, PolicyLoss=-1.1e-8, DeltaPolLoss=-.0216, KL=0.0118, Entropy=Epoch 71: 100%|█| 1/1 [00:00<00:00,  1.40it/s, loss=213.473, v_num=2by5xy7v, PolicyLoss=-1.1e-8, DeltaPolLoss=-.0216, KL=0.0118, Epoch 71: 100%|█| 1/1 [00:00<00:00,  1.40it/s, loss=169.331, v_num=2by5xy7v, PolicyLoss=2.29e-8, DeltaPolLoss=-.0197, KL=0.0112, 
-
-MeanEpReturn: 197.64347356578398
-StdEpReturn: 16.0792494272929
-MaxEpReturn: 224.15825723189613
-MinEpReturn: 181.08748147248704
-MeanEpLength: 1000.0
-PolicyLoss: 2.2888183792701966e-08
-DeltaPolLoss: -0.019739041104912758
-KL: 0.011170346289873123
-Entropy: 0.44066789746284485
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 52.48991012573242
-DeltaValLoss: -9.508914947509766
-
-
-Epoch 71:   0%| | 0/1 [00:00<?, ?it/s, loss=169.331, v_num=2by5xy7v, PolicyLoss=2.29e-8, DeltaPolLoss=-.0197, KL=0.0112, Entropy=Epoch 72:   0%| | 0/1 [00:00<?, ?it/s, loss=169.331, v_num=2by5xy7v, PolicyLoss=2.29e-8, DeltaPolLoss=-.0197, KL=0.0112, Entropy=Epoch 72: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=169.331, v_num=2by5xy7v, PolicyLoss=2.29e-8, DeltaPolLoss=-.0197, KL=0.0112, Epoch 72: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=138.878, v_num=2by5xy7v, PolicyLoss=-1.42e-8, DeltaPolLoss=-.0169, KL=0.00631
-
-MeanEpReturn: -102.81959782716666
-StdEpReturn: 427.6863340299653
-MaxEpReturn: 239.97213694275985
-MinEpReturn: -824.2884861677906
-MeanEpLength: 1000.0
-PolicyLoss: -1.4185905783392627e-08
-DeltaPolLoss: -0.016905270516872406
-KL: 0.006308835931122303
-Entropy: 0.43317678570747375
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 496.9118347167969
-DeltaValLoss: -176.31378173828125
-
-
-Epoch 72:   0%| | 0/1 [00:00<?, ?it/s, loss=138.878, v_num=2by5xy7v, PolicyLoss=-1.42e-8, DeltaPolLoss=-.0169, KL=0.00631, EntropEpoch 73:   0%| | 0/1 [00:00<?, ?it/s, loss=138.878, v_num=2by5xy7v, PolicyLoss=-1.42e-8, DeltaPolLoss=-.0169, KL=0.00631, EntropEpoch 73: 100%|█| 1/1 [00:00<00:00,  1.06it/s, loss=138.878, v_num=2by5xy7v, PolicyLoss=-1.42e-8, DeltaPolLoss=-.0169, KL=0.00631Epoch 73: 100%|█| 1/1 [00:00<00:00,  1.06it/s, loss=129.793, v_num=2by5xy7v, PolicyLoss=-3.34e-9, DeltaPolLoss=-.0218, KL=0.0119,
-
-MeanEpReturn: -82.77412369288314
-StdEpReturn: 486.7632557291005
-MaxEpReturn: 238.15410563219504
-MinEpReturn: -924.7231527027049
-MeanEpLength: 1000.0
-PolicyLoss: -3.3378602104505717e-09
-DeltaPolLoss: -0.02180643379688263
-KL: 0.011884554289281368
-Entropy: 0.422181636095047
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 288.5559997558594
-DeltaValLoss: -61.808868408203125
-
-
-Epoch 73:   0%| | 0/1 [00:00<?, ?it/s, loss=129.793, v_num=2by5xy7v, PolicyLoss=-3.34e-9, DeltaPolLoss=-.0218, KL=0.0119, EntropyEpoch 74:   0%| | 0/1 [00:00<?, ?it/s, loss=129.793, v_num=2by5xy7v, PolicyLoss=-3.34e-9, DeltaPolLoss=-.0218, KL=0.0119, EntropyEpoch 74: 100%|█| 1/1 [00:00<00:00,  2.61it/s, loss=129.793, v_num=2by5xy7v, PolicyLoss=-3.34e-9, DeltaPolLoss=-.0218, KL=0.0119,Epoch 74: 100%|█| 1/1 [00:00<00:00,  2.61it/s, loss=121.245, v_num=2by5xy7v, PolicyLoss=-2.18e-8, DeltaPolLoss=-.0135, KL=0.0153,
-
-MeanEpReturn: -174.563965508538
-StdEpReturn: 699.2570698012661
-MaxEpReturn: 263.7169703416627
-MinEpReturn: -1384.6729707012682
-MeanEpLength: 1000.0
-PolicyLoss: -2.1815299788841003e-08
-DeltaPolLoss: -0.013533744029700756
-KL: 0.015313473530113697
-Entropy: 0.4204998314380646
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 10.0
-ValueLoss: 380.7237243652344
-DeltaValLoss: -79.21871948242188
-
-
-Epoch 74:   0%| | 0/1 [00:00<?, ?it/s, loss=121.245, v_num=2by5xy7v, PolicyLoss=-2.18e-8, DeltaPolLoss=-.0135, KL=0.0153, EntropyEpoch 75:   0%| | 0/1 [00:00<?, ?it/s, loss=121.245, v_num=2by5xy7v, PolicyLoss=-2.18e-8, DeltaPolLoss=-.0135, KL=0.0153, EntropyEpoch 75: 100%|█| 1/1 [00:00<00:00,  1.39it/s, loss=121.245, v_num=2by5xy7v, PolicyLoss=-2.18e-8, DeltaPolLoss=-.0135, KL=0.0153,Epoch 75: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=104.090, v_num=2by5xy7v, PolicyLoss=-2.1e-8, DeltaPolLoss=-.0214, KL=0.0111, 
-
-MeanEpReturn: -155.91933402465457
-StdEpReturn: 627.7400925450094
-MaxEpReturn: 235.6649095287309
-MinEpReturn: -1241.8626182318114
-MeanEpLength: 1000.0
-PolicyLoss: -2.0980834847250662e-08
-DeltaPolLoss: -0.021434806287288666
-KL: 0.011087385006248951
-Entropy: 0.4115413725376129
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 334.5690612792969
-DeltaValLoss: -77.43148803710938
-
-
-Epoch 75:   0%| | 0/1 [00:00<?, ?it/s, loss=104.090, v_num=2by5xy7v, PolicyLoss=-2.1e-8, DeltaPolLoss=-.0214, KL=0.0111, Entropy=Epoch 76:   0%| | 0/1 [00:00<?, ?it/s, loss=104.090, v_num=2by5xy7v, PolicyLoss=-2.1e-8, DeltaPolLoss=-.0214, KL=0.0111, Entropy=Epoch 76: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=104.090, v_num=2by5xy7v, PolicyLoss=-2.1e-8, DeltaPolLoss=-.0214, KL=0.0111, Epoch 76: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=108.106, v_num=2by5xy7v, PolicyLoss=-1.44e-8, DeltaPolLoss=-.021, KL=0.0139, 
-
-MeanEpReturn: 15.383288707603853
-StdEpReturn: 411.16754641477957
-MaxEpReturn: 313.94935313318115
-MinEpReturn: -693.6557438304294
-MeanEpLength: 1000.0
-PolicyLoss: -1.442432395748483e-08
-DeltaPolLoss: -0.021048257127404213
-KL: 0.013869971968233585
-Entropy: 0.39909473061561584
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 224.0985870361328
-DeltaValLoss: -24.0811767578125
-
-
-Epoch 76:   0%| | 0/1 [00:00<?, ?it/s, loss=108.106, v_num=2by5xy7v, PolicyLoss=-1.44e-8, DeltaPolLoss=-.021, KL=0.0139, Entropy=Epoch 77:   0%| | 0/1 [00:00<?, ?it/s, loss=108.106, v_num=2by5xy7v, PolicyLoss=-1.44e-8, DeltaPolLoss=-.021, KL=0.0139, Entropy=Epoch 77: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=108.106, v_num=2by5xy7v, PolicyLoss=-1.44e-8, DeltaPolLoss=-.021, KL=0.0139, Epoch 77: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=108.338, v_num=2by5xy7v, PolicyLoss=1.24e-8, DeltaPolLoss=-.02, KL=0.00982, E
-
-MeanEpReturn: 237.35692888448568
-StdEpReturn: 9.77033076827443
-MaxEpReturn: 247.62762742795172
-MinEpReturn: 224.73887292701085
-MeanEpLength: 1000.0
-PolicyLoss: 1.2397766369076635e-08
-DeltaPolLoss: -0.019966648891568184
-KL: 0.009820080362260342
-Entropy: 0.39342013001441956
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 81.06572723388672
-DeltaValLoss: -27.97600555419922
-
-
-Epoch 77:   0%| | 0/1 [00:00<?, ?it/s, loss=108.338, v_num=2by5xy7v, PolicyLoss=1.24e-8, DeltaPolLoss=-.02, KL=0.00982, Entropy=0Epoch 78:   0%| | 0/1 [00:00<?, ?it/s, loss=108.338, v_num=2by5xy7v, PolicyLoss=1.24e-8, DeltaPolLoss=-.02, KL=0.00982, Entropy=0Epoch 78: 100%|█| 1/1 [00:00<00:00,  2.97it/s, loss=108.338, v_num=2by5xy7v, PolicyLoss=1.24e-8, DeltaPolLoss=-.02, KL=0.00982, EEpoch 78: 100%|█| 1/1 [00:00<00:00,  2.97it/s, loss=92.114, v_num=2by5xy7v, PolicyLoss=2.28e-8, DeltaPolLoss=0.0035, KL=0.0242, E
-
-MeanEpReturn: 258.09533341439607
-StdEpReturn: 16.133616551010466
-MaxEpReturn: 279.05723886617034
-MinEpReturn: 242.29689110762
-MeanEpLength: 1000.0
-PolicyLoss: 2.282857813895589e-08
-DeltaPolLoss: 0.0034993826411664486
-KL: 0.024196898564696312
-Entropy: 0.39316943287849426
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 2.0
-ValueLoss: 64.3801040649414
-DeltaValLoss: -4.474803924560547
-
-
-Epoch 78:   0%| | 0/1 [00:00<?, ?it/s, loss=92.114, v_num=2by5xy7v, PolicyLoss=2.28e-8, DeltaPolLoss=0.0035, KL=0.0242, Entropy=0Epoch 79:   0%| | 0/1 [00:00<?, ?it/s, loss=92.114, v_num=2by5xy7v, PolicyLoss=2.28e-8, DeltaPolLoss=0.0035, KL=0.0242, Entropy=0Epoch 79: 100%|█| 1/1 [00:00<00:00,  2.34it/s, loss=92.114, v_num=2by5xy7v, PolicyLoss=2.28e-8, DeltaPolLoss=0.0035, KL=0.0242, EEpoch 79: 100%|█| 1/1 [00:00<00:00,  2.34it/s, loss=86.700, v_num=2by5xy7v, PolicyLoss=-3.22e-9, DeltaPolLoss=-.00775, KL=0.0151,
-
-MeanEpReturn: -144.48320131284675
-StdEpReturn: 681.2057185644238
-MaxEpReturn: 273.9594914508414
-MinEpReturn: -1323.7844371397118
-MeanEpLength: 1000.0
-PolicyLoss: -3.218650901359865e-09
-DeltaPolLoss: -0.007754272315651178
-KL: 0.01514512114226818
-Entropy: 0.39364391565322876
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 13.0
-ValueLoss: 318.2266540527344
-DeltaValLoss: -95.42707824707031
-
-
-Epoch 79:   0%| | 0/1 [00:00<?, ?it/s, loss=86.700, v_num=2by5xy7v, PolicyLoss=-3.22e-9, DeltaPolLoss=-.00775, KL=0.0151, EntropyEpoch 80:   0%| | 0/1 [00:00<?, ?it/s, loss=86.700, v_num=2by5xy7v, PolicyLoss=-3.22e-9, DeltaPolLoss=-.00775, KL=0.0151, EntropyEpoch 80: 100%|█| 1/1 [00:00<00:00,  2.81it/s, loss=86.700, v_num=2by5xy7v, PolicyLoss=-3.22e-9, DeltaPolLoss=-.00775, KL=0.0151,Epoch 80: 100%|█| 1/1 [00:00<00:00,  2.80it/s, loss=92.733, v_num=2by5xy7v, PolicyLoss=-8.46e-9, DeltaPolLoss=-.00602, KL=0.0153,
-
-MeanEpReturn: 72.81610658612658
-StdEpReturn: 359.0216656395872
-MaxEpReturn: 294.60348390653013
-MinEpReturn: -548.7331513811599
-MeanEpLength: 1000.0
-PolicyLoss: -8.463859835217136e-09
-DeltaPolLoss: -0.006018498912453651
-KL: 0.01530853658914566
-Entropy: 0.3935735821723938
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 4.0
-ValueLoss: 199.08750915527344
-DeltaValLoss: -29.209808349609375
-
-
-Epoch 80:   0%| | 0/1 [00:00<?, ?it/s, loss=92.733, v_num=2by5xy7v, PolicyLoss=-8.46e-9, DeltaPolLoss=-.00602, KL=0.0153, EntropyEpoch 81:   0%| | 0/1 [00:00<?, ?it/s, loss=92.733, v_num=2by5xy7v, PolicyLoss=-8.46e-9, DeltaPolLoss=-.00602, KL=0.0153, EntropyEpoch 81: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=92.733, v_num=2by5xy7v, PolicyLoss=-8.46e-9, DeltaPolLoss=-.00602, KL=0.0153,Epoch 81: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=96.197, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=-.0183, KL=0.00908,
-
-MeanEpReturn: 257.69279658587465
-StdEpReturn: 30.762007866859566
-MaxEpReturn: 310.2361223354764
-MinEpReturn: 232.83767793996043
-MeanEpLength: 1000.0
-PolicyLoss: -6.43730180271973e-09
-DeltaPolLoss: -0.01826881244778633
-KL: 0.009078375063836575
-Entropy: 0.39024221897125244
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 117.98932647705078
-DeltaValLoss: -5.72344970703125
-
-
-Epoch 81:   0%| | 0/1 [00:00<?, ?it/s, loss=96.197, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=-.0183, KL=0.00908, EntropyEpoch 82:   0%| | 0/1 [00:00<?, ?it/s, loss=96.197, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=-.0183, KL=0.00908, EntropyEpoch 82: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=96.197, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=-.0183, KL=0.00908,Epoch 82: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=90.548, v_num=2by5xy7v, PolicyLoss=-1e-8, DeltaPolLoss=-.0187, KL=0.0141, Ent
-
-MeanEpReturn: 0.7383312422599104
-StdEpReturn: 429.7219575783161
-MaxEpReturn: 257.32768572098286
-MinEpReturn: -743.5071652221022
-MeanEpLength: 1000.0
-PolicyLoss: -1.0013580187262505e-08
-DeltaPolLoss: -0.01871574856340885
-KL: 0.014110585674643517
-Entropy: 0.36932551860809326
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 266.60235595703125
-DeltaValLoss: -58.98838806152344
-
-
-Epoch 82:   0%| | 0/1 [00:00<?, ?it/s, loss=90.548, v_num=2by5xy7v, PolicyLoss=-1e-8, DeltaPolLoss=-.0187, KL=0.0141, Entropy=0.3Epoch 83:   0%| | 0/1 [00:00<?, ?it/s, loss=90.548, v_num=2by5xy7v, PolicyLoss=-1e-8, DeltaPolLoss=-.0187, KL=0.0141, Entropy=0.3Epoch 83: 100%|█| 1/1 [00:00<00:00,  2.37it/s, loss=90.548, v_num=2by5xy7v, PolicyLoss=-1e-8, DeltaPolLoss=-.0187, KL=0.0141, EntEpoch 83: 100%|█| 1/1 [00:00<00:00,  2.37it/s, loss=81.243, v_num=2by5xy7v, PolicyLoss=1.84e-8, DeltaPolLoss=-.0102, KL=0.0166, E
-
-MeanEpReturn: 285.5387210919415
-StdEpReturn: 19.424440860683163
-MaxEpReturn: 316.95482003486535
-MinEpReturn: 264.9464839834635
-MeanEpLength: 1000.0
-PolicyLoss: 1.835823049134433e-08
-DeltaPolLoss: -0.010207637213170528
-KL: 0.01661294884979725
-Entropy: 0.3663071393966675
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 18.0
-ValueLoss: 73.21197509765625
-DeltaValLoss: -32.5721435546875
-
-
-Epoch 83:   0%| | 0/1 [00:00<?, ?it/s, loss=81.243, v_num=2by5xy7v, PolicyLoss=1.84e-8, DeltaPolLoss=-.0102, KL=0.0166, Entropy=0Epoch 84:   0%| | 0/1 [00:00<?, ?it/s, loss=81.243, v_num=2by5xy7v, PolicyLoss=1.84e-8, DeltaPolLoss=-.0102, KL=0.0166, Entropy=0Epoch 84: 100%|█| 1/1 [00:00<00:00,  2.95it/s, loss=81.243, v_num=2by5xy7v, PolicyLoss=1.84e-8, DeltaPolLoss=-.0102, KL=0.0166, EEpoch 84: 100%|█| 1/1 [00:00<00:00,  2.94it/s, loss=80.496, v_num=2by5xy7v, PolicyLoss=6.91e-9, DeltaPolLoss=-.000435, KL=0.0157,
-
-MeanEpReturn: -456.2985971047055
-StdEpReturn: 742.945640746906
-MaxEpReturn: 288.389646826204
-MinEpReturn: -1300.450956947025
-MeanEpLength: 1000.0
-PolicyLoss: 6.9141385949933465e-09
-DeltaPolLoss: -0.00043482708861120045
-KL: 0.0156992357224226
-Entropy: 0.3659340739250183
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 3.0
-ValueLoss: 572.2183837890625
-DeltaValLoss: -285.6452331542969
-
-
-Epoch 84:   0%| | 0/1 [00:00<?, ?it/s, loss=80.496, v_num=2by5xy7v, PolicyLoss=6.91e-9, DeltaPolLoss=-.000435, KL=0.0157, EntropyEpoch 85:   0%| | 0/1 [00:00<?, ?it/s, loss=80.496, v_num=2by5xy7v, PolicyLoss=6.91e-9, DeltaPolLoss=-.000435, KL=0.0157, EntropyEpoch 85: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=80.496, v_num=2by5xy7v, PolicyLoss=6.91e-9, DeltaPolLoss=-.000435, KL=0.0157,Epoch 85: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=69.845, v_num=2by5xy7v, PolicyLoss=1.98e-8, DeltaPolLoss=-.0231, KL=0.00609, 
-
-MeanEpReturn: 296.00483191285076
-StdEpReturn: 23.272337917309137
-MaxEpReturn: 325.84414002036925
-MinEpReturn: 267.2546508193786
-MeanEpLength: 1000.0
-PolicyLoss: 1.9788741312254388e-08
-DeltaPolLoss: -0.02306494675576687
-KL: 0.0060905879363417625
-Entropy: 0.35752132534980774
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 61.507511138916016
-DeltaValLoss: -17.395111083984375
-
-
-Epoch 85:   0%| | 0/1 [00:00<?, ?it/s, loss=69.845, v_num=2by5xy7v, PolicyLoss=1.98e-8, DeltaPolLoss=-.0231, KL=0.00609, Entropy=Epoch 86:   0%| | 0/1 [00:00<?, ?it/s, loss=69.845, v_num=2by5xy7v, PolicyLoss=1.98e-8, DeltaPolLoss=-.0231, KL=0.00609, Entropy=Epoch 86: 100%|█| 1/1 [00:00<00:00,  1.24it/s, loss=69.845, v_num=2by5xy7v, PolicyLoss=1.98e-8, DeltaPolLoss=-.0231, KL=0.00609, Epoch 86: 100%|█| 1/1 [00:00<00:00,  1.24it/s, loss=62.657, v_num=2by5xy7v, PolicyLoss=-1.41e-8, DeltaPolLoss=-.0171, KL=0.00874,
-
-MeanEpReturn: 297.5926833861919
-StdEpReturn: 35.403035953827114
-MaxEpReturn: 349.8411876860642
-MinEpReturn: 256.40531043098616
-MeanEpLength: 1000.0
-PolicyLoss: -1.4066696252257316e-08
-DeltaPolLoss: -0.01708287000656128
-KL: 0.008740977384150028
-Entropy: 0.34852954745292664
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 59.04802322387695
-DeltaValLoss: -2.782989501953125
-
-
-Epoch 86:   0%| | 0/1 [00:00<?, ?it/s, loss=62.657, v_num=2by5xy7v, PolicyLoss=-1.41e-8, DeltaPolLoss=-.0171, KL=0.00874, EntropyEpoch 87:   0%| | 0/1 [00:00<?, ?it/s, loss=62.657, v_num=2by5xy7v, PolicyLoss=-1.41e-8, DeltaPolLoss=-.0171, KL=0.00874, EntropyEpoch 87: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=62.657, v_num=2by5xy7v, PolicyLoss=-1.41e-8, DeltaPolLoss=-.0171, KL=0.00874,Epoch 87: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=69.027, v_num=2by5xy7v, PolicyLoss=-2.03e-9, DeltaPolLoss=-.0246, KL=0.00695,
-
-MeanEpReturn: -106.06126265245929
-StdEpReturn: 742.4007249321638
-MaxEpReturn: 352.55093491570636
-MinEpReturn: -1391.4590133501479
-MeanEpLength: 1000.0
-PolicyLoss: -2.0265580324974053e-09
-DeltaPolLoss: -0.024605462327599525
-KL: 0.006953408010303974
-Entropy: 0.3372996151447296
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 256.0517883300781
-DeltaValLoss: -75.55563354492188
-
-
-Epoch 87:   0%| | 0/1 [00:00<?, ?it/s, loss=69.027, v_num=2by5xy7v, PolicyLoss=-2.03e-9, DeltaPolLoss=-.0246, KL=0.00695, EntropyEpoch 88:   0%| | 0/1 [00:00<?, ?it/s, loss=69.027, v_num=2by5xy7v, PolicyLoss=-2.03e-9, DeltaPolLoss=-.0246, KL=0.00695, EntropyEpoch 88: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=69.027, v_num=2by5xy7v, PolicyLoss=-2.03e-9, DeltaPolLoss=-.0246, KL=0.00695,Epoch 88: 100%|█| 1/1 [00:00<00:00,  1.37it/s, loss=70.603, v_num=2by5xy7v, PolicyLoss=-6.2e-9, DeltaPolLoss=-.019, KL=0.00842, E
-
-MeanEpReturn: 126.78854270064205
-StdEpReturn: 355.7419775094409
-MaxEpReturn: 353.58838742007805
-MinEpReturn: -488.5406885558874
-MeanEpLength: 1000.0
-PolicyLoss: -6.1988831845383174e-09
-DeltaPolLoss: -0.01902162656188011
-KL: 0.00842286366969347
-Entropy: 0.33081936836242676
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 120.76313781738281
-DeltaValLoss: -29.346466064453125
-
-
-Epoch 88:   0%| | 0/1 [00:00<?, ?it/s, loss=70.603, v_num=2by5xy7v, PolicyLoss=-6.2e-9, DeltaPolLoss=-.019, KL=0.00842, Entropy=0Epoch 89:   0%| | 0/1 [00:00<?, ?it/s, loss=70.603, v_num=2by5xy7v, PolicyLoss=-6.2e-9, DeltaPolLoss=-.019, KL=0.00842, Entropy=0Epoch 89: 100%|█| 1/1 [00:00<00:00,  2.91it/s, loss=70.603, v_num=2by5xy7v, PolicyLoss=-6.2e-9, DeltaPolLoss=-.019, KL=0.00842, EEpoch 89: 100%|█| 1/1 [00:00<00:00,  2.91it/s, loss=61.445, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=0.000933, KL=0.0241
-
-MeanEpReturn: 341.83984456729024
-StdEpReturn: 29.902597945106354
-MaxEpReturn: 377.1696443135577
-MinEpReturn: 295.19506673572164
-MeanEpLength: 1000.0
-PolicyLoss: -6.43730180271973e-09
-DeltaPolLoss: 0.0009334383066743612
-KL: 0.024058956652879715
-Entropy: 0.3306005895137787
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 2.0
-ValueLoss: 45.93760299682617
-DeltaValLoss: -6.304649353027344
-
-
-Epoch 89:   0%| | 0/1 [00:00<?, ?it/s, loss=61.445, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=0.000933, KL=0.0241, EntropEpoch 90:   0%| | 0/1 [00:00<?, ?it/s, loss=61.445, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=0.000933, KL=0.0241, EntropEpoch 90: 100%|█| 1/1 [00:00<00:00,  2.67it/s, loss=61.445, v_num=2by5xy7v, PolicyLoss=-6.44e-9, DeltaPolLoss=0.000933, KL=0.0241Epoch 90: 100%|█| 1/1 [00:00<00:00,  2.66it/s, loss=64.509, v_num=2by5xy7v, PolicyLoss=9.72e-9, DeltaPolLoss=-.0011, KL=0.0198, E
-
-MeanEpReturn: -77.34280146449066
-StdEpReturn: 644.0097861974161
-MaxEpReturn: 322.1730359793611
-MinEpReturn: -1192.2919339439738
-MeanEpLength: 1000.0
-PolicyLoss: 9.715557247602646e-09
-DeltaPolLoss: -0.0010981345549225807
-KL: 0.019818568602204323
-Entropy: 0.33023062348365784
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 4.0
-ValueLoss: 311.1077575683594
-DeltaValLoss: -79.93911743164062
-
-
-Epoch 90:   0%| | 0/1 [00:00<?, ?it/s, loss=64.509, v_num=2by5xy7v, PolicyLoss=9.72e-9, DeltaPolLoss=-.0011, KL=0.0198, Entropy=0Epoch 91:   0%| | 0/1 [00:00<?, ?it/s, loss=64.509, v_num=2by5xy7v, PolicyLoss=9.72e-9, DeltaPolLoss=-.0011, KL=0.0198, Entropy=0Epoch 91: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=64.509, v_num=2by5xy7v, PolicyLoss=9.72e-9, DeltaPolLoss=-.0011, KL=0.0198, EEpoch 91: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=61.541, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0211, KL=0.015, E
-
-MeanEpReturn: 347.39796977229616
-StdEpReturn: 38.74697711282203
-MaxEpReturn: 412.8974120000124
-MinEpReturn: 312.5948111322447
-MeanEpLength: 1000.0
-PolicyLoss: -1.6570091077028337e-08
-DeltaPolLoss: -0.021149607375264168
-KL: 0.015006432309746742
-Entropy: 0.31749072670936584
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 75.0
-ValueLoss: 168.2550506591797
-DeltaValLoss: -115.35404205322266
-
-
-Epoch 91:   0%| | 0/1 [00:00<?, ?it/s, loss=61.541, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0211, KL=0.015, Entropy=0Epoch 92:   0%| | 0/1 [00:00<?, ?it/s, loss=61.541, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0211, KL=0.015, Entropy=0Epoch 92: 100%|█| 1/1 [00:00<00:00,  1.54it/s, loss=61.541, v_num=2by5xy7v, PolicyLoss=-1.66e-8, DeltaPolLoss=-.0211, KL=0.015, EEpoch 92: 100%|█| 1/1 [00:00<00:00,  1.54it/s, loss=53.419, v_num=2by5xy7v, PolicyLoss=-2.38e-8, DeltaPolLoss=-.0201, KL=0.0153, 
-
-MeanEpReturn: 339.7780443506504
-StdEpReturn: 22.9109347495073
-MaxEpReturn: 376.5076964771548
-MinEpReturn: 314.75564605273183
-MeanEpLength: 1000.0
-PolicyLoss: -2.3841858265427618e-08
-DeltaPolLoss: -0.02006365917623043
-KL: 0.01529030129313469
-Entropy: 0.29672127962112427
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 65.0
-ValueLoss: 46.217891693115234
-DeltaValLoss: -1.0510482788085938
-
-
-Epoch 92:   0%| | 0/1 [00:00<?, ?it/s, loss=53.419, v_num=2by5xy7v, PolicyLoss=-2.38e-8, DeltaPolLoss=-.0201, KL=0.0153, Entropy=Epoch 93:   0%| | 0/1 [00:00<?, ?it/s, loss=53.419, v_num=2by5xy7v, PolicyLoss=-2.38e-8, DeltaPolLoss=-.0201, KL=0.0153, Entropy=Epoch 93: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=53.419, v_num=2by5xy7v, PolicyLoss=-2.38e-8, DeltaPolLoss=-.0201, KL=0.0153, Epoch 93: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=58.204, v_num=2by5xy7v, PolicyLoss=-1.06e-8, DeltaPolLoss=-.0149, KL=0.00884,
-
-MeanEpReturn: 227.4777886911858
-StdEpReturn: 233.08762478473975
-MaxEpReturn: 373.69866967242376
-MinEpReturn: -175.9969210761554
-MeanEpLength: 1000.0
-PolicyLoss: -1.063942889345526e-08
-DeltaPolLoss: -0.01491687260568142
-KL: 0.00883901584893465
-Entropy: 0.2945733964443207
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 308.391357421875
-DeltaValLoss: -172.0508575439453
-
-
-Epoch 93:   0%| | 0/1 [00:00<?, ?it/s, loss=58.204, v_num=2by5xy7v, PolicyLoss=-1.06e-8, DeltaPolLoss=-.0149, KL=0.00884, EntropyEpoch 94:   0%| | 0/1 [00:00<?, ?it/s, loss=58.204, v_num=2by5xy7v, PolicyLoss=-1.06e-8, DeltaPolLoss=-.0149, KL=0.00884, EntropyEpoch 94: 100%|█| 1/1 [00:00<00:00,  1.85it/s, loss=58.204, v_num=2by5xy7v, PolicyLoss=-1.06e-8, DeltaPolLoss=-.0149, KL=0.00884,Epoch 94: 100%|█| 1/1 [00:00<00:00,  1.85it/s, loss=51.796, v_num=2by5xy7v, PolicyLoss=2.15e-8, DeltaPolLoss=-.0192, KL=0.015, En
-
-MeanEpReturn: -39.92670845749555
-StdEpReturn: 749.591451447953
-MaxEpReturn: 401.1208477342734
-MinEpReturn: -1338.204410024618
-MeanEpLength: 1000.0
-PolicyLoss: 2.1457672971791908e-08
-DeltaPolLoss: -0.019180355593562126
-KL: 0.015038290992379189
-Entropy: 0.2984962463378906
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 43.0
-ValueLoss: 197.51364135742188
-DeltaValLoss: -39.09117126464844
-
-
-Epoch 94:   0%| | 0/1 [00:00<?, ?it/s, loss=51.796, v_num=2by5xy7v, PolicyLoss=2.15e-8, DeltaPolLoss=-.0192, KL=0.015, Entropy=0.Epoch 95:   0%| | 0/1 [00:00<?, ?it/s, loss=51.796, v_num=2by5xy7v, PolicyLoss=2.15e-8, DeltaPolLoss=-.0192, KL=0.015, Entropy=0.Epoch 95: 100%|█| 1/1 [00:00<00:00,  2.95it/s, loss=51.796, v_num=2by5xy7v, PolicyLoss=2.15e-8, DeltaPolLoss=-.0192, KL=0.015, EnEpoch 95: 100%|█| 1/1 [00:00<00:00,  2.95it/s, loss=51.510, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=4.81e-5, KL=0.0186,
-
-MeanEpReturn: 368.23668100475004
-StdEpReturn: 30.05353845857155
-MaxEpReturn: 406.5606307948226
-MinEpReturn: 322.6323545399502
-MeanEpLength: 1000.0
-PolicyLoss: -1.8119811429073707e-08
-DeltaPolLoss: 4.807663208339363e-05
-KL: 0.018646258860826492
-Entropy: 0.29842692613601685
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 2.0
-ValueLoss: 53.3265380859375
-DeltaValLoss: -14.946624755859375
-
-
-Epoch 95:   0%| | 0/1 [00:00<?, ?it/s, loss=51.510, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=4.81e-5, KL=0.0186, EntropyEpoch 96:   0%| | 0/1 [00:00<?, ?it/s, loss=51.510, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=4.81e-5, KL=0.0186, EntropyEpoch 96: 100%|█| 1/1 [00:00<00:00,  2.84it/s, loss=51.510, v_num=2by5xy7v, PolicyLoss=-1.81e-8, DeltaPolLoss=4.81e-5, KL=0.0186,Epoch 96: 100%|█| 1/1 [00:00<00:00,  2.84it/s, loss=50.725, v_num=2by5xy7v, PolicyLoss=7.39e-9, DeltaPolLoss=-.00322, KL=0.0173, 
-
-MeanEpReturn: 397.03161388613194
-StdEpReturn: 30.819802173099227
-MaxEpReturn: 428.6646399736799
-MinEpReturn: 351.0892539188473
-MeanEpLength: 1000.0
-PolicyLoss: 7.3909758313561724e-09
-DeltaPolLoss: -0.003223257837817073
-KL: 0.01732274517416954
-Entropy: 0.2982482612133026
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 4.0
-ValueLoss: 48.735408782958984
-DeltaValLoss: -8.153274536132812
-
-
-Epoch 96:   0%| | 0/1 [00:00<?, ?it/s, loss=50.725, v_num=2by5xy7v, PolicyLoss=7.39e-9, DeltaPolLoss=-.00322, KL=0.0173, Entropy=Epoch 97:   0%| | 0/1 [00:00<?, ?it/s, loss=50.725, v_num=2by5xy7v, PolicyLoss=7.39e-9, DeltaPolLoss=-.00322, KL=0.0173, Entropy=Epoch 97: 100%|█| 1/1 [00:00<00:00,  1.51it/s, loss=50.725, v_num=2by5xy7v, PolicyLoss=7.39e-9, DeltaPolLoss=-.00322, KL=0.0173, Epoch 97: 100%|█| 1/1 [00:00<00:00,  1.51it/s, loss=43.367, v_num=2by5xy7v, PolicyLoss=-8.34e-10, DeltaPolLoss=-.0187, KL=0.0153,
-
-MeanEpReturn: 393.38144330579127
-StdEpReturn: 24.530364375992313
-MaxEpReturn: 432.4507732121422
-MinEpReturn: 364.6183116925415
-MeanEpLength: 1000.0
-PolicyLoss: -8.344650526126429e-10
-DeltaPolLoss: -0.018718108534812927
-KL: 0.015345100313425064
-Entropy: 0.28378623723983765
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 59.0
-ValueLoss: 40.07417678833008
-DeltaValLoss: -6.747348785400391
-
-
-Epoch 97:   0%| | 0/1 [00:00<?, ?it/s, loss=43.367, v_num=2by5xy7v, PolicyLoss=-8.34e-10, DeltaPolLoss=-.0187, KL=0.0153, EntropyEpoch 98:   0%| | 0/1 [00:00<?, ?it/s, loss=43.367, v_num=2by5xy7v, PolicyLoss=-8.34e-10, DeltaPolLoss=-.0187, KL=0.0153, EntropyEpoch 98: 100%|█| 1/1 [00:00<00:00,  2.94it/s, loss=43.367, v_num=2by5xy7v, PolicyLoss=-8.34e-10, DeltaPolLoss=-.0187, KL=0.0153,Epoch 98: 100%|█| 1/1 [00:00<00:00,  2.94it/s, loss=40.203, v_num=2by5xy7v, PolicyLoss=1.29e-8, DeltaPolLoss=-.00193, KL=0.0157, 
-
-MeanEpReturn: 414.451425918483
-StdEpReturn: 20.855729071010888
-MaxEpReturn: 438.89507465786266
-MinEpReturn: 392.41536199050915
-MeanEpLength: 1000.0
-PolicyLoss: 1.287460360543946e-08
-DeltaPolLoss: -0.001931016449816525
-KL: 0.015731971710920334
-Entropy: 0.2834911644458771
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 2.0
-ValueLoss: 31.124082565307617
-DeltaValLoss: -2.9792232513427734
-
-
-Epoch 98:   0%| | 0/1 [00:00<?, ?it/s, loss=40.203, v_num=2by5xy7v, PolicyLoss=1.29e-8, DeltaPolLoss=-.00193, KL=0.0157, Entropy=Epoch 99:   0%| | 0/1 [00:00<?, ?it/s, loss=40.203, v_num=2by5xy7v, PolicyLoss=1.29e-8, DeltaPolLoss=-.00193, KL=0.0157, Entropy=Epoch 99: 100%|█| 1/1 [00:00<00:00,  2.19it/s, loss=40.203, v_num=2by5xy7v, PolicyLoss=1.29e-8, DeltaPolLoss=-.00193, KL=0.0157, Epoch 99: 100%|█| 1/1 [00:00<00:00,  2.18it/s, loss=39.743, v_num=2by5xy7v, PolicyLoss=-4.89e-9, DeltaPolLoss=-.0171, KL=0.0158, 
-
-MeanEpReturn: 382.48211587968854
-StdEpReturn: 14.943934643894178
-MaxEpReturn: 400.9933844163264
-MinEpReturn: 359.28249459194467
-MeanEpLength: 1000.0
-PolicyLoss: -4.887581006585151e-09
-DeltaPolLoss: -0.017128029838204384
-KL: 0.01581650972366333
-Entropy: 0.27550292015075684
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 24.0
-ValueLoss: 44.306922912597656
-DeltaValLoss: -13.881641387939453
-
-
-Epoch 99:   0%| | 0/1 [00:00<?, ?it/s, loss=39.743, v_num=2by5xy7v, PolicyLoss=-4.89e-9, DeltaPolLoss=-.0171, KL=0.0158, Entropy=Epoch 100:   0%| | 0/1 [00:00<?, ?it/s, loss=39.743, v_num=2by5xy7v, PolicyLoss=-4.89e-9, DeltaPolLoss=-.0171, KL=0.0158, EntropyEpoch 100: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=39.743, v_num=2by5xy7v, PolicyLoss=-4.89e-9, DeltaPolLoss=-.0171, KL=0.0158,Epoch 100: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=30.108, v_num=2by5xy7v, PolicyLoss=5.01e-9, DeltaPolLoss=-.0229, KL=0.0168, 
-
-MeanEpReturn: 398.3222672469841
-StdEpReturn: 25.813052420762602
-MaxEpReturn: 420.059323055403
-MinEpReturn: 354.35337766553323
-MeanEpLength: 1000.0
-PolicyLoss: 5.006790093631253e-09
-DeltaPolLoss: -0.02288520149886608
-KL: 0.016787871718406677
-Entropy: 0.2601006329059601
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 73.0
-ValueLoss: 46.391685485839844
-DeltaValLoss: -7.919944763183594
-
-
-Epoch 100: 100%|█| 1/1 [00:05<00:00,  5.23s/it, loss=30.108, v_num=2by5xy7v, PolicyLoss=5.01e-9, DeltaPolLoss=-.0229, KL=0.0168, 

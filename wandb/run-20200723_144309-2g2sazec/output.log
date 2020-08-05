@@ -1,537 +1,0 @@
-GPU available: False, used: False
-TPU available: False, using: 0 TPU cores
-
-  | Name | Type            | Params
------------------------------------------
-0 | ac   | FireActorCritic | 7 K   
-Training: 0it [00:00, ?it/s]/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Training:   0%|                                                                                            | 0/1 [00:00<?, ?it/s]Epoch 1:   0%|                                                                                             | 0/1 [00:00<?, ?it/s]Epoch 1: 100%|█████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.48it/s]Epoch 1: 100%|█| 1/1 [00:00<00:00,  1.48it/s, loss=6033.339, v_num=2g2sazec, PolicyLoss=-7.89e-8, DeltaPolLoss=-.0201, KL=0.0151,
-
-MeanEpReturn: -1202.0807652903975
-StdEpReturn: 148.2576183637277
-MaxEpReturn: -1104.1075519396534
-MinEpReturn: -1457.5775871310714
-MeanEpLength: 1000.0
-PolicyLoss: -7.89165497394606e-08
-DeltaPolLoss: -0.020078198984265327
-KL: 0.015100892633199692
-Entropy: 0.9161344170570374
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 53.0
-ValueLoss: 13297.1650390625
-DeltaValLoss: -1230.486328125
-
-
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Tried to pass invalid video frame, marking as broken: Your frame has data type int64, but we require uint8 (i.e. RGB values from 0-255).[0m
-  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Epoch 1:   0%| | 0/1 [00:00<?, ?it/s, loss=6033.339, v_num=2g2sazec, PolicyLoss=-7.89e-8, DeltaPolLoss=-.0201, KL=0.0151, EntropyEpoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=6033.339, v_num=2g2sazec, PolicyLoss=-7.89e-8, DeltaPolLoss=-.0201, KL=0.0151, EntropyEpoch 2: 100%|█| 1/1 [00:01<00:00,  1.00s/it, loss=6033.339, v_num=2g2sazec, PolicyLoss=-7.89e-8, DeltaPolLoss=-.0201, KL=0.0151,Epoch 2: 100%|█| 1/1 [00:01<00:00,  1.00s/it, loss=5539.827, v_num=2g2sazec, PolicyLoss=-2.48e-7, DeltaPolLoss=-.0195, KL=0.0061,
-
-MeanEpReturn: -1136.9689545939677
-StdEpReturn: 17.446401354586296
-MaxEpReturn: -1119.339529432807
-MinEpReturn: -1161.0278478155692
-MeanEpLength: 1000.0
-PolicyLoss: -2.4831294354044076e-07
-DeltaPolLoss: -0.019478732720017433
-KL: 0.0061036571860313416
-Entropy: 0.904965341091156
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 10700.5263671875
-DeltaValLoss: -607.8955078125
-
-
-Epoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=5539.827, v_num=2g2sazec, PolicyLoss=-2.48e-7, DeltaPolLoss=-.0195, KL=0.0061, EntropyEpoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=5539.827, v_num=2g2sazec, PolicyLoss=-2.48e-7, DeltaPolLoss=-.0195, KL=0.0061, EntropyEpoch 3: 100%|█| 1/1 [00:00<00:00,  1.10it/s, loss=5539.827, v_num=2g2sazec, PolicyLoss=-2.48e-7, DeltaPolLoss=-.0195, KL=0.0061,Epoch 3: 100%|█| 1/1 [00:00<00:00,  1.10it/s, loss=5337.177, v_num=2g2sazec, PolicyLoss=1.66e-8, DeltaPolLoss=-.02, KL=0.00966, E
-
-MeanEpReturn: -1137.2113810631488
-StdEpReturn: 123.95885483526172
-MaxEpReturn: -1035.3794721487352
-MinEpReturn: -1340.8242400612319
-MeanEpLength: 1000.0
-PolicyLoss: 1.6629696730774413e-08
-DeltaPolLoss: -0.01998797059059143
-KL: 0.009663979522883892
-Entropy: 0.8988723754882812
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 10415.3779296875
-DeltaValLoss: -551.6220703125
-
-
-Epoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=5337.177, v_num=2g2sazec, PolicyLoss=1.66e-8, DeltaPolLoss=-.02, KL=0.00966, Entropy=0Epoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=5337.177, v_num=2g2sazec, PolicyLoss=1.66e-8, DeltaPolLoss=-.02, KL=0.00966, Entropy=0Epoch 4: 100%|█| 1/1 [00:00<00:00,  2.29it/s, loss=5337.177, v_num=2g2sazec, PolicyLoss=1.66e-8, DeltaPolLoss=-.02, KL=0.00966, EEpoch 4: 100%|█| 1/1 [00:00<00:00,  2.28it/s, loss=4974.685, v_num=2g2sazec, PolicyLoss=-2.53e-7, DeltaPolLoss=-.0105, KL=0.015, 
-
-MeanEpReturn: -1069.4369832980503
-StdEpReturn: 25.30258459937163
-MaxEpReturn: -1039.2269172478002
-MinEpReturn: -1102.109114934665
-MeanEpLength: 1000.0
-PolicyLoss: -2.533793406200857e-07
-DeltaPolLoss: -0.01051468588411808
-KL: 0.015000834129750729
-Entropy: 0.8980818390846252
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 8.0
-ValueLoss: 8208.5654296875
-DeltaValLoss: -434.1533203125
-
-
-Epoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=4974.685, v_num=2g2sazec, PolicyLoss=-2.53e-7, DeltaPolLoss=-.0105, KL=0.015, Entropy=Epoch 5:   0%| | 0/1 [00:00<?, ?it/s, loss=4974.685, v_num=2g2sazec, PolicyLoss=-2.53e-7, DeltaPolLoss=-.0105, KL=0.015, Entropy=Epoch 5: 100%|█| 1/1 [00:00<00:00,  1.11it/s, loss=4974.685, v_num=2g2sazec, PolicyLoss=-2.53e-7, DeltaPolLoss=-.0105, KL=0.015, Epoch 5: 100%|█| 1/1 [00:00<00:00,  1.11it/s, loss=4642.528, v_num=2g2sazec, PolicyLoss=6.03e-7, DeltaPolLoss=-.021, KL=0.0103, E
-
-MeanEpReturn: -1008.7864218027141
-StdEpReturn: 55.59982458972078
-MaxEpReturn: -946.115121349584
-MinEpReturn: -1068.7772544680456
-MeanEpLength: 1000.0
-PolicyLoss: 6.029605970070406e-07
-DeltaPolLoss: -0.020962407812476158
-KL: 0.010327436029911041
-Entropy: 0.8888744115829468
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 7000.98681640625
-DeltaValLoss: -373.18115234375
-
-
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Tried to pass invalid video frame, marking as broken: Your frame has data type int64, but we require uint8 (i.e. RGB values from 0-255).[0m
-  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Epoch 5:   0%| | 0/1 [00:00<?, ?it/s, loss=4642.528, v_num=2g2sazec, PolicyLoss=6.03e-7, DeltaPolLoss=-.021, KL=0.0103, Entropy=0Epoch 6:   0%| | 0/1 [00:00<?, ?it/s, loss=4642.528, v_num=2g2sazec, PolicyLoss=6.03e-7, DeltaPolLoss=-.021, KL=0.0103, Entropy=0Epoch 6: 100%|█| 1/1 [00:00<00:00,  1.56it/s, loss=4642.528, v_num=2g2sazec, PolicyLoss=6.03e-7, DeltaPolLoss=-.021, KL=0.0103, EEpoch 6: 100%|█| 1/1 [00:00<00:00,  1.56it/s, loss=4427.297, v_num=2g2sazec, PolicyLoss=-4.76e-8, DeltaPolLoss=-.0195, KL=0.0151,
-
-MeanEpReturn: -1007.8777250386082
-StdEpReturn: 176.37658186137986
-MaxEpReturn: -798.5238515654814
-MinEpReturn: -1282.020083654531
-MeanEpLength: 1000.0
-PolicyLoss: -4.7564505223363085e-08
-DeltaPolLoss: -0.019464390352368355
-KL: 0.015105371363461018
-Entropy: 0.887370765209198
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 41.0
-ValueLoss: 7066.87890625
-DeltaValLoss: -364.591796875
-
-
-Epoch 6:   0%| | 0/1 [00:00<?, ?it/s, loss=4427.297, v_num=2g2sazec, PolicyLoss=-4.76e-8, DeltaPolLoss=-.0195, KL=0.0151, EntropyEpoch 7:   0%| | 0/1 [00:00<?, ?it/s, loss=4427.297, v_num=2g2sazec, PolicyLoss=-4.76e-8, DeltaPolLoss=-.0195, KL=0.0151, EntropyEpoch 7: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=4427.297, v_num=2g2sazec, PolicyLoss=-4.76e-8, DeltaPolLoss=-.0195, KL=0.0151,Epoch 7: 100%|█| 1/1 [00:00<00:00,  1.18it/s, loss=4182.409, v_num=2g2sazec, PolicyLoss=-1.06e-7, DeltaPolLoss=-.0219, KL=0.00642
-
-MeanEpReturn: -960.6776146265013
-StdEpReturn: 47.54763753825368
-MaxEpReturn: -890.7092970350054
-MinEpReturn: -1021.0023212833323
-MeanEpLength: 1000.0
-PolicyLoss: -1.0645389636465552e-07
-DeltaPolLoss: -0.02187882736325264
-KL: 0.0064188167452812195
-Entropy: 0.8775855898857117
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 5746.72509765625
-DeltaValLoss: -320.56494140625
-
-
-Epoch 7:   0%| | 0/1 [00:00<?, ?it/s, loss=4182.409, v_num=2g2sazec, PolicyLoss=-1.06e-7, DeltaPolLoss=-.0219, KL=0.00642, EntropEpoch 8:   0%| | 0/1 [00:00<?, ?it/s, loss=4182.409, v_num=2g2sazec, PolicyLoss=-1.06e-7, DeltaPolLoss=-.0219, KL=0.00642, EntropEpoch 8: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=4182.409, v_num=2g2sazec, PolicyLoss=-1.06e-7, DeltaPolLoss=-.0219, KL=0.00642Epoch 8: 100%|█| 1/1 [00:00<00:00,  1.31it/s, loss=4016.996, v_num=2g2sazec, PolicyLoss=1.16e-7, DeltaPolLoss=-.0193, KL=0.0103, 
-
-MeanEpReturn: -975.0230875956404
-StdEpReturn: 220.9585531530522
-MaxEpReturn: -677.2200028351906
-MinEpReturn: -1298.4959714605752
-MeanEpLength: 1000.0
-PolicyLoss: 1.1566281443720072e-07
-DeltaPolLoss: -0.019303223118185997
-KL: 0.010321782901883125
-Entropy: 0.8752622604370117
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 6033.14404296875
-DeltaValLoss: -314.9384765625
-
-
-Epoch 8:   0%| | 0/1 [00:00<?, ?it/s, loss=4016.996, v_num=2g2sazec, PolicyLoss=1.16e-7, DeltaPolLoss=-.0193, KL=0.0103, Entropy=Epoch 9:   0%| | 0/1 [00:00<?, ?it/s, loss=4016.996, v_num=2g2sazec, PolicyLoss=1.16e-7, DeltaPolLoss=-.0193, KL=0.0103, Entropy=Epoch 9: 100%|█| 1/1 [00:00<00:00,  1.15it/s, loss=4016.996, v_num=2g2sazec, PolicyLoss=1.16e-7, DeltaPolLoss=-.0193, KL=0.0103, Epoch 9: 100%|█| 1/1 [00:00<00:00,  1.15it/s, loss=3841.384, v_num=2g2sazec, PolicyLoss=-2.52e-8, DeltaPolLoss=-.0184, KL=0.0107,
-
-MeanEpReturn: -927.1033815631064
-StdEpReturn: 213.67393127503132
-MaxEpReturn: -680.3831653508433
-MinEpReturn: -1268.369822542458
-MeanEpLength: 1000.0
-PolicyLoss: -2.5242567147643058e-08
-DeltaPolLoss: -0.018392039462924004
-KL: 0.010706896893680096
-Entropy: 0.8708136677742004
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 5139.3515625
-DeltaValLoss: -266.38671875
-
-
-Epoch 9:   0%| | 0/1 [00:00<?, ?it/s, loss=3841.384, v_num=2g2sazec, PolicyLoss=-2.52e-8, DeltaPolLoss=-.0184, KL=0.0107, EntropyEpoch 10:   0%| | 0/1 [00:00<?, ?it/s, loss=3841.384, v_num=2g2sazec, PolicyLoss=-2.52e-8, DeltaPolLoss=-.0184, KL=0.0107, EntropEpoch 10: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=3841.384, v_num=2g2sazec, PolicyLoss=-2.52e-8, DeltaPolLoss=-.0184, KL=0.0107Epoch 10: 100%|█| 1/1 [00:00<00:00,  1.29it/s, loss=3634.360, v_num=2g2sazec, PolicyLoss=9.2e-8, DeltaPolLoss=-.0183, KL=0.00714,
-
-MeanEpReturn: -887.7774024874828
-StdEpReturn: 12.885914755626466
-MaxEpReturn: -872.5120803686063
-MinEpReturn: -907.9966076097949
-MeanEpLength: 1000.0
-PolicyLoss: 9.19699658652462e-08
-DeltaPolLoss: -0.018321307376027107
-KL: 0.007138948887586594
-Entropy: 0.8614911437034607
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 3773.614990234375
-DeltaValLoss: -231.32568359375
-
-
-Epoch 10:   0%| | 0/1 [00:00<?, ?it/s, loss=3634.360, v_num=2g2sazec, PolicyLoss=9.2e-8, DeltaPolLoss=-.0183, KL=0.00714, EntropyEpoch 11:   0%| | 0/1 [00:00<?, ?it/s, loss=3634.360, v_num=2g2sazec, PolicyLoss=9.2e-8, DeltaPolLoss=-.0183, KL=0.00714, EntropyEpoch 11: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=3634.360, v_num=2g2sazec, PolicyLoss=9.2e-8, DeltaPolLoss=-.0183, KL=0.00714,Epoch 11: 100%|█| 1/1 [00:00<00:00,  1.38it/s, loss=3366.150, v_num=2g2sazec, PolicyLoss=2.37e-7, DeltaPolLoss=-.015, KL=0.00483,
-
-MeanEpReturn: -1115.990344019398
-StdEpReturn: 186.87118015584582
-MaxEpReturn: -917.0695203008453
-MinEpReturn: -1326.534592199371
-MeanEpLength: 1000.0
-PolicyLoss: 2.3704767215804168e-07
-DeltaPolLoss: -0.015032967552542686
-KL: 0.004829892888665199
-Entropy: 0.8523338437080383
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 7108.33349609375
-DeltaValLoss: -405.8408203125
-
-
-Epoch 11:   0%| | 0/1 [00:00<?, ?it/s, loss=3366.150, v_num=2g2sazec, PolicyLoss=2.37e-7, DeltaPolLoss=-.015, KL=0.00483, EntropyEpoch 12:   0%| | 0/1 [00:00<?, ?it/s, loss=3366.150, v_num=2g2sazec, PolicyLoss=2.37e-7, DeltaPolLoss=-.015, KL=0.00483, EntropyEpoch 12: 100%|█| 1/1 [00:00<00:00,  1.15it/s, loss=3366.150, v_num=2g2sazec, PolicyLoss=2.37e-7, DeltaPolLoss=-.015, KL=0.00483,Epoch 12: 100%|█| 1/1 [00:00<00:00,  1.15it/s, loss=3000.592, v_num=2g2sazec, PolicyLoss=2.96e-8, DeltaPolLoss=-.0193, KL=0.00526
-
-MeanEpReturn: -851.9571727672164
-StdEpReturn: 32.944309956252596
-MaxEpReturn: -813.3247382569178
-MinEpReturn: -894.7110356776446
-MeanEpLength: 1000.0
-PolicyLoss: 2.956390332542469e-08
-DeltaPolLoss: -0.019334828481078148
-KL: 0.005260827019810677
-Entropy: 0.8464863896369934
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2975.3935546875
-DeltaValLoss: -193.92333984375
-
-
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Tried to pass invalid video frame, marking as broken: Your frame has data type int64, but we require uint8 (i.e. RGB values from 0-255).[0m
-  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Epoch 12:   0%| | 0/1 [00:00<?, ?it/s, loss=3000.592, v_num=2g2sazec, PolicyLoss=2.96e-8, DeltaPolLoss=-.0193, KL=0.00526, EntropEpoch 13:   0%| | 0/1 [00:00<?, ?it/s, loss=3000.592, v_num=2g2sazec, PolicyLoss=2.96e-8, DeltaPolLoss=-.0193, KL=0.00526, EntropEpoch 13: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=3000.592, v_num=2g2sazec, PolicyLoss=2.96e-8, DeltaPolLoss=-.0193, KL=0.00526Epoch 13: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=2628.757, v_num=2g2sazec, PolicyLoss=1.34e-7, DeltaPolLoss=-.0215, KL=0.00717
-
-MeanEpReturn: -822.9213496237719
-StdEpReturn: 60.41995952782648
-MaxEpReturn: -774.3288331557327
-MinEpReturn: -925.0655167326727
-MeanEpLength: 1000.0
-PolicyLoss: 1.3422966560483474e-07
-DeltaPolLoss: -0.021546892821788788
-KL: 0.007174794562160969
-Entropy: 0.8404830694198608
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2587.715576171875
-DeltaValLoss: -160.6630859375
-
-
-Epoch 13:   0%| | 0/1 [00:00<?, ?it/s, loss=2628.757, v_num=2g2sazec, PolicyLoss=1.34e-7, DeltaPolLoss=-.0215, KL=0.00717, EntropEpoch 14:   0%| | 0/1 [00:00<?, ?it/s, loss=2628.757, v_num=2g2sazec, PolicyLoss=1.34e-7, DeltaPolLoss=-.0215, KL=0.00717, EntropEpoch 14: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=2628.757, v_num=2g2sazec, PolicyLoss=1.34e-7, DeltaPolLoss=-.0215, KL=0.00717Epoch 14: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=2344.391, v_num=2g2sazec, PolicyLoss=-1.12e-7, DeltaPolLoss=-.0203, KL=0.0044
-
-MeanEpReturn: -792.6534208522253
-StdEpReturn: 12.812189381550011
-MaxEpReturn: -781.4963857494954
-MinEpReturn: -814.3573914400275
-MeanEpLength: 1000.0
-PolicyLoss: -1.1229514740307422e-07
-DeltaPolLoss: -0.020307131111621857
-KL: 0.004425447434186935
-Entropy: 0.8304256200790405
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2229.289794921875
-DeltaValLoss: -142.19775390625
-
-
-Epoch 14:   0%| | 0/1 [00:00<?, ?it/s, loss=2344.391, v_num=2g2sazec, PolicyLoss=-1.12e-7, DeltaPolLoss=-.0203, KL=0.00443, EntroEpoch 15:   0%| | 0/1 [00:00<?, ?it/s, loss=2344.391, v_num=2g2sazec, PolicyLoss=-1.12e-7, DeltaPolLoss=-.0203, KL=0.00443, EntroEpoch 15: 100%|█| 1/1 [00:00<00:00,  2.47it/s, loss=2344.391, v_num=2g2sazec, PolicyLoss=-1.12e-7, DeltaPolLoss=-.0203, KL=0.0044Epoch 15: 100%|█| 1/1 [00:00<00:00,  2.47it/s, loss=2102.896, v_num=2g2sazec, PolicyLoss=2.65e-7, DeltaPolLoss=-.00498, KL=0.0159
-
-MeanEpReturn: -779.4049172211229
-StdEpReturn: 55.18713424200087
-MaxEpReturn: -718.0521658178716
-MinEpReturn: -864.7479464264773
-MeanEpLength: 1000.0
-PolicyLoss: 2.6506185690777784e-07
-DeltaPolLoss: -0.004978530574589968
-KL: 0.015933094546198845
-Entropy: 0.8302690982818604
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 5.0
-ValueLoss: 1925.2386474609375
-DeltaValLoss: -127.3271484375
-
-
-Epoch 15:   0%| | 0/1 [00:00<?, ?it/s, loss=2102.896, v_num=2g2sazec, PolicyLoss=2.65e-7, DeltaPolLoss=-.00498, KL=0.0159, EntropEpoch 16:   0%| | 0/1 [00:00<?, ?it/s, loss=2102.896, v_num=2g2sazec, PolicyLoss=2.65e-7, DeltaPolLoss=-.00498, KL=0.0159, EntropEpoch 16: 100%|█| 1/1 [00:00<00:00,  2.22it/s, loss=2102.896, v_num=2g2sazec, PolicyLoss=2.65e-7, DeltaPolLoss=-.00498, KL=0.0159Epoch 16: 100%|█| 1/1 [00:00<00:00,  2.22it/s, loss=1826.694, v_num=2g2sazec, PolicyLoss=6.98e-8, DeltaPolLoss=-.00514, KL=0.0153
-
-MeanEpReturn: -706.7731764597404
-StdEpReturn: 61.07817321189626
-MaxEpReturn: -636.4408204093704
-MinEpReturn: -784.4768164855099
-MeanEpLength: 1000.0
-PolicyLoss: 6.97970392593561e-08
-DeltaPolLoss: -0.005136969033628702
-KL: 0.015349095687270164
-Entropy: 0.8302243947982788
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 5.0
-ValueLoss: 1263.0828857421875
-DeltaValLoss: -84.8428955078125
-
-
-Epoch 16:   0%| | 0/1 [00:00<?, ?it/s, loss=1826.694, v_num=2g2sazec, PolicyLoss=6.98e-8, DeltaPolLoss=-.00514, KL=0.0153, EntropEpoch 17:   0%| | 0/1 [00:00<?, ?it/s, loss=1826.694, v_num=2g2sazec, PolicyLoss=6.98e-8, DeltaPolLoss=-.00514, KL=0.0153, EntropEpoch 17: 100%|█| 1/1 [00:00<00:00,  2.59it/s, loss=1826.694, v_num=2g2sazec, PolicyLoss=6.98e-8, DeltaPolLoss=-.00514, KL=0.0153Epoch 17: 100%|█| 1/1 [00:00<00:00,  2.59it/s, loss=1604.308, v_num=2g2sazec, PolicyLoss=3.16e-8, DeltaPolLoss=-.00461, KL=0.0166
-
-MeanEpReturn: -667.5083240008512
-StdEpReturn: 59.4160406318267
-MaxEpReturn: -604.0930372244375
-MinEpReturn: -730.5347047840835
-MeanEpLength: 1000.0
-PolicyLoss: 3.1590460025654465e-08
-DeltaPolLoss: -0.0046093096025288105
-KL: 0.0166018046438694
-Entropy: 0.8305864334106445
-TimesEarlyStopped: 1
-AvgEarlyStopStep: 4.0
-ValueLoss: 1047.1025390625
-DeltaValLoss: -68.659912109375
-
-
-Epoch 17:   0%| | 0/1 [00:00<?, ?it/s, loss=1604.308, v_num=2g2sazec, PolicyLoss=3.16e-8, DeltaPolLoss=-.00461, KL=0.0166, EntropEpoch 18:   0%| | 0/1 [00:00<?, ?it/s, loss=1604.308, v_num=2g2sazec, PolicyLoss=3.16e-8, DeltaPolLoss=-.00461, KL=0.0166, EntropEpoch 18: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=1604.308, v_num=2g2sazec, PolicyLoss=3.16e-8, DeltaPolLoss=-.00461, KL=0.0166Epoch 18: 100%|█| 1/1 [00:00<00:00,  1.24it/s, loss=1400.848, v_num=2g2sazec, PolicyLoss=-8.61e-8, DeltaPolLoss=-.0241, KL=0.0114
-
-MeanEpReturn: -790.1500626499437
-StdEpReturn: 83.4888678732675
-MaxEpReturn: -690.8911607188224
-MinEpReturn: -920.2183376538767
-MeanEpLength: 1000.0
-PolicyLoss: -8.606910739672458e-08
-DeltaPolLoss: -0.02406010963022709
-KL: 0.011392773129045963
-Entropy: 0.8294650912284851
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1766.3936767578125
-DeltaValLoss: -117.39453125
-
-
-Epoch 18:   0%| | 0/1 [00:00<?, ?it/s, loss=1400.848, v_num=2g2sazec, PolicyLoss=-8.61e-8, DeltaPolLoss=-.0241, KL=0.0114, EntropEpoch 19:   0%| | 0/1 [00:00<?, ?it/s, loss=1400.848, v_num=2g2sazec, PolicyLoss=-8.61e-8, DeltaPolLoss=-.0241, KL=0.0114, EntropEpoch 19: 100%|█| 1/1 [00:00<00:00,  1.23it/s, loss=1400.848, v_num=2g2sazec, PolicyLoss=-8.61e-8, DeltaPolLoss=-.0241, KL=0.0114Epoch 19: 100%|█| 1/1 [00:00<00:00,  1.23it/s, loss=1259.099, v_num=2g2sazec, PolicyLoss=-2.91e-8, DeltaPolLoss=-.0174, KL=0.0081
-
-MeanEpReturn: -786.4128057003957
-StdEpReturn: 234.4450932124165
-MaxEpReturn: -615.2595391510843
-MinEpReturn: -1188.0241548437243
-MeanEpLength: 1000.0
-PolicyLoss: -2.9087066977240283e-08
-DeltaPolLoss: -0.017359411343932152
-KL: 0.008097550831735134
-Entropy: 0.8219850063323975
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2159.4384765625
-DeltaValLoss: -121.443115234375
-
-
-Epoch 19:   0%| | 0/1 [00:00<?, ?it/s, loss=1259.099, v_num=2g2sazec, PolicyLoss=-2.91e-8, DeltaPolLoss=-.0174, KL=0.0081, EntropEpoch 20:   0%| | 0/1 [00:00<?, ?it/s, loss=1259.099, v_num=2g2sazec, PolicyLoss=-2.91e-8, DeltaPolLoss=-.0174, KL=0.0081, EntropEpoch 20: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=1259.099, v_num=2g2sazec, PolicyLoss=-2.91e-8, DeltaPolLoss=-.0174, KL=0.0081Epoch 20: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=1125.712, v_num=2g2sazec, PolicyLoss=7.93e-9, DeltaPolLoss=-.0183, KL=0.00926
-
-MeanEpReturn: -719.49292699966
-StdEpReturn: 14.711844046146943
-MaxEpReturn: -698.0431230400088
-MinEpReturn: -736.9101841616227
-MeanEpLength: 1000.0
-PolicyLoss: 7.927417833286654e-09
-DeltaPolLoss: -0.018273314461112022
-KL: 0.009257898665964603
-Entropy: 0.8131855726242065
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 949.146240234375
-DeltaValLoss: -74.60076904296875
-
-
-Epoch 20:   0%| | 0/1 [00:00<?, ?it/s, loss=1125.712, v_num=2g2sazec, PolicyLoss=7.93e-9, DeltaPolLoss=-.0183, KL=0.00926, EntropEpoch 21:   0%| | 0/1 [00:00<?, ?it/s, loss=1125.712, v_num=2g2sazec, PolicyLoss=7.93e-9, DeltaPolLoss=-.0183, KL=0.00926, EntropEpoch 21: 100%|█| 1/1 [00:00<00:00,  1.27it/s, loss=1125.712, v_num=2g2sazec, PolicyLoss=7.93e-9, DeltaPolLoss=-.0183, KL=0.00926Epoch 21: 100%|█| 1/1 [00:00<00:00,  1.27it/s, loss=818.674, v_num=2g2sazec, PolicyLoss=5.39e-8, DeltaPolLoss=-.02, KL=0.00283, E
-
-MeanEpReturn: -655.8929607495523
-StdEpReturn: 55.55334527166797
-MaxEpReturn: -564.7473491065574
-MinEpReturn: -711.5217591106629
-MeanEpLength: 1000.0
-PolicyLoss: 5.3882597939036714e-08
-DeltaPolLoss: -0.02000643126666546
-KL: 0.0028287158347666264
-Entropy: 0.8042047619819641
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 606.9463500976562
-DeltaValLoss: -45.21417236328125
-
-
-Epoch 21:   0%| | 0/1 [00:00<?, ?it/s, loss=818.674, v_num=2g2sazec, PolicyLoss=5.39e-8, DeltaPolLoss=-.02, KL=0.00283, Entropy=0Epoch 22:   0%| | 0/1 [00:00<?, ?it/s, loss=818.674, v_num=2g2sazec, PolicyLoss=5.39e-8, DeltaPolLoss=-.02, KL=0.00283, Entropy=0Epoch 22: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=818.674, v_num=2g2sazec, PolicyLoss=5.39e-8, DeltaPolLoss=-.02, KL=0.00283, EEpoch 22: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=781.756, v_num=2g2sazec, PolicyLoss=1.98e-8, DeltaPolLoss=-.0203, KL=0.00679,
-
-MeanEpReturn: -783.5223379806432
-StdEpReturn: 293.0905844420649
-MaxEpReturn: -542.9028290798458
-MinEpReturn: -1284.8697662063403
-MeanEpLength: 1000.0
-PolicyLoss: 1.9788741312254388e-08
-DeltaPolLoss: -0.02025582827627659
-KL: 0.006792993750423193
-Entropy: 0.7873725295066833
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2145.109619140625
-DeltaValLoss: -101.9913330078125
-
-
-Epoch 22:   0%| | 0/1 [00:00<?, ?it/s, loss=781.756, v_num=2g2sazec, PolicyLoss=1.98e-8, DeltaPolLoss=-.0203, KL=0.00679, EntropyEpoch 23:   0%| | 0/1 [00:00<?, ?it/s, loss=781.756, v_num=2g2sazec, PolicyLoss=1.98e-8, DeltaPolLoss=-.0203, KL=0.00679, EntropyEpoch 23: 100%|█| 1/1 [00:01<00:00,  1.08s/it, loss=781.756, v_num=2g2sazec, PolicyLoss=1.98e-8, DeltaPolLoss=-.0203, KL=0.00679,Epoch 23: 100%|█| 1/1 [00:01<00:00,  1.08s/it, loss=749.198, v_num=2g2sazec, PolicyLoss=4.4e-8, DeltaPolLoss=-.0173, KL=0.00421, 
-
-MeanEpReturn: -778.7662857955654
-StdEpReturn: 285.3494884183903
-MaxEpReturn: -585.8371422482038
-MinEpReturn: -1271.7331347645752
-MeanEpLength: 1000.0
-PolicyLoss: 4.39882263947311e-08
-DeltaPolLoss: -0.01727730967104435
-KL: 0.004211757332086563
-Entropy: 0.7812706828117371
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1872.51025390625
-DeltaValLoss: -96.6317138671875
-
-
-Epoch 23:   0%| | 0/1 [00:00<?, ?it/s, loss=749.198, v_num=2g2sazec, PolicyLoss=4.4e-8, DeltaPolLoss=-.0173, KL=0.00421, Entropy=Epoch 24:   0%| | 0/1 [00:00<?, ?it/s, loss=749.198, v_num=2g2sazec, PolicyLoss=4.4e-8, DeltaPolLoss=-.0173, KL=0.00421, Entropy=Epoch 24: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=749.198, v_num=2g2sazec, PolicyLoss=4.4e-8, DeltaPolLoss=-.0173, KL=0.00421, Epoch 24: 100%|█| 1/1 [00:00<00:00,  1.35it/s, loss=782.210, v_num=2g2sazec, PolicyLoss=-3.55e-8, DeltaPolLoss=-.019, KL=0.00725,
-
-MeanEpReturn: -863.6643231334324
-StdEpReturn: 328.36925338287836
-MaxEpReturn: -489.8207001049302
-MinEpReturn: -1237.0662512904282
-MeanEpLength: 1000.0
-PolicyLoss: -3.5524369224049224e-08
-DeltaPolLoss: -0.019006330519914627
-KL: 0.00724814273416996
-Entropy: 0.7740083932876587
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 2896.642822265625
-DeltaValLoss: -149.2998046875
-
-
-Epoch 24:   0%| | 0/1 [00:00<?, ?it/s, loss=782.210, v_num=2g2sazec, PolicyLoss=-3.55e-8, DeltaPolLoss=-.019, KL=0.00725, EntropyEpoch 25:   0%| | 0/1 [00:00<?, ?it/s, loss=782.210, v_num=2g2sazec, PolicyLoss=-3.55e-8, DeltaPolLoss=-.019, KL=0.00725, EntropyEpoch 25: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=782.210, v_num=2g2sazec, PolicyLoss=-3.55e-8, DeltaPolLoss=-.019, KL=0.00725,Epoch 25: 100%|█| 1/1 [00:00<00:00,  1.36it/s, loss=743.594, v_num=2g2sazec, PolicyLoss=1.14e-8, DeltaPolLoss=-.021, KL=0.0115, E
-
-MeanEpReturn: -661.2918381121
-StdEpReturn: 253.20810908276664
-MaxEpReturn: -395.9043121992933
-MinEpReturn: -1078.9304814964842
-MeanEpLength: 1000.0
-PolicyLoss: 1.135468519208871e-08
-DeltaPolLoss: -0.020986706018447876
-KL: 0.01152976043522358
-Entropy: 0.7722317576408386
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1060.651611328125
-DeltaValLoss: -35.0743408203125
-
-
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Tried to pass invalid video frame, marking as broken: Your frame has data type int64, but we require uint8 (i.e. RGB values from 0-255).[0m
-  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
-  warnings.warn(*args, **kwargs)
-Epoch 25:   0%| | 0/1 [00:00<?, ?it/s, loss=743.594, v_num=2g2sazec, PolicyLoss=1.14e-8, DeltaPolLoss=-.021, KL=0.0115, Entropy=0Epoch 26:   0%| | 0/1 [00:00<?, ?it/s, loss=743.594, v_num=2g2sazec, PolicyLoss=1.14e-8, DeltaPolLoss=-.021, KL=0.0115, Entropy=0Epoch 26: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=743.594, v_num=2g2sazec, PolicyLoss=1.14e-8, DeltaPolLoss=-.021, KL=0.0115, EEpoch 26: 100%|█| 1/1 [00:00<00:00,  1.34it/s, loss=744.822, v_num=2g2sazec, PolicyLoss=4.76e-8, DeltaPolLoss=-.0196, KL=0.0134, 
-
-MeanEpReturn: -691.6104740628625
-StdEpReturn: 247.90796334731175
-MaxEpReturn: -509.4949848784607
-MinEpReturn: -1118.8920120303148
-MeanEpLength: 1000.0
-PolicyLoss: 4.7564505223363085e-08
-DeltaPolLoss: -0.019589418545365334
-KL: 0.013443165458738804
-Entropy: 0.7569716572761536
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1244.15234375
-DeltaValLoss: -41.3505859375
-
-
-Epoch 26:   0%| | 0/1 [00:00<?, ?it/s, loss=744.822, v_num=2g2sazec, PolicyLoss=4.76e-8, DeltaPolLoss=-.0196, KL=0.0134, Entropy=Epoch 27:   0%| | 0/1 [00:00<?, ?it/s, loss=744.822, v_num=2g2sazec, PolicyLoss=4.76e-8, DeltaPolLoss=-.0196, KL=0.0134, Entropy=Epoch 27: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=744.822, v_num=2g2sazec, PolicyLoss=4.76e-8, DeltaPolLoss=-.0196, KL=0.0134, Epoch 27: 100%|█| 1/1 [00:00<00:00,  1.28it/s, loss=703.847, v_num=2g2sazec, PolicyLoss=-, DeltaPolLoss=-.0193, KL=0.00738, Entro
-
-MeanEpReturn: -537.5685043666823
-StdEpReturn: 70.32177122950318
-MaxEpReturn: -422.1434046446211
-MinEpReturn: -605.5015832598345
-MeanEpLength: 1000.0
-PolicyLoss: -0.0
-DeltaPolLoss: -0.0193253792822361
-KL: 0.007383391726762056
-Entropy: 0.7509666085243225
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 164.02325439453125
-DeltaValLoss: -5.071044921875
-
-
-Epoch 27:   0%| | 0/1 [00:00<?, ?it/s, loss=703.847, v_num=2g2sazec, PolicyLoss=-, DeltaPolLoss=-.0193, KL=0.00738, Entropy=0.751Epoch 28:   0%| | 0/1 [00:00<?, ?it/s, loss=703.847, v_num=2g2sazec, PolicyLoss=-, DeltaPolLoss=-.0193, KL=0.00738, Entropy=0.751Epoch 28: 100%|█| 1/1 [00:00<00:00,  1.27it/s, loss=703.847, v_num=2g2sazec, PolicyLoss=-, DeltaPolLoss=-.0193, KL=0.00738, EntroEpoch 28: 100%|█| 1/1 [00:00<00:00,  1.27it/s, loss=689.812, v_num=2g2sazec, PolicyLoss=3.81e-9, DeltaPolLoss=-.0253, KL=0.00637,
-
-MeanEpReturn: -661.2894954279632
-StdEpReturn: 287.6148558221853
-MaxEpReturn: -485.8572984633338
-MinEpReturn: -1159.1336320157977
-MeanEpLength: 1000.0
-PolicyLoss: 3.814697446813398e-09
-DeltaPolLoss: -0.025333086028695107
-KL: 0.006372809875756502
-Entropy: 0.7479720115661621
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1401.3997802734375
-DeltaValLoss: -33.1011962890625
-
-
-Epoch 28:   0%| | 0/1 [00:00<?, ?it/s, loss=689.812, v_num=2g2sazec, PolicyLoss=3.81e-9, DeltaPolLoss=-.0253, KL=0.00637, EntropyEpoch 29:   0%| | 0/1 [00:00<?, ?it/s, loss=689.812, v_num=2g2sazec, PolicyLoss=3.81e-9, DeltaPolLoss=-.0253, KL=0.00637, EntropyEpoch 29: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=689.812, v_num=2g2sazec, PolicyLoss=3.81e-9, DeltaPolLoss=-.0253, KL=0.00637,Epoch 29: 100%|█| 1/1 [00:00<00:00,  1.25it/s, loss=659.844, v_num=2g2sazec, PolicyLoss=2.55e-8, DeltaPolLoss=-.017, KL=0.0114, E
-
-MeanEpReturn: -700.17672551448
-StdEpReturn: 316.14902160622006
-MaxEpReturn: -506.00422443169657
-MinEpReturn: -1247.4943728551166
-MeanEpLength: 1000.0
-PolicyLoss: 2.55107881486083e-08
-DeltaPolLoss: -0.016959456726908684
-KL: 0.01135767437517643
-Entropy: 0.743272602558136
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1480.50634765625
-DeltaValLoss: -41.8809814453125
-
-
-Epoch 29:   0%| | 0/1 [00:00<?, ?it/s, loss=659.844, v_num=2g2sazec, PolicyLoss=2.55e-8, DeltaPolLoss=-.017, KL=0.0114, Entropy=0Epoch 30:   0%| | 0/1 [00:00<?, ?it/s, loss=659.844, v_num=2g2sazec, PolicyLoss=2.55e-8, DeltaPolLoss=-.017, KL=0.0114, Entropy=0Epoch 30: 100%|█| 1/1 [00:00<00:00,  1.16it/s, loss=659.844, v_num=2g2sazec, PolicyLoss=2.55e-8, DeltaPolLoss=-.017, KL=0.0114, EEpoch 30: 100%|█| 1/1 [00:00<00:00,  1.15it/s, loss=702.611, v_num=2g2sazec, PolicyLoss=-5.74e-8, DeltaPolLoss=-.0183, KL=0.0072,
-
-MeanEpReturn: -826.0878499646703
-StdEpReturn: 277.7272112492152
-MaxEpReturn: -543.6813834199345
-MinEpReturn: -1131.2174932644177
-MeanEpLength: 1000.0
-PolicyLoss: -5.742907660533092e-08
-DeltaPolLoss: -0.018336091190576553
-KL: 0.007195360027253628
-Entropy: 0.7419998645782471
-TimesEarlyStopped: 0
-AvgEarlyStopStep: 0
-ValueLoss: 1831.717041015625
-DeltaValLoss: -101.8258056640625
-
-
-/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
-  warnings.warn(*args, **kwargs)
-Epoch 30: 100%|█| 1/1 [00:04<00:00,  4.26s/it, loss=702.611, v_num=2g2sazec, PolicyLoss=-5.74e-8, DeltaPolLoss=-.0183, KL=0.0072,

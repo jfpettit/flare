@@ -15,3 +15,4 @@ testing.py
 **/.mypy_cache
 **/pa2c.py
 **/lightning_logs
+**/wandb
