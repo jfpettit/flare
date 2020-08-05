@@ -1,0 +1,51 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.9.3
+    framework: torch
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.7.7
+alg:
+  desc: null
+  value: PPO
+env:
+  desc: null
+  value: LunarLander-v2
+epochs:
+  desc: null
+  value: 100
+gamma:
+  desc: null
+  value: 0.99
+horizon:
+  desc: null
+  value: 1000
+lam:
+  desc: null
+  value: 0.97
+layers:
+  desc: null
+  value:
+  - 64
+  - 32
+minibatch_size:
+  desc: null
+  value: 4000
+project_name:
+  desc: null
+  value: None
+run_name:
+  desc: null
+  value: None
+seed:
+  desc: null
+  value: 0
+steps_per_epoch:
+  desc: null
+  value: 4000
+wandb:
+  desc: null
+  value: true

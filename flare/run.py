@@ -61,6 +61,24 @@ parser.add_argument(
     help="Seed for agent and environment.",
     default=0
 )
+parser.add_argument(
+    "-wandb",
+    "--wandb",
+    action="store_true",
+    help="Whether to use weights and biases logger. Need to have weights and biases installed."
+)
+parser.add_argument(
+    "-project",
+    "--project_name",
+    help="Project name for Weights and Biases logger.",
+    default = None
+)
+parser.add_argument(
+    "-run_name",
+    "--run_name",
+    help="Name for run in plots. If None, defaults to algo_name/env_name/current_timestamp",
+    default = None
+)
 # get args from argparser
 args = parser.parse_args()
 
@@ -134,9 +152,4 @@ if __name__ == "__main__":
             save_states=args.save_states,
             steps_per_epoch=args.steps_per_epoch,
         )
-    rew, leng = trainer.learn(
-        args.epochs,
-        horizon=args.horizon,
-        render=args.render,
-    )
 

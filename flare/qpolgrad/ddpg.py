@@ -6,7 +6,7 @@ from termcolor import cprint
 from flare.qpolgrad.base import BaseQPolicyGradient
 import flare.kindling as fk
 from flare.kindling import ReplayBuffer
-from typing import Optional, Union, Callable
+from typing import Optional, Union, Callable, List, Tuple
 
 
 class DDPG(BaseQPolicyGradient):

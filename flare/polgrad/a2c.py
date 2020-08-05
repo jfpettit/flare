@@ -100,7 +100,8 @@ class A2C(BasePolicyGradient):
         batch_idx,
         optimizer,
         optimizer_idx,
-        second_order_closure=None
+        second_order_closure=None,
+        using_native_amp = None
     ):
         if optimizer_idx == 0:
             if self.trainer.use_tpu and XLA_AVAILABLE:

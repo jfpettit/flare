@@ -1,0 +1,30 @@
+{
+    "root": "/Users/jacobpettit/Documents/flare",
+    "program": "/Users/jacobpettit/Documents/flare/flare/run.py",
+    "git": {
+        "remote": "https://github.com/jfpettit/flare.git",
+        "commit": "8cc1a9d2dcaa24ae9a44c0219d6ea30c81159115"
+    },
+    "email": "jfpettit@gmail.com",
+    "startedAt": "2020-07-22T06:29:33.499658",
+    "host": "MacBook-Pro.local",
+    "username": "jacobpettit",
+    "executable": "/Users/jacobpettit/anaconda3/envs/flare/bin/python",
+    "os": "Darwin-19.5.0-x86_64-i386-64bit",
+    "python": "3.7.7",
+    "cpu_count": 8,
+    "args": [
+        "--env",
+        "HalfCheetahBulletEnv-v0",
+        "-wandb",
+        "-project",
+        "flare-benchmarking"
+    ],
+    "state": "failed",
+    "jobType": null,
+    "mode": "run",
+    "name": "flare_experiments/ABCMeta/HalfCheetahBulletEnv-v0/1595399373",
+    "project": "flare-benchmarking",
+    "heartbeatAt": "2020-07-22T06:29:35.283203",
+    "exitcode": 1
+}

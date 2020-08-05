@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/jacobpettit/Documents/flare/flare/run.py", line 111, in <module>
+    hparams=args
+  File "/Users/jacobpettit/Documents/flare/flare/polgrad/ppo.py", line 145, in learn
+    seed = seed
+  File "/Users/jacobpettit/Documents/flare/flare/polgrad/base.py", line 338, in runner
+    logger.experiment.monitor()
+AttributeError: 'Run' object has no attribute 'monitor'

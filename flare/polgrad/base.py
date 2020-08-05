@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as f
 import numpy as np
 import gym
+from gym.wrappers import Monitor
 import time
 import flare.kindling as fk
 from flare.kindling import utils
@@ -13,6 +14,11 @@ from flare.kindling.datasets import PolicyGradientRLDataset
 import sys
 import abc
 from argparse import Namespace
+try:
+    import wandb
+except:
+    pass
+
 
 class BasePolicyGradient(pl.LightningModule):
     r"""
@@ -46,7 +52,7 @@ class BasePolicyGradient(pl.LightningModule):
         val_lr: Optional[float] = 1e-3,
         train_iters = 80,
         seed = 0,
-        hparams: Namespace = None
+        hparams: Namespace = None,
     ):
         super().__init__()
 
@@ -65,6 +71,11 @@ class BasePolicyGradient(pl.LightningModule):
             self.env.action_space,
             hidden_sizes
         )
+
+        try:
+            self.logger.experiment.watch(self.ac)
+        except:
+            pass
 
         self.buffer = fk.PGBuffer(
             self.env.observation_space.shape[0],
@@ -280,6 +291,7 @@ def runner(
     hidden_sizes: Optional[Union[Tuple, List]] = (64, 64),
     gamma: Optional[float] = 0.99,
     lam: Optional[float] = 0.97,
+    wand: Optional[bool] = False,
     hparams: Optional[Namespace] = None,
     seed: Optional[int] = 0
     ):
@@ -298,9 +310,14 @@ def runner(
         hparams (Namespace): Hyperparameters to log. Defaults to None.
         seed (int): Random seeding for environment, PyTorch, and NumPy.
     """
+    
+    if hparams.run_name is None:
+        store_name = f"flare_experiments/{algo.__class__.__name__}/{env_name}/{int(time.time())}"
+    else:
+        store_name = f"flare_experiments/{hparams.run_name}"
 
     env = lambda: gym.make(env_name)
-    
+
     agent = algo(
         env,
         ac,
@@ -310,13 +327,22 @@ def runner(
         minibatch_size=minibatch_size,
         gamma=gamma,
         lam=lam,
-        hparams=hparams
+        hparams=hparams,
         )
+    
+    
+    if hparams.wandb:
+        expt = wandb.init(name=store_name, project=hparams.project_name, monitor_gym=True)
+        logger = pl.loggers.WandbLogger(store_name, project=hparams.project_name, experiment=expt)
+        logger.watch(agent)
+    else:
+        logger = pl.loggers.TensorBoardLogger(store_name)
 
     trainer = pl.Trainer(
         reload_dataloaders_every_epoch=True,
         early_stop_callback=False,
-        max_epochs=epochs
+        max_epochs=epochs,
+        logger=logger,
     )
 
     trainer.fit(agent)

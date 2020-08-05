@@ -1,0 +1,101 @@
+
+  | Name | Type            | Params
+-----------------------------------------
+0 | ac   | FireActorCritic | 7 K   
+Training: 0it [00:00, ?it/s]/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: The dataloader, train dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 8 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  warnings.warn(*args, **kwargs)
+Training:   0%|                                                                                            | 0/1 [00:00<?, ?it/s]Epoch 1:   0%|                                                                                             | 0/1 [00:00<?, ?it/s]Epoch 1: 100%|█████████████████████████████████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  1.23it/s]Epoch 1: 100%|█| 1/1 [00:00<00:00,  1.23it/s, loss=8347.957, v_num=2uc1oshi, PolicyLoss=8.24e-8, DeltaPolLoss=-.022, KL=0.012, En
+
+MeanEpReturn: -1411.91839696866
+StdEpReturn: 101.95590445595025
+MaxEpReturn: -1248.0754196699854
+MinEpReturn: -1525.0131278585252
+MeanEpLength: 1000.0
+PolicyLoss: 8.237361726060044e-08
+DeltaPolLoss: -0.022018108516931534
+KL: 0.011985969729721546
+Entropy: 0.910601019859314
+TimesEarlyStopped: 0
+AvgEarlyStopStep: 0
+ValueLoss: 18132.23828125
+DeltaValLoss: -1436.32421875
+
+
+Epoch 1:   0%| | 0/1 [00:00<?, ?it/s, loss=8347.957, v_num=2uc1oshi, PolicyLoss=8.24e-8, DeltaPolLoss=-.022, KL=0.012, Entropy=0.Epoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=8347.957, v_num=2uc1oshi, PolicyLoss=8.24e-8, DeltaPolLoss=-.022, KL=0.012, Entropy=0.Epoch 2: 100%|█| 1/1 [00:00<00:00,  1.16it/s, loss=8347.957, v_num=2uc1oshi, PolicyLoss=8.24e-8, DeltaPolLoss=-.022, KL=0.012, EnEpoch 2: 100%|█| 1/1 [00:00<00:00,  1.16it/s, loss=8231.717, v_num=2uc1oshi, PolicyLoss=-4.94e-8, DeltaPolLoss=-.0226, KL=0.0127,
+
+MeanEpReturn: -1424.5934547721185
+StdEpReturn: 69.9731309303246
+MaxEpReturn: -1330.3425271099752
+MinEpReturn: -1521.1282862783578
+MeanEpLength: 1000.0
+PolicyLoss: -4.9352646414035917e-08
+DeltaPolLoss: -0.022571954876184464
+KL: 0.012706543318927288
+Entropy: 0.9007218480110168
+TimesEarlyStopped: 0
+AvgEarlyStopStep: 0
+ValueLoss: 17062.796875
+DeltaValLoss: -831.8447265625
+
+
+Epoch 2:   0%| | 0/1 [00:00<?, ?it/s, loss=8231.717, v_num=2uc1oshi, PolicyLoss=-4.94e-8, DeltaPolLoss=-.0226, KL=0.0127, EntropyEpoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=8231.717, v_num=2uc1oshi, PolicyLoss=-4.94e-8, DeltaPolLoss=-.0226, KL=0.0127, EntropyEpoch 3: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=8231.717, v_num=2uc1oshi, PolicyLoss=-4.94e-8, DeltaPolLoss=-.0226, KL=0.0127,Epoch 3: 100%|█| 1/1 [00:00<00:00,  1.21it/s, loss=7988.063, v_num=2uc1oshi, PolicyLoss=4e-7, DeltaPolLoss=-.0216, KL=0.00955, En
+
+MeanEpReturn: -1403.6779301176946
+StdEpReturn: 100.27995570302954
+MaxEpReturn: -1230.866738057145
+MinEpReturn: -1469.7892033270227
+MeanEpLength: 1000.0
+PolicyLoss: 4.0006636936595896e-07
+DeltaPolLoss: -0.02156573347747326
+KL: 0.009552537463605404
+Entropy: 0.887309730052948
+TimesEarlyStopped: 0
+AvgEarlyStopStep: 0
+ValueLoss: 15688.494140625
+DeltaValLoss: -686.982421875
+
+
+Epoch 3:   0%| | 0/1 [00:00<?, ?it/s, loss=7988.063, v_num=2uc1oshi, PolicyLoss=4e-7, DeltaPolLoss=-.0216, KL=0.00955, Entropy=0.Epoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=7988.063, v_num=2uc1oshi, PolicyLoss=4e-7, DeltaPolLoss=-.0216, KL=0.00955, Entropy=0.Epoch 4: 100%|█| 1/1 [00:00<00:00,  1.16it/s, loss=7988.063, v_num=2uc1oshi, PolicyLoss=4e-7, DeltaPolLoss=-.0216, KL=0.00955, EnEpoch 4: 100%|█| 1/1 [00:00<00:00,  1.16it/s, loss=7789.852, v_num=2uc1oshi, PolicyLoss=1.43e-7, DeltaPolLoss=-.0238, KL=0.0141, 
+
+MeanEpReturn: -1412.157297862455
+StdEpReturn: 39.62293167422852
+MaxEpReturn: -1377.11245868128
+MinEpReturn: -1474.2082996948948
+MeanEpLength: 1000.0
+PolicyLoss: 1.4328956865483633e-07
+DeltaPolLoss: -0.023840246722102165
+KL: 0.014132192358374596
+Entropy: 0.870559573173523
+TimesEarlyStopped: 0
+AvgEarlyStopStep: 0
+ValueLoss: 15035.6220703125
+DeltaValLoss: -645.18359375
+
+
+Epoch 4:   0%| | 0/1 [00:00<?, ?it/s, loss=7789.852, v_num=2uc1oshi, PolicyLoss=1.43e-7, DeltaPolLoss=-.0238, KL=0.0141, Entropy=Epoch 5:   0%| | 0/1 [00:00<?, ?it/s, loss=7789.852, v_num=2uc1oshi, PolicyLoss=1.43e-7, DeltaPolLoss=-.0238, KL=0.0141, Entropy=Epoch 5: 100%|█| 1/1 [00:00<00:00,  2.29it/s, loss=7789.852, v_num=2uc1oshi, PolicyLoss=1.43e-7, DeltaPolLoss=-.0238, KL=0.0141, Epoch 5: 100%|█| 1/1 [00:00<00:00,  2.29it/s, loss=7572.388, v_num=2uc1oshi, PolicyLoss=-9.78e-8, DeltaPolLoss=-.00949, KL=0.0151
+
+MeanEpReturn: -1383.690055248331
+StdEpReturn: 21.81321685695486
+MaxEpReturn: -1361.9117517074817
+MinEpReturn: -1411.084102439961
+MeanEpLength: 1000.0
+PolicyLoss: -9.775161657898934e-08
+DeltaPolLoss: -0.009494290687143803
+KL: 0.015119369141757488
+Entropy: 0.8692989349365234
+TimesEarlyStopped: 1
+AvgEarlyStopStep: 7.0
+ValueLoss: 14000.087890625
+DeltaValLoss: -595.0263671875
+
+
+/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/site-packages/pytorch_lightning/utilities/distributed.py:25: UserWarning: Detected KeyboardInterrupt, attempting graceful shutdown...
+  warnings.warn(*args, **kwargs)
+Traceback (most recent call last):
+  File "/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Users/jacobpettit/anaconda3/envs/flare/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/jacobpettit/Documents/flare/flare/run.py", line 155, in <module>
+    rew, leng = trainer.learn(
+NameError: name 'trainer' is not defined

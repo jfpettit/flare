@@ -10,6 +10,7 @@ from flare.kindling.utils import NetworkUtils as netu
 import gym
 from scipy.signal import lfilter
 from typing import Optional, Iterable, List, Dict, Callable, Union, Tuple
+from flare.kindling.utils import conv2d_output_shape, conv2d_output_size
 
 
 class MLP(nn.Module):
@@ -54,6 +55,78 @@ class MLP(nn.Module):
 
         return torch.squeeze(x, -1) if self.out_squeeze else x
 
+class CNN(nn.Module):
+    """
+    Create a PyTorch CNN module.
+    :param kernel_size: Convolutional kernel size
+    :param stride: convolutional kernel stride
+    :param outpu_size: size of network output
+    :param input_channels: number of channels in the input
+    :param output_activation: if any, activation to apply to the output layer
+    :param input_height: size of one side of input (currently assumes square input)
+    :param channels: List of channel sizes for each convolutional layer
+    :param linear_layer_sizes: list of (if any) sizes of linear layers to add after convolutional layers
+    :param activation: activation function
+    :param dropout_layers: if any, layers to apply dropout to
+    :param dropout_p: probability of dropout to use
+    :param out_squeeze: whether to squeeze the output
+    """
+    def __init__(self, 
+                input_channels: int,
+                input_height: int,
+                output_size: int,
+                kernel_size: int = 3,
+                stride: int = 1,
+                channels: list = [64, 64],
+                linear_layer_sizes: list = [512],
+                activation: Callable = torch.relu,
+                output_activation: Callable = None,
+                dropout_layers: list = None,
+                dropout_p: float = None,
+                out_squeeze: bool = False):
+        
+        super(CNN, self).__init__()
+
+        conv_sizes = [input_channels] + channels
+        self.layers = nn.ModuleList()
+        self.activation = activation
+        self.output_activation = output_activation
+        self.out_squeeze = out_squeeze
+
+        self.dropout_p = dropout_p
+        self.dropout_layers = dropout_layers
+
+        self.hw=input_height
+        for i, l in enumerate(conv_sizes[1:]):
+            self.hw = conv2d_output_size(kernel_size=kernel_size, stride=stride, sidesize=self.hw)
+            self.layers.append(nn.Conv2d(conv_sizes[i], l, kernel_size=kernel_size, stride=stride))
+
+        self.hw = (self.hw, self.hw)
+        conv_out_size = 1
+        for num in self.hw:
+            conv_out_size *= num
+        conv_out_size *= conv_sizes[-1]
+
+        linear_sizes = [conv_out_size] + linear_layer_sizes + [output_size]
+        self.layers.append(nn.Flatten())
+        for i, l in enumerate(linear_sizes[1:]):
+            self.layers.append(nn.Linear(linear_sizes[i], l))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        for l in self.layers[:-1]:
+            x = self.activation(l(x))
+            print(l)
+
+            if self.dropout_layers is not None and l in self.dropout_layers:
+                x = F.dropout(x, p=self.dropout_p)
+
+        if self.output_activation is None:
+            x = self.layers[-1](x)
+        else:
+            x = self.output_activation(self.layers[-1](x))
+
+        return x.squeeze() if self.out_squeeze else x
+
 class Actor(nn.Module):
     
     def action_distribution(self, states):
@@ -88,14 +161,23 @@ class CategoricalPolicy(Actor):
         hidden_sizes: Union[List, Tuple],
         activation: Callable,
         out_activation: Callable,
+        useconv: bool = False,
+        channels: int = 3,
+        height: int = 64,
     ):
         super().__init__()
-        self.mlp = MLP(
-            [state_features] + list(hidden_sizes) + [action_dim], activations=activation
-        )
+        if not useconv:
+            self.net = MLP(
+                [state_features] + list(hidden_sizes) + [action_dim], activations=activation
+            )
+
+        elif useconv:
+            self.net = CNN(
+                channels, height, action_dim 
+            )
 
     def action_distribution(self, x):
-        logits = self.mlp(x)
+        logits = self.net(x)
         return torch.distributions.Categorical(logits=logits)
 
     def logprob_from_distribution(self, policy, actions):
@@ -121,18 +203,27 @@ class GaussianPolicy(Actor):
         hidden_sizes: Union[List, Tuple],
         activation: Callable,
         out_activation: Callable,
+        useconv: bool = False,
+        channels: int = 3,
+        height: int = 64,
     ):
         super().__init__()
 
-        self.mlp = MLP(
-            [state_features] + list(hidden_sizes) + [action_dim],
-            activations=activation,
-            out_act=out_activation,
-        )
+        if not useconv:
+            self.net = MLP(
+                [state_features] + list(hidden_sizes) + [action_dim],
+                activations=activation,
+                out_act=out_activation,
+            )
+
+        elif useconv:
+            self.net = CNN(
+                channels, height, action_dim 
+            ) 
         self.logstd = nn.Parameter(-0.5 * torch.ones(action_dim, dtype=torch.float32))
 
     def action_distribution(self, states):
-        mus = self.mlp(states)
+        mus = self.net(states)
         std = torch.exp(self.logstd)
         return torch.distributions.Normal(mus, std)
 
@@ -164,6 +255,9 @@ class FireActorCritic(nn.Module):
         activation: Optional[Callable] = torch.tanh,
         out_activation: Optional[Callable] = None,
         policy: Optional[nn.Module] = None,
+        useconv: Optional[bool] = False,
+        channels: Optional[int] = 3,
+        height: Optional[int] = 64
     ):
         super(FireActorCritic, self).__init__()
     
@@ -176,7 +270,11 @@ class FireActorCritic(nn.Module):
                 act_dim, 
                 hidden_sizes, 
                 activation,
-                out_activation)
+                out_activation,
+                useconv=useconv,
+                channels=channels,
+                height=height
+                )
         elif isinstance(action_space, gym.spaces.Box):
             act_dim = action_space.shape[0]
             self.policy = GaussianPolicy(
@@ -184,14 +282,21 @@ class FireActorCritic(nn.Module):
                 act_dim, 
                 hidden_sizes, 
                 activation, 
-                out_activation)
+                out_activation,
+                useconv=useconv,
+                channels=channels,
+                height=height
+                )
         else:
             self.policy = policy(
                 obs_dim,
                 action_space,
                 hidden_sizes,
                 activation,
-                out_activation
+                out_activation,
+                useconv=useconv,
+                channels=channels,
+                height=height
             )
 
         self.value_f = MLP(

@@ -1,0 +1,15 @@
+alg: PPO
+env: HalfCheetahBulletEnv-v0
+epochs: 100
+gamma: 0.99
+horizon: 1000
+lam: 0.97
+layers:
+- 64
+- 32
+minibatch_size: 4000
+project_name: null
+run_name: null
+seed: 0
+steps_per_epoch: 4000
+wandb: false
