@@ -61,17 +61,6 @@ class PPO(BasePolicyGradient):
     def backward(self, trainer, loss, optimizer, optimizer_idx):
         pass
 
-    #def optimizer_step(
-    #    self,
-    #    epoch,
-    #    batch_idx,
-    #    optimizer,
-    #    optimizer_idx,
-    #    second_order_closure = None,
-    #    using_native_amp = None
-    #):
-        #optimizer.zero_grad()
-
     def training_step(self, batch, batch_idx, optimizer_idx):
         states, actions, advs, rets, logps_old = batch
 
