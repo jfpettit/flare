@@ -157,7 +157,7 @@ class ReplayBuffer(PGBuffer):
             rew=self.rew_buf[idxs],
             done=self.done_buf[idxs],
         )
-        return {k: torch.as_tensor(v, dtype=torch.float32) for k, v in batch.items()}
+        return tuple(torch.as_tensor(v, dtype=torch.float32) for _, v in batch.items())
 
     def get(self):
         return [self.obs1_buf, self.obs2_buf, self.act_buf, self.rew_buf, self.done_buf]

@@ -18,6 +18,7 @@ class DDPG(BaseQPolicyGradient):
         self,
         env_fn: Callable,
         actorcritic: Callable = fk.FireDDPGActorCritic,
+        epochs: int = 100,
         seed: Optional[int] = 0,
         steps_per_epoch: Optional[int] = 4000,
         replay_size: Optional[int] = int(1e6),
@@ -32,11 +33,13 @@ class DDPG(BaseQPolicyGradient):
         update_every: Optional[int] = 50,
         act_noise: Optional[float] = 0.1,
         buffer: Optional[float] = ReplayBuffer,
+        hparams = None
     ):
 
         super().__init__(
             env_fn,
             actorcritic,
+            epochs=epochs,
             seed=seed,
             steps_per_epoch=steps_per_epoch,
             replay_size=replay_size,
@@ -50,18 +53,20 @@ class DDPG(BaseQPolicyGradient):
             update_after=update_after,
             update_every=update_every,
             act_noise=act_noise,
+            hparams=hparams
         )
 
-    def configure_optimizers(self, pol_lr, q_lr):
-        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=pol_lr)
-        self.q_optimizer = torch.optim.Adam(self.ac.qfunc.parameters(), lr=q_lr)
+    def configure_optimizers(self):
+        self.policy_optimizer = torch.optim.Adam(self.ac.policy.parameters(), lr=self.pol_lr)
+        self.q_optimizer = torch.optim.Adam(self.ac.qfunc.parameters(), lr=self.q_lr)
+        return self.policy_optimizer, self.q_optimizer
 
     def calc_pol_loss(self, states):
         q_pi = self.ac.qfunc(states, self.ac.policy(states))
         return -q_pi.mean()
 
     def calc_qfunc_loss(self, data):
-        o, a, r, o2, d = data 
+        o, o2, a, r, d = data 
 
         q = self.ac.qfunc(o, a)
 
@@ -74,7 +79,7 @@ class DDPG(BaseQPolicyGradient):
         loss_q = ((q - backup) ** 2).mean()
 
         # Useful info for logging
-        loss_info = dict(QValues=q.detach().numpy())
+        loss_info = dict(MeanQValues=q.mean().detach().numpy())
 
         return loss_q, loss_info
 
@@ -134,8 +139,8 @@ class DDPG(BaseQPolicyGradient):
 
 def learn(
     env_name,
-    epochs: Optional[int] = 10000,
-    minibatch_size: Optional[int] = None,
+    epochs: Optional[int] = 100,
+    batch_size: Optional[int] = None,
     steps_per_epoch: Optional[int] = 4000,
     hidden_sizes: Optional[Union[Tuple, List]] = (256, 256),
     gamma: Optional[float] = 0.99,
@@ -143,12 +148,13 @@ def learn(
     seed = 0
 ):
     from flare.qpolgrad.base import runner 
-    minibatch_size = 50 if minibatch_size is None else minibatch_size
+    batch_size = 100 if batch_size is None else batch_size
     runner(
         env_name, 
         DDPG,
+        fk.FireDDPGActorCritic,
         epochs=epochs, 
-        minibatch_size=minibatch_size, 
+        bs=batch_size, 
         hidden_sizes=hidden_sizes,
         gamma=gamma,
         hparams=hparams,
