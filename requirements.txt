@@ -27,7 +27,7 @@ mkl-fft==1.0.15
 mkl-random==1.1.0
 mkl-service==2.3.0
 mpi4py==3.0.3
-numpy==1.21.0
+numpy==1.22.0
 oauthlib==3.1.0
 parso==0.7.0
 pexpect==4.8.0
